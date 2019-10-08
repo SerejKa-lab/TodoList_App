@@ -1,16 +1,16 @@
-.App {
-
-}
+.App {}
 
 .todoList {
-  width: 500px;
+  width : 500px;
   margin: 0 auto;
 }
 
-.todoList > div {
+.todoList>div {
   padding: 10px;
 }
 
-.todoList-task {
+.todoList-task {}
 
+.active {
+  background-color: gold;
 }
