@@ -12,5 +12,9 @@
 .todoList-task {}
 
 .active {
-  background-color: gold;
+  background-color: yellowgreen;
 }
+
+.priority {
+  color: yellowgreen;
+ }
