@@ -8,24 +8,28 @@ class App extends React.Component {
 
     state = {
         tasks: [
-            { title: "HTML", isDone: true, priority: 'low' },
-            { title: 'CSS', isDone: false, priority: 'medium' },
-            { title: 'JS', isDone: true, priority: 'high' },
-            { title: 'React', isDone: false, priority: 'high' }
+            { id: 0, title: 'CSS', isDone: false, priority: 'medium' },
+            { id: 1, title: 'JS', isDone: true, priority: 'high' },
+            { id: 2, title: "HTML", isDone: true, priority: 'low' },
+            { id: 3, title: 'React', isDone: false, priority: 'high' }
         ],
 
-        filterValue: 'All'
+        filterValue: 'All',
+        taskId: 4
     };
+
 
     addNewTask = (newTitle) => {
         let newTask = {
+            id: this.state.taskId,
             title: newTitle,
             isDone: false,
             priority: "low"
         };
         let newTasks = [...this.state.tasks, newTask];
         this.setState({
-            tasks: newTasks
+            tasks : newTasks,
+            taskId : this.state.taskId +1
         });
     };
 
@@ -45,9 +49,9 @@ class App extends React.Component {
         this.setState({ filterValue: newFilterValue })
     };
 
-    changeTask = ( task, obj ) => {
+    changeTask = ( taskId, obj ) => {
         let newTasks = this.state.tasks.map ( (t) => {
-            if (t === task) return ( { ...t, ...obj } )
+            if (t.id === taskId) return ( { ...t, ...obj } )
             else return t;
         });
         this.setState ( { tasks: newTasks } );

@@ -13,11 +13,11 @@ class TodoListTask extends React.Component {
 
     changeTaskStatus = (event) => {
         let newTaskStatus = event.currentTarget.checked;
-        this.props.changeTask ( this.props.task, { isDone: newTaskStatus } )
+        this.props.changeTask ( this.props.task.id, { isDone: newTaskStatus } )
     }
 
     editTaskTitle = (e) => {
-        this.props.changeTask( this.props.task, { title: e.currentTarget.value } )
+        this.props.changeTask( this.props.task.id, { title: e.currentTarget.value } )
     }
 
     setNewPriority = () => {
@@ -32,7 +32,7 @@ class TodoListTask extends React.Component {
             default: 
                 newPriority = 'high';
             }
-        this.props.changeTask( this.props.task, { priority: newPriority } );
+        this.props.changeTask( this.props.task.id, { priority: newPriority } );
     }
 
     setPriorityClassName = () => {
@@ -48,6 +48,7 @@ class TodoListTask extends React.Component {
             <div className="todoList-tasks">
                 <div className={ this.props.task.isDone ? 'taskIsDone' : 'todoList-task' }>
                     <input onChange = { this.changeTaskStatus } type="checkbox" checked={this.props.task.isDone} />
+                    <span> { this.props.task.id } - </span>
                     { this.state.editMode
                     ? <input type="text" 
                             value = { this.props.task.title }
