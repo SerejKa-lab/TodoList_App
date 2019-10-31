@@ -20,6 +20,29 @@ class TodoListTask extends React.Component {
         this.props.changeTask( this.props.task, { title: e.currentTarget.value } )
     }
 
+    setNewPriority = () => {
+        let newPriority = this.props.task.priority;
+        switch (this.props.task.priority) {
+            case 'high' :
+                    newPriority = 'low';
+                    break;
+            case 'low' : 
+                newPriority = 'medium';
+                break;
+            default: 
+                newPriority = 'high';
+            }
+        this.props.changeTask( this.props.task, { priority: newPriority } );
+    }
+
+    setPriorityClassName = () => {
+        switch (this.props.task.priority) {
+            case 'low': return 'priorityLow';
+            case 'medium': return 'priorityMedium';
+            default: return 'priorityHigh';
+        }
+    }
+
     render = () => {
         return (
             <div className="todoList-tasks">
@@ -34,7 +57,7 @@ class TodoListTask extends React.Component {
                             onKeyPress = { (e) => { if ( e.key === "Enter" ) this.setEditMode() } } />
                     : <span onClick = { this.setEditMode } >{this.props.task.title}: </span>
                     }
-                    <span className = 'priority' >{this.props.task.priority}</span>
+                    <span onClick = { this.setNewPriority } className = { this.setPriorityClassName() } >{this.props.task.priority}</span>
                 </div>
             </div>
         );

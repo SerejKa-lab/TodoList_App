@@ -1,27 +1,39 @@
-.App {}
+.App {
+
+}
 
 .todoList {
-  width : 500px;
+  width: 500px;
   margin: 0 auto;
 }
 
-.todoList>div {
+.todoList > div {
   padding: 10px;
 }
 
-.todoList-task {}
+.todoList-task {
 
-.active {
+}
+
+.filter-active {
   background-color: yellowgreen;
 }
 
-.priority {
-  color: yellowgreen;
- }
+.priorityLow {
+  color:  rgb(15, 162, 13);
+}
 
- .error {
-   border: 2px solid tomato;
- }
+.priorityMedium {
+  color: darkgoldenrod;
+}
+
+.priorityHigh {
+  color: crimson;
+}
+
+.error {
+	border-color: red;
+}
 
  .taskIsDone {
    opacity: 0.5;

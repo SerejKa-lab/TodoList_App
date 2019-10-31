@@ -15,9 +15,9 @@ class TodoListFooter extends React.Component {
 
 
     render = () => {
-        let buttonAll = this.props.filterValue === 'All' ? 'active' : '';
-        let buttonActive = this.props.filterValue === 'Active' ? 'active' : '';
-        let buttonCompleted = this.props.filterValue === 'Completed' ? 'active' : '';
+        let buttonAll = this.props.filterValue === 'All' ? 'filter-active' : '';
+        let buttonActive = this.props.filterValue === 'Active' ? 'filter-active' : '';
+        let buttonCompleted = this.props.filterValue === 'Completed' ? 'filter-active' : '';
         return (
             <div className="todoList-footer">
                 {!this.state.isHidden &&
