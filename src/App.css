@@ -18,3 +18,11 @@
 .priority {
   color: yellowgreen;
  }
+
+ .error {
+   border: 2px solid tomato;
+ }
+
+ .taskIsDone {
+   opacity: 0.5;
+ }

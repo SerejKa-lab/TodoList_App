@@ -33,9 +33,9 @@ class App extends React.Component {
         return (
             this.state.tasks.filter((task) => {
                 switch (this.state.filterValue) {
-                    case 'All': return true;
                     case 'Completed': return task.isDone;
                     case 'Active': return !task.isDone;
+                    default : return true;
                 }
             })
         )
@@ -45,9 +45,9 @@ class App extends React.Component {
         this.setState({ filterValue: newFilterValue })
     };
 
-    changeTaskStatus = (newStatus, task) => {
+    changeTask = ( task, obj ) => {
         let newTasks = this.state.tasks.map ( (t) => {
-            if (t === task) return ( { ...t, isDone: newStatus } );
+            if (t === task) return ( { ...t, ...obj } )
             else return t;
         });
         this.setState ( { tasks: newTasks } );
@@ -59,7 +59,7 @@ class App extends React.Component {
             <div className="App">
                 <div className="todoList">
                     <TodoListHeader addNewTask={this.addNewTask} />
-                    <TodoListTasks subjects={this.getFilteredTasks()} changeTaskStatus = {this.changeTaskStatus} />
+                    <TodoListTasks tasks = { this.getFilteredTasks() } changeTask = {this.changeTask} />
                     <TodoListFooter filterValue={this.state.filterValue} changeFilter={this.changeFilter} />
                 </div>
             </div>
