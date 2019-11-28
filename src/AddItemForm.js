@@ -27,7 +27,7 @@ class AddItemForm extends React.Component {
                     className={this.state.inputError ? 'error' : ''}
                     onChange={this.setItemTitle}
                     onKeyPress={(e) => { if (e.key === 'Enter') this.addItem() }}
-                    type="text" placeholder="Add item" value={this.state.itemTitle} />
+                    type="text" placeholder={this.props.placeholder} value={this.state.itemTitle} />
                 <button onClick={this.addItem} >Add</button>
             </div>
         )

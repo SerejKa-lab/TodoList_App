@@ -16,6 +16,7 @@ const TodoListHeader = (props) => {
                 <button className='delete_list' onClick = { deleteListOnClick }><i className="fa fa-close"></i></button>
                 </h3>
             <AddItemForm
+                placeholder = 'Add new task'
                 listId ={ listId }
                 addItem ={ addItem } />
         </div>

@@ -85,8 +85,8 @@ class App extends React.Component {
 
         return (
             <div className='app'>
-                <h3>Органайзер задач</h3>
-                <AddItemForm addItem = { this.addList }/>
+                <h2>Органайзер задач</h2>
+                <AddItemForm addItem = { this.addList } placeholder = 'Add list'/>
                 <div className='app_lists'>
                     {todoLists}
                 </div>
