@@ -10,12 +10,10 @@ class App extends React.Component {
     };
 
     state = {
-        nextListId: 5,
+        nextListId: 1,
         lists: []
         // lists: [
         //     { id: 0, title:  'Спорт', tasks: [{ id: 1, title: 'CSS', isDone: false, priority: 'medium' }], nextTaskId: 2 },
-        //     { id: 1, title:  'Здоровье', tasks: [{ id: 1, title: 'JS', isDone: true, priority: 'high' }], nextTaskId: 2 },
-        //     { id: 2, title:  'Красота', tasks: [{ id: 1, title: "HTML", isDone: true, priority: 'low' }], nextTaskId: 2 },
         // ]
     };
 
@@ -33,13 +31,18 @@ class App extends React.Component {
         this.setState(state);
     }
 
-    addListItem = ( listTitle ) => {
-        const listId = this.state.nextListId;
+    addList = ( listTitle ) => {
+        const listId = this.state.lists.length === 0 ? 0 : this.state.nextListId;
         const newList = { id: listId, title: listTitle, tasks: [], nextTaskId: 1 };
-        this.setState( { lists: [ ...this.state.lists, newList ], nextListId: listId+1 } )
+        this.setState( { lists: [ ...this.state.lists, newList ], nextListId: listId+1 }, this.saveState )
     }
 
-    addTaskItem = (taskTitle, listId) => {
+    deleteList = ( listId ) => {
+        const newLists = this.state.lists.filter( (list) => list.id !== listId );
+        this.setState( { lists: newLists }, this.saveState );
+    }
+
+    addTask = (taskTitle, listId) => {
         const listIndex = this.state.lists.findIndex( (list) => list.id === listId );
         const taskId = this.state.lists[listIndex].tasks.length + 1;
         const newTask = { id: taskId, title: taskTitle, isDone: false, priority: 'medium' }
@@ -75,13 +78,15 @@ class App extends React.Component {
             <TodoList
                 list={list}
                 key={list.id}
-                addItem={this.addTaskItem}
-                changeTask={this.changeTask} />
+                addItem={this.addTask}
+                changeTask={this.changeTask}
+                deleteList={this.deleteList} />
         )
 
         return (
             <div className='app'>
-                <AddItemForm addItem = { this.addListItem }/>
+                <h3>Органайзер задач</h3>
+                <AddItemForm addItem = { this.addList }/>
                 <div className='app_lists'>
                     {todoLists}
                 </div>

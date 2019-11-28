@@ -6,33 +6,11 @@ import TodoListFooter from './TodoListFooter';
 
 class TodoList extends React.Component {
 
-    componentDidMount() {
-        this.restoreState();
-    }
-
     state = {
         filterValue: 'All'
     };
 
-    saveState = () => {
-        const {id} = this.props.list;
-        const stateToString = JSON.stringify(this.state);
-        localStorage.setItem( id+1+'-ListState', stateToString);
-    }
-
-    restoreState = () => {
-        const {id} = this.props.list;
-        let state = {
-            filterValue: 'All'
-        }
-        const stringToState = localStorage.getItem(id+1+'-ListState');
-        if (stringToState !== null) {
-            state = JSON.parse(stringToState)
-        };
-        this.setState(state);
-    }
-
- 
+     
     changeFilter = (newFilterValue) => {
         this.setState({ filterValue: newFilterValue }, this.saveState )
     };
@@ -51,10 +29,10 @@ class TodoList extends React.Component {
 
 
     render = () => {
-        const { list, changeTask, addItem } = this.props;
+        const { list, changeTask, addItem, deleteList } = this.props;
         return (
             <div className="todoList">
-                <TodoListHeader title = { list.title } listId = { list.id } addItem={addItem} />
+                <TodoListHeader title = { list.title } listId = { list.id } addItem={addItem} deleteList={deleteList}/>
                 <TodoListTasks tasks={this.getFilteredTasks()} changeTask = { changeTask } listId = { list.id }/>
                 <TodoListFooter filterValue={this.state.filterValue} changeFilter={this.changeFilter} />
             </div>

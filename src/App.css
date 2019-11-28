@@ -16,6 +16,10 @@
   padding: 10px;
 }
 
+.delete_list:hover {
+  background: pink;
+}
+
 .todoList-task {
 
 }
