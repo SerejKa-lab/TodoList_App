@@ -11,13 +11,13 @@ class TodoListTask extends React.Component {
         this.setState( { editMode:newEditMode } ) 
     }
 
-    changeTaskStatus = (event) => {
-        let newTaskStatus = event.currentTarget.checked;
-        this.props.changeTask ( this.props.task.id, { isDone: newTaskStatus } )
+    changeTaskStatus = (e) => {
+        let newTaskStatus = e.currentTarget.checked;
+        this.props.changeTask ( this.props.listId, this.props.task.id, { isDone: newTaskStatus } )
     }
 
-    editTaskTitle = (e) => {
-        this.props.changeTask( this.props.task.id, { title: e.currentTarget.value } )
+    setTaskTitle = (e) => {
+        this.props.changeTask( this.props.listId, this.props.task.id, {title: e.currentTarget.value } )
     }
 
     setNewPriority = () => {
@@ -32,7 +32,7 @@ class TodoListTask extends React.Component {
             default: 
                 newPriority = 'high';
             }
-        this.props.changeTask( this.props.task.id, { priority: newPriority } );
+        this.props.changeTask( this.props.listId, this.props.task.id, { priority: newPriority } );
     }
 
     setPriorityClassName = () => {
@@ -52,7 +52,7 @@ class TodoListTask extends React.Component {
                     { this.state.editMode
                     ? <input type="text" 
                             value = { this.props.task.title }
-                            onChange = { this.editTaskTitle }
+                            onChange = { this.setTaskTitle }
                             autoFocus ={ true } 
                             onBlur = { this.setEditMode } 
                             onKeyPress = { (e) => { if ( e.key === "Enter" ) this.setEditMode() } } />

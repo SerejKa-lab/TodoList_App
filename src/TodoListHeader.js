@@ -9,13 +9,13 @@ class TodoListHeader extends React.Component {
 
     setTaskTitle = (e) => {
         if ( this.state.inputError ) this.setState( { inputError : false } );
-        this.setState( { taskTitle : e.currentTarget.value } )
+        this.setState ( {taskTitle: e.currentTarget.value} );
     }
 
-    onAddNewTask = () => {
+    addTask = () => {
         if ( this.state.taskTitle === '') this.setState( { inputError : true } )
         else {
-            this.props.addNewTask( this.state.taskTitle );
+            this.props.addTask( this.props.listId, this.state.taskTitle );
             this.setState( { taskTitle : '' } )
         }
     }
@@ -24,14 +24,14 @@ class TodoListHeader extends React.Component {
     render = () => {
         return (
             <div className="todoList-header">
-                <h3 className="todoList-header__title">What to Learn</h3>
+                <h3 className="todoList-header__title">{ this.props.title }</h3>
                 <div className="todoList-newTaskForm">
                     <input 
                         className = { this.state.inputError ? 'error' : '' }
                         onChange = { this.setTaskTitle } 
-                        onKeyPress = { (e) => { if ( e.key === 'Enter' ) this.onAddNewTask() } }
+                        onKeyPress = { (e) => { if ( e.key === 'Enter' ) this.addTask() } }
                         type="text" placeholder="New task name" value = { this.state.taskTitle } />
-                    <button onClick = { this.onAddNewTask } >Add</button>
+                    <button onClick = { this.addTask } >Add</button>
                 </div>
             </div>
         );
