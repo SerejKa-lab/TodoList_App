@@ -1,10 +1,15 @@
-.App {
+.app {
+  padding: 10px;
+}
+.app_lists {
   display: flex;
+  flex-wrap: wrap;
+  margin: 10px;
 }
 
 .todoList {
-  width: 500px;
-  margin: 0 auto;
+  width: 300px;
+  margin: 10px;
 }
 
 .todoList > div {
