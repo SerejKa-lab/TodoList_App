@@ -51,10 +51,10 @@ class TodoList extends React.Component {
 
 
     render = () => {
-        const { list, changeTask, addTask } = this.props;
+        const { list, changeTask, addItem } = this.props;
         return (
             <div className="todoList">
-                <TodoListHeader title = { list.title } listId = { list.id } addTask={addTask} />
+                <TodoListHeader title = { list.title } listId = { list.id } addItem={addItem} />
                 <TodoListTasks tasks={this.getFilteredTasks()} changeTask = { changeTask } listId = { list.id }/>
                 <TodoListFooter filterValue={this.state.filterValue} changeFilter={this.changeFilter} />
             </div>
