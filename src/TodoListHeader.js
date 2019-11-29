@@ -1,10 +1,12 @@
 import React from 'react';
 import AddItemForm from './AddItemForm';
+import { connect } from 'react-redux';
 
 
 const TodoListHeader = (props) => {
 
     const { listId, addItem, deleteList } = props;
+
     const deleteListOnClick = () => {
         deleteList( listId );
     }
@@ -23,5 +25,20 @@ const TodoListHeader = (props) => {
     );
 }
 
-export default TodoListHeader;
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        deleteList: (listId) => {
+            const action = {
+                type: 'DELETE-LIST',
+                listId
+
+            };
+            dispatch(action);
+        }
+    }
+}
+
+
+export default connect(null, mapDispatchToProps)(TodoListHeader);
 
