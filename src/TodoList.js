@@ -29,7 +29,7 @@ class TodoList extends React.Component {
 
 
     render = () => {
-        const { list, addItem } = this.props;
+        const { list } = this.props;
         return (
             <div className="todoList">
                 <TodoListHeader title = { list.title } listId = { list.id } />

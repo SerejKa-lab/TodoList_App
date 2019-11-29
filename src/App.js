@@ -2,6 +2,7 @@ import React from 'react';
 import TodoList from './TodoList';
 import AddItemForm from './AddItemForm';
 import { connect } from 'react-redux';
+import { addListAC } from './reducer';
 
 
 class App extends React.Component {
@@ -34,10 +35,7 @@ const mapStateToProps = ( state ) => {
 const mapDispatchToProps = ( dispatch ) => {
     return {
         addList: ( listTitle ) => {
-            const action = {
-                type: 'ADD-LIST',
-                listTitle: listTitle
-            }
+            const action = addListAC(listTitle);
             dispatch( action );
         }
     }

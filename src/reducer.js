@@ -1,4 +1,48 @@
 
+const addList = 'ADD-LIST';
+const addListAC = (listTitle) => {
+    return {
+        type: addList,
+        listTitle: listTitle
+    }
+}
+
+const deleteList = 'DELETE-LIST';
+const deleteListAC = (listId) => {
+    return {
+        type: deleteList,
+        listId
+    }
+}
+
+const addTask = 'ADD-TASK';
+const addTaskAC = (taskTitle, listId) => {
+    return {
+        type: addTask,
+        listId,
+        taskTitle
+    }
+}
+
+const deleteTask = 'DELETE-TASK';
+const deleteTaskAC = (listId, taskId) => {
+    return {
+        type: deleteTask,
+        listId,
+        taskId
+    }
+}
+
+const updateTask = 'UPDATE-TASK';
+const updateTaskAC = (listId, taskId, dataObj) => {
+    return {
+        type: updateTask,
+        listId,
+        taskId,
+        dataObj
+    }
+}
+
 
 const initialState = localStorage.getItem('TodoListForGit') !== null
     ? JSON.parse(localStorage.getItem('TodoListForGit'))
@@ -8,12 +52,11 @@ const initialState = localStorage.getItem('TodoListForGit') !== null
     };
 
 
-
 const reducer = (state = initialState, action) => {
 
     switch (action.type) {
 
-        case 'ADD-LIST':
+        case addList:
             const listId = state.lists.length;
             const newList = { id: listId, title: action.listTitle, tasks: [], nextTaskId: 1 };
             return {
@@ -21,7 +64,7 @@ const reducer = (state = initialState, action) => {
                 lists: [...state.lists, newList],
             }
 
-        case 'DELETE-LIST':
+        case deleteList:
             return {
                 ...state,
                 lists: 
@@ -29,7 +72,7 @@ const reducer = (state = initialState, action) => {
                     .map( (list, index) => ({ ...list, id: index }) )
             }
 
-        case 'ADD-TASK':
+        case addTask:
             const taskId = state.lists[action.listId].tasks.length + 1;
             const newTask = { id: taskId, title: action.taskTitle, isDone: false, priority: 'medium' }
             return {
@@ -46,7 +89,7 @@ const reducer = (state = initialState, action) => {
                 })
             }
 
-        case 'DELETE-TASK':
+        case deleteTask:
             return {
                 ...state,
                 lists: state.lists.map((list) => {
@@ -62,7 +105,7 @@ const reducer = (state = initialState, action) => {
                 })
             }
 
-        case 'UPDATE-TASK':
+        case updateTask:
 
             const getNewPriorityObj = () => {
                 switch (action.dataObj.priority) {
@@ -99,3 +142,4 @@ const reducer = (state = initialState, action) => {
 }
 
 export default reducer;
+export { addListAC, deleteListAC, addTaskAC, deleteTaskAC, updateTaskAC };

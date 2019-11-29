@@ -1,6 +1,7 @@
 import React from 'react';
 import AddItemForm from './AddItemForm';
 import { connect } from 'react-redux';
+import { deleteListAC, addTaskAC } from './reducer';
 
 
 const TodoListHeader = (props) => {
@@ -28,19 +29,11 @@ const TodoListHeader = (props) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         deleteList: (listId) => {
-            const action = {
-                type: 'DELETE-LIST',
-                listId
-
-            };
+            const action = deleteListAC(listId);
             dispatch(action);
         },
         addTask: (taskTitle, listId) => {
-            const action = {
-                type: 'ADD-TASK',
-                listId,
-                taskTitle
-            };
+            const action = addTaskAC( taskTitle, listId )
             dispatch(action);
         }
     }
