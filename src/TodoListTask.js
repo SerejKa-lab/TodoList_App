@@ -16,26 +16,15 @@ class TodoListTask extends React.Component {
 
     changeTaskStatus = (e) => {
         let newTaskStatus = e.currentTarget.checked;
-        this.props.changeTask ( this.props.listId, this.props.task.id, { isDone: newTaskStatus } )
+        this.props.editTask ( this.props.listId, this.props.task.id, { isDone: newTaskStatus } )
     }
 
     setTaskTitle = (e) => {
-        this.props.changeTask( this.props.listId, this.props.task.id, {title: e.currentTarget.value } )
+        this.props.editTask( this.props.listId, this.props.task.id, {title: e.currentTarget.value } )
     }
 
     setNewPriority = () => {
-        let newPriority = this.props.task.priority;
-        switch (this.props.task.priority) {
-            case 'high' :
-                    newPriority = 'low';
-                    break;
-            case 'low' : 
-                newPriority = 'medium';
-                break;
-            default: 
-                newPriority = 'high';
-            }
-        this.props.changeTask( this.props.listId, this.props.task.id, { priority: newPriority } );
+        this.props.editTask( this.props.listId, this.props.task.id, { priority: this.props.task.priority } );
     }
 
     setPriorityClassName = () => {
@@ -59,7 +48,8 @@ class TodoListTask extends React.Component {
                         type="checkbox" 
                         checked={this.props.task.isDone} />
                     <span> { this.props.task.id } - </span>
-                    { this.state.editMode
+                    
+                    { this.state.editMode // активируем режим редактирования названия задачи
                     ? <input type="text" 
                             value = { this.props.task.title }
                             onChange = { this.setTaskTitle }
@@ -68,6 +58,7 @@ class TodoListTask extends React.Component {
                             onKeyPress = { this.setEditModeOnKey } />
                     : <span onClick = { this.setEditMode } >{this.props.task.title}: </span>
                     }
+                    
                     <span 
                         onClick = { this.setNewPriority } 
                         className = { this.setPriorityClassName() } > {this.props.task.priority} &nbsp;
@@ -89,6 +80,15 @@ const mapDispatchToProps = (dispatch) => {
                 listId,
                 taskId
             };
+            dispatch(action);
+        },
+        editTask: (listId, taskId, dataObj) => {
+            const action = {
+                type: 'UPDATE-TASK',
+                listId,
+                taskId,
+                dataObj
+            }
             dispatch(action);
         }
     }

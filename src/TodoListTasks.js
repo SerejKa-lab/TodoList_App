@@ -7,8 +7,7 @@ const TodoListTasks = (props) => {
         return <TodoListTask
             task={task}
             key={task.id}
-            listId={props.listId}
-            changeTask={props.changeTask} />
+            listId={props.listId} />
 
     });
 

@@ -63,6 +63,36 @@ const reducer = (state = initialState, action) => {
                 } )
             }
         
+        case 'UPDATE-TASK':
+
+            const getNewPriorityObj = () => {
+                switch (action.dataObj.priority) {
+                    case 'high':
+                        return ({ priority: 'low' })
+                    case 'low':
+                        return ({ priority: 'medium' })
+                    default:
+                        return ({ priority: 'high' })
+                }
+            }
+
+            const newData = action.dataObj['priority'] === undefined ? action.dataObj : getNewPriorityObj();
+
+            return {
+                ...state,
+                lists: state.lists.map( (list) => {
+                    if ( list.id === action.listId ) {
+                        return {
+                            ...list,
+                            tasks: list.tasks.map( (task) => {
+                                if (task.id === action.taskId) {
+                                    return { ...task, ...newData }
+                                } else return task
+                            } )
+                        }
+                    } else return list;
+                } )
+            }
 
         default: return state;
     }

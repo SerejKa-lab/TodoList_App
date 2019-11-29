@@ -6,31 +6,11 @@ import { connect } from 'react-redux';
 
 class App extends React.Component {
 
-    changeTask = (listId, taskId, dataObj) => {
-        const newLists = this.state.lists.map((list) => {
-            if (list.id === listId) {
-                return {
-                    ...list,
-                    tasks: list.tasks.map((task) => {
-                        if (task.id === taskId) {
-                            return { ...task, ...dataObj }
-                        } else return task;
-                    })
-                }
-            } else return list;
-        })
-        this.setState({ lists: newLists }, this.saveState);
-    }
-
-
     render() {
         const todoLists = this.props.lists.map((list) =>
             <TodoList
                 list={list}
-                key={list.id}
-                
-                addItem={this.addTask}
-                changeTask={this.changeTask} />
+                key={list.id} />
         )
 
         return (

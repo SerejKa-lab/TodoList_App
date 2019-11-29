@@ -7,9 +7,7 @@ const TodoListHeader = (props) => {
 
     const { listId, addTask, deleteList } = props;
 
-    const deleteListOnClick = () => {
-        deleteList( listId );
-    };
+    const deleteListOnClick = () => { deleteList( listId ) };
 
         return (
             <div className="todoList-header">
