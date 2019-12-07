@@ -28,14 +28,8 @@ const TodoListHeader = (props) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        deleteList: (listId) => {
-            const action = deleteListAC(listId);
-            dispatch(action);
-        },
-        addTask: (taskTitle, listId) => {
-            const action = addTaskAC( taskTitle, listId )
-            dispatch(action);
-        }
+        deleteList: (listId) => dispatch( deleteListAC(listId) ),
+        addTask: (taskTitle, listId) => dispatch( addTaskAC( taskTitle, listId ) )
     }
 }
 

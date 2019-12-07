@@ -32,13 +32,6 @@ const mapStateToProps = ( state ) => {
     }
 }
 
-const mapDispatchToProps = ( dispatch ) => {
-    return {
-        addList: ( listTitle ) => {
-            const action = addListAC(listTitle);
-            dispatch( action );
-        }
-    }
-}
+const mapDispatchToProps = ( dispatch ) => ({addList: ( listTitle ) => dispatch( addListAC(listTitle) ) })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

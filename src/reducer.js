@@ -1,47 +1,18 @@
 
 const ADD_LIST = 'ADD-LIST';
-const addListAC = (listTitle) => {
-    return {
-        type: ADD_LIST,
-        listTitle: listTitle
-    }
-}
+const addListAC = (listTitle) => ({type: ADD_LIST, listTitle: listTitle})
 
 const DELETE_LIST = 'DELETE-LIST';
-const deleteListAC = (listId) => {
-    return {
-        type: DELETE_LIST,
-        listId
-    }
-}
+const deleteListAC = (listId) => ({type: DELETE_LIST, listId})
 
 const ADD_TASK = 'ADD-TASK';
-const addTaskAC = (taskTitle, listId) => {
-    return {
-        type: ADD_TASK,
-        listId,
-        taskTitle
-    }
-}
+const addTaskAC = (taskTitle, listId) => ({type: ADD_TASK, listId, taskTitle})
 
 const DELETE_TASK = 'DELETE-TASK';
-const deleteTaskAC = (listId, taskId) => {
-    return {
-        type: DELETE_TASK,
-        listId,
-        taskId
-    }
-}
+const deleteTaskAC = (listId, taskId) => ({type: DELETE_TASK, listId, taskId})
 
 const UPDATE_TASK = 'UPDATE-TASK';
-const updateTaskAC = (listId, taskId, dataObj) => {
-    return {
-        type: UPDATE_TASK,
-        listId,
-        taskId,
-        dataObj
-    }
-}
+const updateTaskAC = (listId, taskId, dataObj) => ({type: UPDATE_TASK, listId, taskId, dataObj})
 
 
 const initialState = localStorage.getItem('TodoListForGit') !== null

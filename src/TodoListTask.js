@@ -75,14 +75,8 @@ class TodoListTask extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        deleteTask: (listId, taskId) => {
-            const action = deleteTaskAC(listId, taskId)
-            dispatch(action);
-        },
-        editTask: (listId, taskId, dataObj) => {
-            const action = updateTaskAC(listId, taskId, dataObj)
-            dispatch(action);
-        }
+        deleteTask: (listId, taskId) => dispatch( deleteTaskAC(listId, taskId) ),
+        editTask: (listId, taskId, dataObj) => dispatch( updateTaskAC(listId, taskId, dataObj) )
     }
 }
 
