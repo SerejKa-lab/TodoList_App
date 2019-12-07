@@ -1,23 +1,5 @@
 
-const ADD_LIST = 'ADD-LIST';
-const addListAC = (listTitle) => ({type: ADD_LIST, listTitle: listTitle})
-
-const DELETE_LIST = 'DELETE-LIST';
-const deleteListAC = (listId) => ({type: DELETE_LIST, listId})
-
-const ADD_TASK = 'ADD-TASK';
-const addTaskAC = (taskTitle, listId) => ({type: ADD_TASK, listId, taskTitle})
-
-const DELETE_TASK = 'DELETE-TASK';
-const deleteTaskAC = (listId, taskId) => ({type: DELETE_TASK, listId, taskId})
-
-const UPDATE_TASK = 'UPDATE-TASK';
-const updateTaskAC = (listId, taskId, dataObj) => ({type: UPDATE_TASK, listId, taskId, dataObj})
-
-
-const initialState = localStorage.getItem('TodoListForGit') !== null
-    ? JSON.parse(localStorage.getItem('TodoListForGit'))
-    : {
+const initialState =  {
         lists: []
         //lists: [{id: 0, title: 'Спорт', nextTaskId: 2, tasks: [{ id: 1, title: 'CSS', isDone: false, priority: 'medium' }]  }]
     };
@@ -26,6 +8,16 @@ const initialState = localStorage.getItem('TodoListForGit') !== null
 const reducer = (state = initialState, action) => {
 
     switch (action.type) {
+
+        case RESTORE_LISTS:
+            return {
+                ...state,
+                lists: action.lists.map( (list) => {
+                    return !list.tasks
+                        ? { ...list, tasks: [] } 
+                        : list
+                } )
+            }
 
         case ADD_LIST:
             const listId = state.lists.length;
@@ -41,6 +33,19 @@ const reducer = (state = initialState, action) => {
                 lists: 
                     state.lists.filter((list) => list.id !== action.listId)
                     .map( (list, index) => ({ ...list, id: index }) )
+            }
+
+        case RESTORE_TASKS:
+            return {
+                ...state,
+                lists: state.lists.map(list => {
+                    return list.id === action.listId
+                        ? {
+                            ...list,
+                            tasks: !action.tasks ? [] : action.tasks
+                        }
+                        : list
+                })
             }
 
         case ADD_TASK:
@@ -113,4 +118,24 @@ const reducer = (state = initialState, action) => {
 }
 
 export default reducer;
-export { addListAC, deleteListAC, addTaskAC, deleteTaskAC, updateTaskAC };
+
+const  RESTORE_LISTS = 'RESTORE-LISTS';
+export const restoreLists = (lists) => ({ type: RESTORE_LISTS, lists })
+
+const ADD_LIST = 'ADD-LIST';
+export const addList = (listTitle) => ({type: ADD_LIST, listTitle: listTitle})
+
+const DELETE_LIST = 'DELETE-LIST';
+export const deleteList = (listId) => ({type: DELETE_LIST, listId})
+
+const RESTORE_TASKS = 'RESTORE_TASKS';
+export const restoreTasks = (listId, tasks) => ({ type: RESTORE_TASKS, listId, tasks })
+
+const ADD_TASK = 'ADD-TASK';
+export const addTask = (taskTitle, listId) => ({type: ADD_TASK, listId, taskTitle})
+
+const DELETE_TASK = 'DELETE-TASK';
+export const deleteTask = (listId, taskId) => ({type: DELETE_TASK, listId, taskId})
+
+const UPDATE_TASK = 'UPDATE-TASK';
+export const updateTask = (listId, taskId, dataObj) => ({type: UPDATE_TASK, listId, taskId, dataObj})

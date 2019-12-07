@@ -6,11 +6,14 @@ import TodoListFooter from './TodoListFooter';
 
 class TodoList extends React.Component {
 
+    componentDidMount(){
+        this.props.restoreTasks(this.props.list.id)
+    }
+
     state = {
         filterValue: 'All'
     };
 
-     
     changeFilter = (newFilterValue) => {
         this.setState({ filterValue: newFilterValue }, this.saveState )
     };

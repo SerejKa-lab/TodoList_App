@@ -11,7 +11,3 @@ ReactDOM.render(
     </Provider>, document.getElementById('root'));
 
 
-store.subscribe( () => {
-    localStorage.setItem( 'TodoListForGit', JSON.stringify( store.getState() ) )
-} );
-
