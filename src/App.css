@@ -24,6 +24,10 @@
 
 }
 
+.inProgress {
+  display: flex;
+}
+
 .filter-active {
   background-color: yellowgreen;
 }
