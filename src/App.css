@@ -28,6 +28,10 @@
   display: flex;
 }
 
+.addTaskInProgress {
+  margin-top: 20px;
+}
+
 .filter-active {
   background-color: yellowgreen;
 }

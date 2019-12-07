@@ -2,11 +2,12 @@ import React from 'react';
 import preloader from './preloader.svg';
 
 
-const Preloader = ({ width='30px', height='15px' }) => {
+const Preloader = ({ width='30px', height='15px', marginTop='0px' }) => {
     const imgStyle = {
-        width: width, 
-        height: height,
-        'margin-left': '10px'
+        width, 
+        height,
+        marginLeft: '10px',
+        marginTop
     };
       
     return(
