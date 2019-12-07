@@ -20,11 +20,10 @@ const reducer = (state = initialState, action) => {
             }
 
         case ADD_LIST:
-            const listId = state.lists.length;
-            const newList = { id: listId, title: action.listTitle, tasks: [], nextTaskId: 1 };
+            const extendedList = { ...action.list, tasks: [] };
             return {
                 ...state,
-                lists: [...state.lists, newList],
+                lists: [ extendedList, ...state.lists ]
             }
 
         case DELETE_LIST:
@@ -32,7 +31,6 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 lists: 
                     state.lists.filter((list) => list.id !== action.listId)
-                    .map( (list, index) => ({ ...list, id: index }) )
             }
 
         case RESTORE_TASKS:
@@ -123,7 +121,7 @@ const  RESTORE_LISTS = 'RESTORE-LISTS';
 export const restoreLists = (lists) => ({ type: RESTORE_LISTS, lists })
 
 const ADD_LIST = 'ADD-LIST';
-export const addList = (listTitle) => ({type: ADD_LIST, listTitle: listTitle})
+export const addList = (list) => ({type: ADD_LIST, list})
 
 const DELETE_LIST = 'DELETE-LIST';
 export const deleteList = (listId) => ({type: DELETE_LIST, listId})

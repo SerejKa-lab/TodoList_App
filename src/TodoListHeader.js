@@ -1,38 +1,52 @@
 import React from 'react';
-import AddItemForm from './AddItemForm';
 import { connect } from 'react-redux';
-import { deleteListAC, addTaskAC } from './reducer';
+import axios from 'axios';
+import AddItemForm from './AddItemForm';
+import { deleteList, addTask } from './reducer';
+import Preloader from './Preloader/Preloader';
 
 
-const TodoListHeader = (props) => {
+class TodoListHeader extends React.Component {
 
-    const { listId, addTask, deleteList } = props;
+    state = {
+        inProgress: false
+    }
 
-    const deleteListOnClick = () => { deleteList( listId ) };
+    deleteList = () => {
+        this.setState({ inProgress: true });
+        axios.delete(`https://social-network.samuraijs.com/api/1.1/todo-lists/${this.props.listId}`,
+            {
+                withCredentials: true,
+                headers: { 'API-KEY': '8baf44b2-0e02-4373-8d97-31683e1cf067' }
+            }
+        )
+            .then(() => {
+                debugger
+                this.props.deleteList(this.props.listId);
+                this.setState({ inProgress: false })
+            })
+    }
 
+    render() {
         return (
             <div className="todoList-header">
-                <h3 className="todoList-header__title">
-                    {props.title} &nbsp;
-                <button className='delete_list' onClick={deleteListOnClick}><i className="fa fa-close"></i></button>
+                <h3 className="todoList-header__title inProgress">
+                    {this.props.title} &nbsp;
+                <button className='delete_list' onClick={this.deleteList}><i className="fa fa-close"></i></button>
+                {this.state.inProgress && <Preloader />}
                 </h3>
                 <AddItemForm
                     placeholder='Add new task'
-                    listId = { listId }
+                    listId={this.props.listId}
                     addItem={addTask} />
             </div>
-        );
-
-}
-
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        deleteList: (listId) => dispatch( deleteListAC(listId) ),
-        addTask: (taskTitle, listId) => dispatch( addTaskAC( taskTitle, listId ) )
+        )
     }
+
 }
 
 
-export default connect(null, mapDispatchToProps)(TodoListHeader);
+const actionCreators = { deleteList, addTask }
+
+export default connect(null, actionCreators)(TodoListHeader);
 

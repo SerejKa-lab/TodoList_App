@@ -27,12 +27,26 @@ class App extends React.Component {
             })
     }
 
+    addList = (title) => {
+        this.setState({ listsLoading: true });
+        axios.post('https://social-network.samuraijs.com/api/1.1/todo-lists',
+            { title },
+            {
+                withCredentials: true,
+                headers: { 'API-KEY': '8baf44b2-0e02-4373-8d97-31683e1cf067' }
+            }
+        )
+            .then(Response => {
+                this.props.addList(Response.data.data.item);
+                this.setState({ listsLoading: false })
+            })
+    }
+
     restoreTasks = (listId) => {
         this.setState({ tasksLoading: true });
         axios.get(`https://social-network.samuraijs.com/api/1.1/todo-lists/${listId}/tasks`,
             { withCredentials: true })
             .then(Response => {
-                console.log(Response);
                 this.props.restoreTasks(listId, Response.data.items);
                 this.setState({ tasksLoading: false })
             })
@@ -47,9 +61,12 @@ class App extends React.Component {
         return (
             <div className='app'>
                 <h2>Органайзер задач</h2>
-                <AddItemForm addItem={this.addList} placeholder='Add list' />
-                <div className='app_lists'>
+                <div className='inProgress'>
+                    {this.props.lists.length < 10 
+                        && <AddItemForm addItem={this.addList} placeholder='Add list' />}
                     {this.state.listsLoading && <Preloader />}
+                </div>
+                <div className='app_lists'>
                     {todoLists}
                 </div>
             </div>
