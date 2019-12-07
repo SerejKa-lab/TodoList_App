@@ -40,23 +40,23 @@ const reducer = (state = initialState, action) => {
                     return list.id === action.listId
                         ? {
                             ...list,
-                            tasks: !action.tasks ? [] : action.tasks
+                            tasks: !action.tasks 
+                                ? [] 
+                                : action.tasks.map( (task, index) => ({...task, renderIndex: index + 1 }) )
                         }
                         : list
                 })
             }
 
         case ADD_TASK:
-            const taskId = state.lists[action.listId].tasks.length + 1;
-            const newTask = { id: taskId, title: action.taskTitle, isDone: false, priority: 'medium' }
             return {
                 ...state,
                 lists: state.lists.map((list) => {
-                    if (list.id === action.listId) {
+                    if (list.id === action.task.todoListId) {
                         return {
                             ...list,
-                            nextTaskId: list.nextTaskId + 1,
-                            tasks: [...list.tasks, newTask]
+                            tasks: [ action.task, ...list.tasks ]
+                                .map((task, index) => ({ ...task, renderIndex: index + 1 }))
                         }
                     } else return list;
 
@@ -130,7 +130,7 @@ const RESTORE_TASKS = 'RESTORE_TASKS';
 export const restoreTasks = (listId, tasks) => ({ type: RESTORE_TASKS, listId, tasks })
 
 const ADD_TASK = 'ADD-TASK';
-export const addTask = (taskTitle, listId) => ({type: ADD_TASK, listId, taskTitle})
+export const addTask = (task) => ({type: ADD_TASK, task})
 
 const DELETE_TASK = 'DELETE-TASK';
 export const deleteTask = (listId, taskId) => ({type: DELETE_TASK, listId, taskId})
