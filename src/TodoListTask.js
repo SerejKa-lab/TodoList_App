@@ -92,12 +92,15 @@ class TodoListTask extends React.Component {
 
     priorityArray = ['Low', 'Middle', 'High', 'Urgent', 'Later']
 
-    getTaskPriority = () => this.priorityArray[this.props.task.priority]
-
     priorityOptions = this.priorityArray.map( prior => 
         <option className={prior} >{prior}</option> )
 
+    getTaskPriority = () => this.priorityArray[this.props.task.priority]
+
     setPriorityMode = () => this.setState({ setPriorityMode: !this.state.setPriorityMode })
+
+    priorityOnKey = (e) => { if (e.keyCode === 27) this.setPriorityMode() }
+    
 
     render = () => {
         return (
@@ -123,9 +126,13 @@ class TodoListTask extends React.Component {
                     }
 {/* статус */}
                     {this.state.setPriorityMode
-                        ? <select defaultValue={this.getTaskPriority()} className={this.getTaskPriority()} onChange={this.setTaskPriority}>
-                            {this.priorityOptions}
-                        </select>
+                        ? <select 
+                            defaultValue={this.getTaskPriority()} 
+                            className={this.getTaskPriority()} 
+                            onChange={this.setTaskPriority}
+                            onBlur={this.setPriorityMode}
+                            onKeyDown={this.priorityOnKey}
+                            autoFocus ={ true } > {this.priorityOptions} </select>
                         :<span 
                             onClick = { this.setPriorityMode } 
                             className = { this.getTaskPriority() } > {this.getTaskPriority()} &nbsp;
