@@ -45,7 +45,7 @@ class App extends React.Component {
 
     restoreTasks = (listId) => {
         this.setState({ tasksLoading: true });
-        axios.get(`https://social-network.samuraijs.com/api/1.1/todo-lists/${listId}/tasks?count=30`,
+        axios.get(`https://social-network.samuraijs.com/api/1.1/todo-lists/${listId}/tasks?count=10`,
             { withCredentials: true })
             .then(Response => {
                 this.props.restoreTasks(listId, Response.data.items);

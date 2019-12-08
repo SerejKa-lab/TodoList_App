@@ -11,9 +11,9 @@ class TodoListTask extends React.Component {
 
     state = {
         title: '',
-        editTitle: false,
+        editTitleMode: false,
         inputError: false,
-        setStatus: false,
+        setPriorityMode: false,
         updateInProgress: false
     }
 
@@ -54,10 +54,10 @@ class TodoListTask extends React.Component {
     }
 
     setTitleEditMode = () => {
-        this.setState( { editTitle: !this.state.editTitle, title: this.props.task.title } ); 
+        this.setState( { editTitleMode: !this.state.editTitleMode, title: this.props.task.title } ); 
     }
 
-    setDisplayMode = () => this.setState({ editTitle: false });
+    setDisplayMode = () => this.setState({ editTitleMode: false });
 
     editTaskTitle = (e) => {
         const newTitle = e.currentTarget.value;
@@ -83,6 +83,21 @@ class TodoListTask extends React.Component {
         const completed = e.currentTarget.checked;
         this.updateTaskAPI({ completed })
     }
+       
+    setTaskPriority = (e) => {
+        const priority = this.priorityArray.findIndex( (prior) => prior === e.currentTarget.value);
+        this.updateTaskAPI({ priority });
+        this.setPriorityMode()
+    }
+
+    priorityArray = ['Low', 'Middle', 'High', 'Urgent', 'Later']
+
+    getTaskPriority = () => this.priorityArray[this.props.task.priority]
+
+    priorityOptions = this.priorityArray.map( prior => 
+        <option className={prior} >{prior}</option> )
+
+    setPriorityMode = () => this.setState({ setPriorityMode: !this.state.setPriorityMode })
 
     render = () => {
         return (
@@ -95,7 +110,7 @@ class TodoListTask extends React.Component {
                         checked={this.props.task.completed} />
                     <span> { this.props.task.renderIndex } - </span>
 {/* заголовок */}
-                    { this.state.editTitle // активируем режим редактирования названия задачи
+                    { this.state.editTitleMode // активируем режим редактирования названия задачи
                    
                         ? <input type="text" 
                                 value = { this.state.title }
@@ -107,10 +122,16 @@ class TodoListTask extends React.Component {
                         : <span onClick = { this.setTitleEditMode } >{this.props.task.title}, </span>
                     }
 {/* статус */}
-                    <span 
-                        onClick = { this.setNewPriority } 
-                        className = { this.getPriority() } > {this.getPriority()} &nbsp;
-                    </span>
+                    {this.state.setPriorityMode
+                        ? <select defaultValue={this.getTaskPriority()} className={this.getTaskPriority()} onChange={this.setTaskPriority}>
+                            {this.priorityOptions}
+                        </select>
+                        :<span 
+                            onClick = { this.setPriorityMode } 
+                            className = { this.getTaskPriority() } > {this.getTaskPriority()} &nbsp;
+                        </span>
+                    }
+                    
                     <button className='delete_list' onClick={this.deleteTask}>
                         <i className="fa fa-close"></i></button>
                     
