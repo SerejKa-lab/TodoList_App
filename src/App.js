@@ -5,6 +5,7 @@ import TodoList from './TodoList';
 import AddItemForm from './AddItemForm';
 import Preloader from './Preloader/Preloader';
 import { restoreLists, restoreTasks, addList } from './reducer';
+import { API_KEY } from './store';
 
 
 class App extends React.Component {
@@ -33,7 +34,7 @@ class App extends React.Component {
             { title },
             {
                 withCredentials: true,
-                headers: { 'API-KEY': '8baf44b2-0e02-4373-8d97-31683e1cf067' }
+                headers: { 'API-KEY': API_KEY }
             }
         )
             .then(Response => {
@@ -44,7 +45,7 @@ class App extends React.Component {
 
     restoreTasks = (listId) => {
         this.setState({ tasksLoading: true });
-        axios.get(`https://social-network.samuraijs.com/api/1.1/todo-lists/${listId}/tasks`,
+        axios.get(`https://social-network.samuraijs.com/api/1.1/todo-lists/${listId}/tasks?count=30`,
             { withCredentials: true })
             .then(Response => {
                 this.props.restoreTasks(listId, Response.data.items);

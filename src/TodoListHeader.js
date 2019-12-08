@@ -4,7 +4,7 @@ import axios from 'axios';
 import AddItemForm from './AddItemForm';
 import { deleteList, addTask } from './reducer';
 import Preloader from './Preloader/Preloader';
-
+import { API_KEY } from './store';
 
 class TodoListHeader extends React.Component {
 
@@ -18,7 +18,7 @@ class TodoListHeader extends React.Component {
         axios.delete(`https://social-network.samuraijs.com/api/1.1/todo-lists/${this.props.listId}`,
             {
                 withCredentials: true,
-                headers: { 'API-KEY': '8baf44b2-0e02-4373-8d97-31683e1cf067' }
+                headers: { 'API-KEY': API_KEY }
             }
         )
             .then(() => {
@@ -33,7 +33,7 @@ class TodoListHeader extends React.Component {
             {title},
             {
                 withCredentials: true,
-                headers: { 'API-KEY': '8baf44b2-0e02-4373-8d97-31683e1cf067' }
+                headers: { 'API-KEY': API_KEY }
             }
         )
             .then(Response => {
