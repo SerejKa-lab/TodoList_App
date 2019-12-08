@@ -11,7 +11,9 @@ class TodoListTask extends React.Component {
 
     state = {
         title: '',
-        editTitleMode: false,
+        editTitle: false,
+        inputError: false,
+        setStatus: false,
         updateInProgress: false
     }
 
@@ -52,20 +54,29 @@ class TodoListTask extends React.Component {
     }
 
     setTitleEditMode = () => {
-        this.setState( { editTitleMode: !this.state.editTitleMode, title: this.props.task.title } ); 
+        this.setState( { editTitle: !this.state.editTitle, title: this.props.task.title } ); 
     }
 
-    setDisplayMode = () => this.setState({ editTitleMode: false });
+    setDisplayMode = () => this.setState({ editTitle: false });
 
-    editTaskTitle = (e) => this.setState({ title: e.currentTarget.value });
+    editTaskTitle = (e) => {
+        const newTitle = e.currentTarget.value;
+        if (this.state.inputError) this.setState({ inputError: false });
+        if (newTitle.trim() === '' || newTitle.length > 100) {
+            this.setState({ title: newTitle, inputError: true })
+        } else this.setState({ title: newTitle })
+    }
 
     setTitleOnKey = (e) => {
-        if (e.key === 'Enter') {
-            const title = e.currentTarget.value;
+        const title = e.currentTarget.value;
+        if (e.key === 'Enter' && !this.state.inputError) {
             this.updateTaskAPI({ title });
             this.setDisplayMode()
         }
-        if (e.keyCode === 27) this.setDisplayMode() 
+        if (e.keyCode === 27) {
+            this.setDisplayMode()
+            if (this.state.inputError) this.setState({ inputError: false })
+        }
     }
     
     changeTaskStatus = (e) => {
@@ -73,47 +84,36 @@ class TodoListTask extends React.Component {
         this.updateTaskAPI({ completed })
     }
 
-    
-    setNewPriority = () => {
-        this.props.updateTask( this.props.listId, this.props.task.id, { priority: this.props.task.priority } );
-    }
-
-    setPriorityClassName = () => {
-        switch (this.props.task.priority) {
-            case 'low': return 'priorityLow';
-            case 'medium': return 'priorityMedium';
-            default: return 'priorityHigh';
-        }
-    }
-
-
     render = () => {
         return (
             <div className="todoList-tasks">
                 <div className={ this.props.task.completed ? 'taskIsDone' : 'todoList-task' }>
+{/* чекбокс */}
                     <input 
                         onChange = { this.changeTaskStatus } 
                         type="checkbox" 
                         checked={this.props.task.completed} />
                     <span> { this.props.task.renderIndex } - </span>
-                    
-                    { this.state.editTitleMode // активируем режим редактирования названия задачи
+{/* заголовок */}
+                    { this.state.editTitle // активируем режим редактирования названия задачи
                    
                         ? <input type="text" 
                                 value = { this.state.title }
+                                className = { this.state.inputError ? 'error' : ''}
                                 onChange = { this.editTaskTitle }
                                 autoFocus ={ true } 
                                 onBlur = { this.setDisplayMode } 
                                 onKeyDown = { this.setTitleOnKey } />
                         : <span onClick = { this.setTitleEditMode } >{this.props.task.title}, </span>
                     }
-                    
+{/* статус */}
                     <span 
                         onClick = { this.setNewPriority } 
-                        className = { this.setPriorityClassName() } > {this.props.task.priority} &nbsp;
+                        className = { this.getPriority() } > {this.getPriority()} &nbsp;
                     </span>
                     <button className='delete_list' onClick={this.deleteTask}>
                         <i className="fa fa-close"></i></button>
+                    
                     {this.state.updateInProgress && <Preloader /> }
                 </div>
             </div>
