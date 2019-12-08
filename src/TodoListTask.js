@@ -1,11 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { deleteTaskAC, updateTaskAC } from './reducer';
+import axios from 'axios';
+import { deleteTask, updateTask } from './reducer';
+import { API_KEY } from './store';
+import Preloader from './Preloader/Preloader'
+
+
 
 class TodoListTask extends React.Component {
 
     state = {
-        editMode: false
+        editMode: false,
+        delereInProgress: false
     }
 
     setEditMode = () => {
@@ -17,15 +23,15 @@ class TodoListTask extends React.Component {
 
     changeTaskStatus = (e) => {
         let newTaskStatus = e.currentTarget.checked;
-        this.props.editTask ( this.props.listId, this.props.task.id, { isDone: newTaskStatus } )
+        this.props.updateTask ( this.props.listId, this.props.task.id, { isDone: newTaskStatus } )
     }
 
     setTaskTitle = (e) => {
-        this.props.editTask( this.props.listId, this.props.task.id, {title: e.currentTarget.value } )
+        this.props.updateTask( this.props.listId, this.props.task.id, {title: e.currentTarget.value } )
     }
 
     setNewPriority = () => {
-        this.props.editTask( this.props.listId, this.props.task.id, { priority: this.props.task.priority } );
+        this.props.updateTask( this.props.listId, this.props.task.id, { priority: this.props.task.priority } );
     }
 
     setPriorityClassName = () => {
@@ -36,19 +42,32 @@ class TodoListTask extends React.Component {
         }
     }
 
-    deleteTaskOnClick = () => {
-        this.props.deleteTask( this.props.listId, this.props.task.id )
+    deleteTask = () => {
+        const listId = this.props.listId;
+        const taskId = this.props.task.id;
+        this.setState({ delereInProgress: true });
+        axios.delete(
+            `https://social-network.samuraijs.com/api/1.1//todo-lists/${listId}/tasks/${taskId}`,
+            {
+                withCredentials: true,
+                headers: { 'API-KEY': API_KEY }
+            }
+        )
+        .then( () => {
+        this.props.deleteTask(listId, taskId);
+        this.setState({ isLoading: false })
+        })
     };
 
     render = () => {
         return (
             <div className="todoList-tasks">
-                <div className={ this.props.task.isDone ? 'taskIsDone' : 'todoList-task' }>
+                <div className={ this.props.task.completed ? 'taskIsDone' : 'todoList-task' }>
                     <input 
                         onChange = { this.changeTaskStatus } 
                         type="checkbox" 
-                        checked={this.props.task.isDone} />
-                    <span> { this.props.task.id } - </span>
+                        checked={this.props.task.completed} />
+                    <span> { this.props.task.renderIndex } - </span>
                     
                     { this.state.editMode // активируем режим редактирования названия задачи
                     ? <input type="text" 
@@ -64,8 +83,9 @@ class TodoListTask extends React.Component {
                         onClick = { this.setNewPriority } 
                         className = { this.setPriorityClassName() } > {this.props.task.priority} &nbsp;
                     </span>
-                    <button className='delete_list' onClick={this.deleteTaskOnClick}>
+                    <button className='delete_list' onClick={this.deleteTask}>
                         <i className="fa fa-close"></i></button>
+                    {this.state.delereInProgress && <Preloader /> }
                 </div>
             </div>
         );
@@ -73,12 +93,7 @@ class TodoListTask extends React.Component {
 }
 
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        deleteTask: (listId, taskId) => dispatch( deleteTaskAC(listId, taskId) ),
-        editTask: (listId, taskId, dataObj) => dispatch( updateTaskAC(listId, taskId, dataObj) )
-    }
-}
+const actionCreators = {deleteTask, updateTask}
 
-export default connect(null, mapDispatchToProps)(TodoListTask);
+export default connect(null, actionCreators)(TodoListTask);
 
