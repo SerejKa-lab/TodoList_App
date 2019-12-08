@@ -79,28 +79,15 @@ const reducer = (state = initialState, action) => {
 
         case UPDATE_TASK:
 
-            const getNewPriorityObj = () => {
-                switch (action.dataObj.priority) {
-                    case 'high':
-                        return ({ priority: 'low' })
-                    case 'low':
-                        return ({ priority: 'medium' })
-                    default:
-                        return ({ priority: 'high' })
-                }
-            }
-
-            const newData = action.dataObj['priority'] === undefined ? action.dataObj : getNewPriorityObj();
-
             return {
                 ...state,
                 lists: state.lists.map((list) => {
-                    if (list.id === action.listId) {
+                    if (list.id === action.task.todoListId) {
                         return {
                             ...list,
                             tasks: list.tasks.map((task) => {
-                                if (task.id === action.taskId) {
-                                    return { ...task, ...newData }
+                                if (task.id === action.task.id) {
+                                    return { ...task, ...action.task }
                                 } else return task
                             })
                         }
@@ -134,4 +121,4 @@ const DELETE_TASK = 'DELETE-TASK';
 export const deleteTask = (listId, taskId) => ({type: DELETE_TASK, listId, taskId})
 
 const UPDATE_TASK = 'UPDATE-TASK';
-export const updateTask = (listId, taskId, dataObj) => ({type: UPDATE_TASK, listId, taskId, dataObj})
+export const updateTask = (task) => ({type: UPDATE_TASK, task })

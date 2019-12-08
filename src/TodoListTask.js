@@ -10,26 +10,70 @@ import Preloader from './Preloader/Preloader'
 class TodoListTask extends React.Component {
 
     state = {
-        editMode: false,
-        delereInProgress: false
+        title: '',
+        editTitleMode: false,
+        updateInProgress: false
     }
 
-    setEditMode = () => {
-        let newEditMode = this.state.editMode ? false : true;
-        this.setState( { editMode:newEditMode } ) 
+    deleteTask = () => {
+        const listId = this.props.listId;
+        const taskId = this.props.task.id;
+        this.setState({ updateInProgress: true });
+        axios.delete(
+            `https://social-network.samuraijs.com/api/1.1//todo-lists/${listId}/tasks/${taskId}`,
+            {
+                withCredentials: true,
+                headers: { 'API-KEY': API_KEY }
+            }
+        )
+        .then( () => {
+        this.props.deleteTask(listId, taskId);
+        this.setState({ updateInProgress: false })
+        })
+    };
+
+    updateTaskAPI = (dataObj) => {
+        const listId = this.props.listId;
+        const taskId = this.props.task.id;
+        this.setState({ updateInProgress: true });
+        axios.put(
+            `https://social-network.samuraijs.com/api/1.1//todo-lists/${listId}/tasks/${taskId}`,
+            {...this.props.task, ...dataObj},
+            {
+                withCredentials: true,
+                headers: { 'API-KEY': API_KEY }
+            }
+        )
+        .then( Response => {
+            console.log(Response)
+            this.props.updateTask ( Response.data.data.item )
+            this.setState({ updateInProgress: false })
+        })
     }
 
-    setEditModeOnKey = (e) => { if ( e.key === "Enter" ) this.setEditMode() }
+    setTitleEditMode = () => {
+        this.setState( { editTitleMode: !this.state.editTitleMode, title: this.props.task.title } ); 
+    }
 
+    setDisplayMode = () => this.setState({ editTitleMode: false });
+
+    editTaskTitle = (e) => this.setState({ title: e.currentTarget.value });
+
+    setTitleOnKey = (e) => {
+        if (e.key === 'Enter') {
+            const title = e.currentTarget.value;
+            this.updateTaskAPI({ title });
+            this.setDisplayMode()
+        }
+        if (e.keyCode === 27) this.setDisplayMode() 
+    }
+    
     changeTaskStatus = (e) => {
-        let newTaskStatus = e.currentTarget.checked;
-        this.props.updateTask ( this.props.listId, this.props.task.id, { isDone: newTaskStatus } )
+        const completed = e.currentTarget.checked;
+        this.updateTaskAPI({ completed })
     }
 
-    setTaskTitle = (e) => {
-        this.props.updateTask( this.props.listId, this.props.task.id, {title: e.currentTarget.value } )
-    }
-
+    
     setNewPriority = () => {
         this.props.updateTask( this.props.listId, this.props.task.id, { priority: this.props.task.priority } );
     }
@@ -42,22 +86,6 @@ class TodoListTask extends React.Component {
         }
     }
 
-    deleteTask = () => {
-        const listId = this.props.listId;
-        const taskId = this.props.task.id;
-        this.setState({ delereInProgress: true });
-        axios.delete(
-            `https://social-network.samuraijs.com/api/1.1//todo-lists/${listId}/tasks/${taskId}`,
-            {
-                withCredentials: true,
-                headers: { 'API-KEY': API_KEY }
-            }
-        )
-        .then( () => {
-        this.props.deleteTask(listId, taskId);
-        this.setState({ isLoading: false })
-        })
-    };
 
     render = () => {
         return (
@@ -69,14 +97,15 @@ class TodoListTask extends React.Component {
                         checked={this.props.task.completed} />
                     <span> { this.props.task.renderIndex } - </span>
                     
-                    { this.state.editMode // активируем режим редактирования названия задачи
-                    ? <input type="text" 
-                            value = { this.props.task.title }
-                            onChange = { this.setTaskTitle }
-                            autoFocus ={ true } 
-                            onBlur = { this.setEditMode } 
-                            onKeyPress = { this.setEditModeOnKey } />
-                    : <span onClick = { this.setEditMode } >{this.props.task.title}: </span>
+                    { this.state.editTitleMode // активируем режим редактирования названия задачи
+                   
+                        ? <input type="text" 
+                                value = { this.state.title }
+                                onChange = { this.editTaskTitle }
+                                autoFocus ={ true } 
+                                onBlur = { this.setDisplayMode } 
+                                onKeyDown = { this.setTitleOnKey } />
+                        : <span onClick = { this.setTitleEditMode } >{this.props.task.title}, </span>
                     }
                     
                     <span 
@@ -85,7 +114,7 @@ class TodoListTask extends React.Component {
                     </span>
                     <button className='delete_list' onClick={this.deleteTask}>
                         <i className="fa fa-close"></i></button>
-                    {this.state.delereInProgress && <Preloader /> }
+                    {this.state.updateInProgress && <Preloader /> }
                 </div>
             </div>
         );
