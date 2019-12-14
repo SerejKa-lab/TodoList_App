@@ -33,7 +33,6 @@ class TodoListTask extends React.Component {
         this.setState({ updateInProgress: true });
         api.updateTask( listId, taskId, {...this.props.task, ...dataObj} )
         .then( Response => {
-            console.log(Response)
             this.props.updateTask ( Response.data.data.item )
             this.setState({ updateInProgress: false })
         })
@@ -43,7 +42,10 @@ class TodoListTask extends React.Component {
         this.setState( { editTitleMode: !this.state.editTitleMode, title: this.props.task.title } ); 
     }
 
-    setDisplayMode = () => this.setState({ editTitleMode: false });
+    setDisplayMode = () => {
+        if (this.state.inputError) this.setState({ inputError: false })
+        this.setState({ editTitleMode: false })
+    }
 
     editTaskTitle = (e) => {
         const newTitle = e.currentTarget.value;
@@ -124,7 +126,7 @@ class TodoListTask extends React.Component {
                             className = { this.getTaskPriority() } > {this.getTaskPriority()} &nbsp;
                         </span>
                     }
-                    
+{/* кнопка delete */}
                     <button className='delete_list' onClick={this.deleteTask}>
                         <i className="fa fa-close"></i></button>
                     
