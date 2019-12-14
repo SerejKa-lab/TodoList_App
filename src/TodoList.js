@@ -36,8 +36,8 @@ class TodoList extends React.Component {
         return (
             <div className="todoList">
                 <section>
-                    <TodoListHeader title = { list.title } listId = { list.id } />
-                    <TodoListTasks tasks={this.getFilteredTasks()} listId = { list.id }/>
+                    <TodoListHeader title = { list.title } listId = { list.id } totalCount={list.totalCount} />
+                    <TodoListTasks listId = { list.id } tasks={this.getFilteredTasks()} />
                 </section>
                 <TodoListFooter filterValue={this.state.filterValue} changeFilter={this.changeFilter} />
             </div>

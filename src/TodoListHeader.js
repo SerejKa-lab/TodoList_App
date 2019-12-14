@@ -9,7 +9,8 @@ import ListTitle from './ListTitle';
 class TodoListHeader extends React.Component {
 
     state = {
-        taskLoading: false
+        taskLoading: false,
+        maxTasksCount: 30
     }
 
     addTask = (title) => {
@@ -25,16 +26,16 @@ class TodoListHeader extends React.Component {
     render() {
         return (
             <div className="list_header">
-{/* заголовок*/}
                 <ListTitle listId={this.props.listId} title={this.props.title} />
 {/* форма добавления задач */}
-                <div className='list_header_add_form'>
-                    <AddItemForm
-                        placeholder='Add new task'
-                        listId={this.props.listId}
-                        addItem={this.addTask} />
-                    {this.state.taskLoading && <Preloader />}
-                </div>
+                {this.props.totalCount < this.state.maxTasksCount &&
+                    <div className='list_header_add_form'>
+                        <AddItemForm
+                            placeholder='Add new task'
+                            listId={this.props.listId}
+                            addItem={this.addTask} />
+                        {this.state.taskLoading && <Preloader />}
+                    </div>}
             </div>
         )
     }

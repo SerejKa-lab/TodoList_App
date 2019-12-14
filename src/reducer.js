@@ -1,7 +1,7 @@
 
 const initialState =  {
         lists: []
-        //lists: [{id: 0, title: 'Спорт', nextTaskId: 2, tasks: [{ id: 1, title: 'CSS', isDone: false, priority: 'medium' }]  }]
+        //lists: [{id: 0, title: 'Спорт', nextTaskId: 2, totalCount: 1, tasks: [{ id: 1, title: 'CSS', isDone: false, priority: 'medium' }]  }]
     };
 
 
@@ -49,6 +49,7 @@ const reducer = (state = initialState, action) => {
                     return list.id === action.listId
                         ? {
                             ...list,
+                            totalCount: action.totalCount,
                             tasks: !action.tasks 
                                 ? [] 
                                 : action.tasks.map( (task, index) => ({...task, renderIndex: index + 1 }) )
@@ -64,6 +65,7 @@ const reducer = (state = initialState, action) => {
                     if (list.id === action.task.todoListId) {
                         return {
                             ...list,
+                            totalCount: list.totalCount + 1,
                             tasks: [ action.task, ...list.tasks ]
                                 .map((task, index) => ({ ...task, renderIndex: index + 1 }))
                         }
@@ -79,6 +81,7 @@ const reducer = (state = initialState, action) => {
                     if (list.id === action.listId) {
                         return {
                             ...list,
+                            totalCount: list.totalCount-1,
                             tasks:
                                 list.tasks.filter((task) => task.id !== action.taskId)
                                     .map( (task, index) => ({ ...task, renderIndex: index + 1 })  )
@@ -125,7 +128,7 @@ const DELETE_LIST = 'DELETE-LIST';
 export const deleteList = (listId) => ({type: DELETE_LIST, listId})
 
 const RESTORE_TASKS = 'RESTORE_TASKS';
-export const restoreTasks = (listId, tasks) => ({ type: RESTORE_TASKS, listId, tasks })
+export const restoreTasks = (listId, tasks, totalCount) => ({ type: RESTORE_TASKS, listId, tasks, totalCount })
 
 const ADD_TASK = 'ADD-TASK';
 export const addTask = (task) => ({type: ADD_TASK, task})
