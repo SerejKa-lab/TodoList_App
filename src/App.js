@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { NavLink, Route } from 'react-router-dom';
 import TodoList from './TodoList';
 import AddItemForm from './AddItemForm';
 import Preloader from './Preloader/Preloader';
@@ -40,27 +41,37 @@ class App extends React.Component {
         this.setState({ tasksLoading: true });
         api.restoreTasks(listId)
             .then(Response => {
-                this.props.restoreTasks(listId, Response.data.items);
+                this.props.restoreTasks(listId, Response.data.items, Response.data.totalCount);
                 this.setState({ tasksLoading: false })
             })
     }
 
 
     render() {
-        const todoLists = this.props.lists.map((list) =>
-            <TodoList list={list} key={list.id} restoreTasks={this.restoreTasks} />
+        const listsRoutes = this.props.lists.map((list) =>
+            <Route path={`/${list.title}`}><TodoList list={list} key={list.id} restoreTasks={this.restoreTasks} /></Route>
         )
+
+        const allLists = this.props.lists.map( (list) => 
+            <TodoList list={list} key={list.id} restoreTasks={this.restoreTasks} /> )
+
+        const listLinks = this.props.lists.map( ( list ) => 
+            <li><NavLink to={`/${list.title}`}>{list.title}</NavLink></li> )
 
         return (
             <div className='app'>
-                <h2>Органайзер задач</h2>
-                <div className='inProgress'>
+                <div className='app_header'>
+                    <NavLink to='/' exact className='app_title'><h2>Органайзер задач</h2></NavLink>
                     {this.props.lists.length < 10 
                         && <AddItemForm addItem={this.addList} placeholder='Add list' />}
                     {this.state.listsLoading && <Preloader />}
                 </div>
+                <nav className='app_header_navigation'>
+                    <ul>{listLinks}</ul>
+                </nav>
                 <div className='app_lists'>
-                    {todoLists}
+                    {listsRoutes}
+                    <Route path='/' exact>{allLists}</Route>
                 </div>
             </div>
         )
