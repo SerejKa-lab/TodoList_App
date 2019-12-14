@@ -16,7 +16,8 @@ class App extends React.Component {
 
     state = {
         listsLoading: false,
-        tasksLoading: false
+        tasksLoading: false,
+        listAdding: false
     }
 
     restoreLists = () => {
@@ -29,11 +30,11 @@ class App extends React.Component {
     }
 
     addList = (title) => {
-        this.setState({ listsLoading: true });
+        this.setState({ listAdding: true });
         api.addList(title)
             .then(Response => {
                 this.props.addList(Response.data.data.item);
-                this.setState({ listsLoading: false })
+                this.setState({ listAdding: false })
             })
     }
 
@@ -49,14 +50,16 @@ class App extends React.Component {
 
     render() {
         const listsRoutes = this.props.lists.map((list) =>
-            <Route path={`/${list.title}`}><TodoList list={list} key={list.id} restoreTasks={this.restoreTasks} /></Route>
+            <Route path={`/${list.title}`} key={list.id}>
+                <TodoList list={list} key={list.id} restoreTasks={this.restoreTasks} />
+            </Route>
         )
 
         const allLists = this.props.lists.map( (list) => 
             <TodoList list={list} key={list.id} restoreTasks={this.restoreTasks} /> )
 
         const listLinks = this.props.lists.map( ( list ) => 
-            <li><NavLink to={`/${list.title}`}>{list.title}</NavLink></li> )
+            <li key={list.id}><NavLink to={`/${list.title}`}>{list.title}</NavLink></li> )
 
         return (
             <div className='app'>
@@ -64,7 +67,7 @@ class App extends React.Component {
                     <NavLink to='/' exact className='app_title'><h2>Органайзер задач</h2></NavLink>
                     {this.props.lists.length < 10 
                         && <AddItemForm addItem={this.addList} placeholder='Add list' />}
-                    {this.state.listsLoading && <Preloader />}
+                    {this.state.listAdding && <Preloader />}
                 </div>
                 <nav className='app_header_navigation'>
                     <ul>{listLinks}</ul>
