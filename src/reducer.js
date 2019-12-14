@@ -72,6 +72,7 @@ const reducer = (state = initialState, action) => {
                             ...list,
                             tasks:
                                 list.tasks.filter((task) => task.id !== action.taskId)
+                                    .map( (task, index) => ({ ...task, renderIndex: index + 1 })  )
                         }
                     } else return list
                 })
