@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import AddItemForm from './AddItemForm';
 import { deleteList, addTask } from './reducer';
 import Preloader from './Preloader/Preloader';
-import { API_KEY } from './store';
+import { api } from './api';
 
 class TodoListHeader extends React.Component {
 
@@ -15,12 +14,7 @@ class TodoListHeader extends React.Component {
 
     deleteList = () => {
         this.setState({ inProgress: true });
-        axios.delete(`https://social-network.samuraijs.com/api/1.1/todo-lists/${this.props.listId}`,
-            {
-                withCredentials: true,
-                headers: { 'API-KEY': API_KEY }
-            }
-        )
+        api.deleteList(this.props.listId)
             .then(() => {
                 this.props.deleteList(this.props.listId);
                 this.setState({ inProgress: false })
@@ -29,13 +23,7 @@ class TodoListHeader extends React.Component {
 
     addTask = (title) => {
         this.setState({ taskLoading: true });
-        axios.post(`https://social-network.samuraijs.com/api/1.1/todo-lists/${this.props.listId}/tasks`,
-            {title},
-            {
-                withCredentials: true,
-                headers: { 'API-KEY': API_KEY }
-            }
-        )
+        api.addTask(this.props.listId, title)
             .then(Response => {
                 this.props.addTask(Response.data.data.item)
                 this.setState({ taskLoading: false })

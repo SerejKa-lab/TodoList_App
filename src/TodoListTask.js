@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import { deleteTask, updateTask } from './reducer';
-import { API_KEY } from './store';
 import Preloader from './Preloader/Preloader'
+import { api } from './api';
 
 
 
@@ -21,31 +20,18 @@ class TodoListTask extends React.Component {
         const listId = this.props.listId;
         const taskId = this.props.task.id;
         this.setState({ updateInProgress: true });
-        axios.delete(
-            `https://social-network.samuraijs.com/api/1.1//todo-lists/${listId}/tasks/${taskId}`,
-            {
-                withCredentials: true,
-                headers: { 'API-KEY': API_KEY }
-            }
-        )
+        api.deleteTask(listId, taskId)
         .then( () => {
         this.props.deleteTask(listId, taskId);
         this.setState({ updateInProgress: false })
         })
     };
 
-    updateTaskAPI = (dataObj) => {
+    updateTask = (dataObj) => {
         const listId = this.props.listId;
         const taskId = this.props.task.id;
         this.setState({ updateInProgress: true });
-        axios.put(
-            `https://social-network.samuraijs.com/api/1.1//todo-lists/${listId}/tasks/${taskId}`,
-            {...this.props.task, ...dataObj},
-            {
-                withCredentials: true,
-                headers: { 'API-KEY': API_KEY }
-            }
-        )
+        api.updateTask( listId, taskId, {...this.props.task, ...dataObj} )
         .then( Response => {
             console.log(Response)
             this.props.updateTask ( Response.data.data.item )
@@ -70,7 +56,7 @@ class TodoListTask extends React.Component {
     setTitleOnKey = (e) => {
         const title = e.currentTarget.value;
         if (e.key === 'Enter' && !this.state.inputError) {
-            this.updateTaskAPI({ title });
+            this.updateTask({ title });
             this.setDisplayMode()
         }
         if (e.keyCode === 27) {
@@ -81,12 +67,12 @@ class TodoListTask extends React.Component {
     
     changeTaskStatus = (e) => {
         const completed = e.currentTarget.checked;
-        this.updateTaskAPI({ completed })
+        this.updateTask({ completed })
     }
        
     setTaskPriority = (e) => {
         const priority = this.priorityArray.findIndex( (prior) => prior === e.currentTarget.value);
-        this.updateTaskAPI({ priority });
+        this.updateTask({ priority });
         this.setPriorityMode()
     }
 

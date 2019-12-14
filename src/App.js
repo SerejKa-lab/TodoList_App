@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import TodoList from './TodoList';
 import AddItemForm from './AddItemForm';
 import Preloader from './Preloader/Preloader';
 import { restoreLists, restoreTasks, addList } from './reducer';
-import { API_KEY } from './store';
+import { api } from './api';
 
 
 class App extends React.Component {
@@ -19,9 +18,9 @@ class App extends React.Component {
         tasksLoading: false
     }
 
-    restoreLists = () => {
+    restoreLists = () => {debugger
         this.setState({ listsLoading: true });
-        axios.get('https://social-network.samuraijs.com/api/1.1/todo-lists', { withCredentials: true })
+        api.restoreLists()
             .then(Response => {
                 this.props.restoreLists(Response.data);
                 this.setState({ listsLoading: false })
@@ -30,13 +29,7 @@ class App extends React.Component {
 
     addList = (title) => {
         this.setState({ listsLoading: true });
-        axios.post('https://social-network.samuraijs.com/api/1.1/todo-lists',
-            { title },
-            {
-                withCredentials: true,
-                headers: { 'API-KEY': API_KEY }
-            }
-        )
+        api.addList(title)
             .then(Response => {
                 this.props.addList(Response.data.data.item);
                 this.setState({ listsLoading: false })
@@ -45,8 +38,7 @@ class App extends React.Component {
 
     restoreTasks = (listId) => {
         this.setState({ tasksLoading: true });
-        axios.get(`https://social-network.samuraijs.com/api/1.1/todo-lists/${listId}/tasks?count=10`,
-            { withCredentials: true })
+        api.restoreTasks(listId)
             .then(Response => {
                 this.props.restoreTasks(listId, Response.data.items);
                 this.setState({ tasksLoading: false })
