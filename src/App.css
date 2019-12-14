@@ -19,11 +19,16 @@
   align-items: center;
 }
 
-.header_title {
-  margin: 10px 0;
+.list_header_title {
+  margin: 10px;
   font-size: 1.2em;
   font-weight: bold;
   text-align: center;
+}
+
+.list_header_add_form {
+  display: flex;
+  justify-content: center;
 }
 
 .app_header_navigation {
@@ -56,6 +61,7 @@
 
 .app_lists {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   margin: 10px;
 }
@@ -68,7 +74,7 @@
   border-radius: 10px;
 }
 
-.todoList-header {
+.list_header {
   margin-bottom: 20px;
 }
 
@@ -76,7 +82,7 @@
   padding: 10px;
 }
 
-.header_title__input {
+.list_header_title__input {
   margin: 11px;
   text-align: center;
 }
@@ -92,8 +98,6 @@
 .delete_list:hover {
   background: pink;
 }
-
-
 
 .todoList-tasks {
   margin: 10px;
