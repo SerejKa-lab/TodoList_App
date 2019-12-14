@@ -18,7 +18,7 @@ class App extends React.Component {
         tasksLoading: false
     }
 
-    restoreLists = () => {debugger
+    restoreLists = () => {
         this.setState({ listsLoading: true });
         api.restoreLists()
             .then(Response => {
