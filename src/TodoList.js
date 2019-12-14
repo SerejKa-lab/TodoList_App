@@ -22,8 +22,8 @@ class TodoList extends React.Component {
         return (
             this.props.list.tasks.filter((task) => {
                 switch (this.state.filterValue) {
-                    case 'Completed': return task.isDone;
-                    case 'Active': return !task.isDone;
+                    case 'Completed': return task.completed;
+                    case 'Active': return !task.completed;
                     default: return true;
                 }
             })
