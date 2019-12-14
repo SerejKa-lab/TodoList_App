@@ -1,6 +1,59 @@
 .app {
   padding: 10px;
 }
+
+.todoList {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.app_title {
+  text-decoration: none;
+  color: black;
+}
+
+.app_header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header_title {
+  margin: 10px 0;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.app_header_navigation {
+  display: flex;
+  justify-content: center;
+}
+
+.app_header_navigation ul {
+  display: flex;
+  flex-wrap: wrap;
+  padding-inline-start: 0;
+  padding-right: 35px;
+}
+
+.app_header_navigation li {
+  margin-left: 35px;
+}
+
+.app_header_navigation a {
+  overflow-wrap: break-word;
+  text-decoration: none;
+  font-style: italic;
+  color: darkslategray;
+}
+
+.app_header_navigation a:hover {
+  color: darkgray;
+  text-decoration: underline;
+}
+
 .app_lists {
   display: flex;
   flex-wrap: wrap;
@@ -8,23 +61,28 @@
 }
 
 .todoList {
-  width: 285px;
+  width: 275px;
   margin: 10px;
   overflow-wrap: break-word;
+  border: 1px solid gray;
+  border-radius: 10px;
 }
 
-.todoList > div {
+.todoList-header {
+  margin-bottom: 20px;
+}
+
+.todoList>div {
   padding: 10px;
 }
 
-.header_title {
-  margin-bottom: 10px;
-  font-size: 1.2em;
-  font-weight: bold;;
+.header_title__input {
+  margin: 11px;
+  text-align: center;
 }
 
-.header_title__input {
-  margin-bottom: 10px;
+.todoList-newTaskForm {
+  text-align: center;
 }
 
 .todoList-newTaskForm button:hover {
@@ -35,12 +93,10 @@
   background: pink;
 }
 
-.todoList-task {
 
-}
 
-.addTaskInProgress {
-  margin-top: 20px;
+.todoList-tasks {
+  margin: 10px;
 }
 
 .filter-active {
@@ -48,15 +104,15 @@
 }
 
 .error {
-	border-color: red;
+  border-color: red;
 }
 
- .taskIsDone {
-   opacity: 0.5;
- }
+.taskIsDone {
+  opacity: 0.5;
+}
 
- .Low {
-  color:  rgb(15, 162, 13);
+.Low {
+  color: rgb(15, 162, 13);
 }
 
 .Middle {
@@ -73,4 +129,8 @@
 
 .Later {
   color: grey
+}
+
+.filter_buttons {
+  text-align: center;
 }
