@@ -26,6 +26,15 @@ const reducer = (state = initialState, action) => {
                 lists: [ extendedList, ...state.lists ]
             }
 
+        case UPDATE_LIST_TITLE:
+            return {
+                ...state,
+                lists: state.lists.map( (list) => {
+                    if (list.id === action.listId) return ({ ...list, title: action.title })
+                    else return list
+                } )
+            }
+
         case DELETE_LIST:
             return {
                 ...state,
@@ -108,6 +117,9 @@ export const restoreLists = (lists) => ({ type: RESTORE_LISTS, lists })
 
 const ADD_LIST = 'ADD-LIST';
 export const addList = (list) => ({type: ADD_LIST, list})
+
+const UPDATE_LIST_TITLE = 'UPDATE_LIST_TITLE';
+export const updateListTitle = (listId, title) => ({ type: UPDATE_LIST_TITLE, listId, title })
 
 const DELETE_LIST = 'DELETE-LIST';
 export const deleteList = (listId) => ({type: DELETE_LIST, listId})

@@ -17,16 +17,26 @@
   padding: 10px;
 }
 
+.header_title {
+  margin-bottom: 10px;
+  font-size: 1.2em;
+  font-weight: bold;;
+}
+
+.header_title__input {
+  margin-bottom: 10px;
+}
+
+.todoList-newTaskForm button:hover {
+  background-color: yellowgreen;
+}
+
 .delete_list:hover {
   background: pink;
 }
 
 .todoList-task {
 
-}
-
-.inProgress {
-  display: flex;
 }
 
 .addTaskInProgress {

@@ -13,6 +13,10 @@ export const api = {
         return instance.get('')
     },
 
+    updateListTitle( listId, title ) {
+        return instance.put(`/${listId}`, {title} )
+    },
+
     addList(title) {
         return instance.post('', { title } )
     },
