@@ -1,67 +1,40 @@
-import axios from 'axios';
+import Axios from 'axios';
 
-const API_KEY = '5deaa5a9-bfea-4e80-bac8-d313181506e0';
+
+const instance = Axios.create({ 
+    baseURL: 'https://social-network.samuraijs.com/api/1.1//todo-lists',
+    withCredentials: true,
+    headers: { 'API-KEY': '5deaa5a9-bfea-4e80-bac8-d313181506e0' }
+ })
 
 export const api = {
 
     restoreLists() {
-        return axios.get('https://social-network.samuraijs.com/api/1.1/todo-lists', { withCredentials: true })
+        return instance.get('')
     },
 
     addList(title) {
-        return axios.post('https://social-network.samuraijs.com/api/1.1/todo-lists',
-            { title },
-            {
-                withCredentials: true,
-                headers: { 'API-KEY': API_KEY }
-            }
-        )
+        return instance.post('', { title } )
     },
 
     deleteList(listId) {
-        return axios.delete(`https://social-network.samuraijs.com/api/1.1/todo-lists/${listId}`,
-            {
-                withCredentials: true,
-                headers: { 'API-KEY': API_KEY }
-            }
-        )
+        return instance.delete(`/${listId}`)
     },
 
     restoreTasks(listId) {
-        return axios.get(`https://social-network.samuraijs.com/api/1.1/todo-lists/${listId}/tasks?count=10`,
-            { withCredentials: true }
-        )
+        return instance.get(`/${listId}/tasks?count=10`)
     },
 
     addTask(listId, title) {
-        return axios.post(`https://social-network.samuraijs.com/api/1.1/todo-lists/${listId}/tasks`,
-            {title},
-            {
-                withCredentials: true,
-                headers: { 'API-KEY': API_KEY }
-            }
-        )
+        return instance.post(`/${listId}/tasks`, {title} )
     },
 
     updateTask(listId, taskId, dataObj) {
-        return axios.put(
-            `https://social-network.samuraijs.com/api/1.1//todo-lists/${listId}/tasks/${taskId}`,
-            { ...dataObj },
-            {
-                withCredentials: true,
-                headers: { 'API-KEY': API_KEY }
-            }
-        )
+        return instance.put(`/${listId}/tasks/${taskId}`, { ...dataObj } )
     },
 
     deleteTask(listId, taskId) {
-        return axios.delete(
-            `https://social-network.samuraijs.com/api/1.1//todo-lists/${listId}/tasks/${taskId}`,
-            {
-                withCredentials: true,
-                headers: { 'API-KEY': API_KEY }
-            }
-        )
+        return instance.delete(`/${listId}/tasks/${taskId}`)
     }
             
 }
