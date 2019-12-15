@@ -72,13 +72,13 @@ class ListTitle extends React.Component {
                         autoFocus={true}
                         onBlur={this.setDisplayMode}
                         onKeyDown={this.setTitleOnKey} />
-                    <button className='delete_list' onClick={this.deleteList}><i className="fa fa-close"></i></button>
+                    <button className='delete_button' onClick={this.deleteList}><i className="fa fa-close"></i></button>
                 </div>
             )
         } else return (
             <div className='list_header_title'>
                 <span onClick={this.setEditMode}>{this.props.title} &nbsp;</span>
-                <button className='delete_list' onClick={this.deleteList}><i className="fa fa-close"></i></button>
+                <button className='delete_button' onClick={this.deleteList}><i className="fa fa-close"></i></button>
                 {this.state.inProgress && <Preloader />}
             </div>
         )

@@ -91,6 +91,7 @@ class TodoListTask extends React.Component {
     
 
     render = () => {
+
         return (
             <div className="todoList-tasks">
                 <div className={ this.props.task.completed ? 'taskIsDone' : 'todoList-task' }>
@@ -127,7 +128,7 @@ class TodoListTask extends React.Component {
                         </span>
                     }
 {/* кнопка delete */}
-                    <button className='delete_list' onClick={this.deleteTask}>
+                    <button className='delete_button' onClick={this.deleteTask}>
                         <i className="fa fa-close"></i></button>
                     
                     {this.state.updateInProgress && <Preloader /> }
