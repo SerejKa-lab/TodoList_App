@@ -14,13 +14,13 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 lists: action.lists.map( (list) => {
                     return !list.tasks
-                        ? { ...list, tasks: [] } 
-                        : list
+                        ? { ...list, page: 1, tasks: [] } 
+                        : { ...list, page: 1 }
                 } )
             }
 
         case ADD_LIST:
-            const extendedList = { ...action.list, tasks: [] };
+            const extendedList = { ...action.list, page: 1, tasks: [] };
             return {
                 ...state,
                 lists: [ extendedList, ...state.lists ]
@@ -56,6 +56,22 @@ const reducer = (state = initialState, action) => {
                         }
                         : list
                 })
+            }
+
+        case SET_TASKS_PAGE:
+            const renderBasis = (action.page - 1)*10 +1;
+            return {
+                ...state,
+                lists: state.lists.map( (list) => {
+                    if (list.id === action.listId) {
+                        return {
+                            ...list,
+                            page: action.page,
+                            tasks: action.tasks
+                                .map( (task, index) => ({...task, renderIndex: renderBasis + index }) )
+                        }
+                    } else return list
+                } )
             }
 
         case ADD_TASK:
@@ -129,6 +145,9 @@ export const deleteList = (listId) => ({type: DELETE_LIST, listId})
 
 const RESTORE_TASKS = 'RESTORE_TASKS';
 export const restoreTasks = (listId, tasks, totalCount) => ({ type: RESTORE_TASKS, listId, tasks, totalCount })
+
+const SET_TASKS_PAGE = 'SET_TASKS_PAGE';
+export const setTasksPage = (listId, tasks, page) => ({ type: SET_TASKS_PAGE, listId, tasks, page })
 
 const ADD_TASK = 'ADD-TASK';
 export const addTask = (task) => ({type: ADD_TASK, task})

@@ -39,6 +39,10 @@ export const api = {
 
     deleteTask(listId, taskId) {
         return instance.delete(`/${listId}/tasks/${taskId}`)
+    },
+
+    setTasksPage(listId, page = 1) {
+        return instance.get(`/${listId}/tasks?count=10&page=${page}`)
     }
             
 }

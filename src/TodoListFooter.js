@@ -1,10 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import './App.css';
+import { api } from './api';
+import { setTasksPage } from './reducer';
 
 class TodoListFooter extends React.Component {
 
     state = {
-        isHidden: false
+        isHidden: false,
+        tasksCountOnPage: 10
     }
 
     onAllFilterClick = () => { this.props.changeFilter('All') }
@@ -13,6 +17,28 @@ class TodoListFooter extends React.Component {
     onShowButtonClick = () => { this.setState({ isHidden: false }) }
     onHideButtonClick = () => { this.setState({ isHidden: true }) }
 
+    setTasksPage = (page) =>{
+        api.setTasksPage(this.props.listId, page)
+            .then( Response => {
+                this.props.setTasksPage(this.props.listId, Response.data.items, page) 
+            })
+    }
+
+    getPagesCount = () => 
+        this.props.totalCount ? Math.ceil(this.props.totalCount/this.state.tasksCountOnPage) : 1;
+
+    getPagesLinks = () => {
+        const {page} = this.props;
+        
+        const pagesLinks = []
+        for ( let i = 1; i <= this.getPagesCount(); i++ ) {
+            const pageLink = <span className={ i === page ? 'pageLink active' : 'pageLink' }
+                onClick={() => this.setTasksPage(i)} key={i}>{i}</span>
+            pagesLinks.push(pageLink)
+        }
+        return pagesLinks
+    }
+
 
     render = () => {
         let buttonAll = this.props.filterValue === 'All' ? 'filter-active' : '';
@@ -20,6 +46,8 @@ class TodoListFooter extends React.Component {
         let buttonCompleted = this.props.filterValue === 'Completed' ? 'filter-active' : '';
         return (
             <div className="todoList-footer">
+                {this.getPagesCount() > 1 && 
+                    <div className='tasksPagesLinks'>{ this.getPagesLinks() }</div>}
                 {!this.state.isHidden &&
                     <div className='filter_buttons'>
                         <button onClick={ this.onAllFilterClick } className={buttonAll}>All</button>
@@ -34,5 +62,5 @@ class TodoListFooter extends React.Component {
     }
 }
 
-export default TodoListFooter;
+export default connect(null, { setTasksPage } )(TodoListFooter);
 
