@@ -6,6 +6,7 @@ import AddItemForm from './AddItemForm';
 import Preloader from './Preloader/Preloader';
 import { restoreLists, restoreTasks, addList } from './reducer';
 import { api } from './api';
+import book from './Assets/img/book.png';
 
 
 class App extends React.Component {
@@ -65,7 +66,12 @@ class App extends React.Component {
         return (
             <div className='app'>
                 <div className='app_header'>
-                    <NavLink to='/' exact className='app_title'><h2>Органайзер задач</h2></NavLink>
+                    <NavLink to='/' exact className='app_title'>
+                        <h2>
+                            <img src={book} alt='book' className='app_header_icon' />
+                            Органайзер задач
+                        </h2>
+                    </NavLink>
                     {this.props.lists.length < this.state.maxListsCount 
                         && <AddItemForm addItem={this.addList} placeholder='Add list' />}
                     {this.state.listAdding && <Preloader />}

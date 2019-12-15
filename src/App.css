@@ -3,6 +3,7 @@
   min-height: 100vh;
   background-image: url('./Assets/img/navigation.jpg');
   background-size: cover;
+  background-attachment: fixed;
 }
 
 .todoList {
@@ -20,16 +21,29 @@
 }
 
 .app_title {
-  text-decoration: none;
   color: white;
+  text-decoration: none;
+  margin-right: 3em;
+}
+
+.app_header h2 {
+  display: flex;
+  align-items: center;
 }
 
 .app_title:hover{
   text-decoration: underline;
+  color: white;
 }
 
 .app_title.active {
   text-decoration: underline;
+  color: white;
+}
+
+.app_title img {
+  margin-right: 10px;
+  height: 50px;
 }
 
 .app_header {
@@ -58,6 +72,8 @@
 .app_header_navigation ul {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+  max-width: 50%;
   padding-inline-start: 0;
   padding-right: 35px;
   color: white;
@@ -65,6 +81,7 @@
 
 .app_header_navigation li {
   margin-left: 35px;
+  margin-bottom: 5px;
 }
 
 .app_header_navigation a {
