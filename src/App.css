@@ -1,5 +1,8 @@
 .app {
   padding: 10px;
+  min-height: 100vh;
+  background-image: url('./Assets/img/navigation.jpg');
+  background-size: cover;
 }
 
 .todoList {
@@ -18,7 +21,15 @@
 
 .app_title {
   text-decoration: none;
-  color: black;
+  color: white;
+}
+
+.app_title:hover{
+  text-decoration: underline;
+}
+
+.app_title.active {
+  text-decoration: underline;
 }
 
 .app_header {
@@ -49,6 +60,7 @@
   flex-wrap: wrap;
   padding-inline-start: 0;
   padding-right: 35px;
+  color: white;
 }
 
 .app_header_navigation li {
@@ -59,16 +71,15 @@
   overflow-wrap: break-word;
   text-decoration: none;
   font-style: italic;
-  color: darkslategray;
+  color: white;
 }
 
 .app_header_navigation a:hover {
-  color: darkgray;
   text-decoration: underline;
 }
 
 .app_header_navigation a.active {
-  color: yellowgreen
+  text-decoration: underline;
 } 
 
 .app_lists {
@@ -81,10 +92,6 @@
 .list_header {
   margin-bottom: 20px;
 }
-
-/* .todoList>div {
-  padding: 10px;
-} */
 
 .list_header_title__input {
   margin: 11px;
@@ -158,9 +165,9 @@
 }
 
 .pageLink:hover {
-  background-color: yellowgreen;
+  background-color: rgb(171, 228, 55);
 }
 
-.active {
-  color: yellowgreen;
+span.active {
+  background-color: rgb(171, 228, 55);
 }
