@@ -17,7 +17,8 @@ class App extends React.Component {
     state = {
         listsLoading: false,
         tasksLoading: false,
-        listAdding: false
+        listAdding: false,
+        maxListsCount: 10
     }
 
     restoreLists = () => {
@@ -65,7 +66,7 @@ class App extends React.Component {
             <div className='app'>
                 <div className='app_header'>
                     <NavLink to='/' exact className='app_title'><h2>Органайзер задач</h2></NavLink>
-                    {this.props.lists.length < 10 
+                    {this.props.lists.length < this.state.maxListsCount 
                         && <AddItemForm addItem={this.addList} placeholder='Add list' />}
                     {this.state.listAdding && <Preloader />}
                 </div>

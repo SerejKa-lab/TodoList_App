@@ -10,7 +10,7 @@ class TodoListHeader extends React.Component {
 
     state = {
         taskLoading: false,
-        maxTasksCount: 30
+        maxTasksCount: 100
     }
 
     addTask = (title) => {
