@@ -6,22 +6,26 @@ import { setTasksPage, setFltrTasksPage } from './reducer';
 
 class TodoListFooter extends React.Component {
 
+    componentDidUpdate() {
+        if (this.props.filterValue !== this.state.filterValue) 
+            this.setState({ filterValue: this.props.filterValue })
+    }
+
     state = {
         isHidden: false,
         filterValue: 'All'
     }
 
-    /* ------> вызов колл-бэков из TodoList        
-    onAllFilterClick = () => { this.props.changeFilter('All') }
-    onCompletedFilterClick = () => { this.props.changeFilter('Completed') }
-    onActiveFilterClick = () => { this.props.changeFilter('Active') } */
-    
-    
     onShowButtonClick = () => { this.setState({ isHidden: false }) }
     onHideButtonClick = () => { this.setState({ isHidden: true }) }
 
     getTasks = (filterValue) => {
-        this.setState({ filterValue }, () => this.setTasksPage(1))
+        this.setState({ filterValue }, 
+            () => {
+                this.setTasksPage(1);
+                this.props.changeFilter(filterValue)
+            }
+        )
     }
 
     setTasksPage = (page) => {

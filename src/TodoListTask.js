@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { deleteTask, updateTask, setTasksPage } from './reducer';
+import { deleteTask, updateTask, setTasksPage, setFltrTasksPage, deleteFltrTask } from './reducer';
 import Preloader from './Preloader/Preloader'
 import { api } from './api';
 
@@ -19,40 +19,69 @@ class TodoListTask extends React.Component {
     getPagesCount = () => 
         this.props.totalCount ? Math.ceil(this.props.totalCount/this.props.countOnPage) : 1;
 
+    setAllTasksPage = (listId, page) => {
+        return (
+            api.setTasksPage(listId, page)
+                .then((Response) => {
+                    this.props.setTasksPage(listId, page,
+                        Response.data.items, Response.data.totalCount)
+                })
+        )
+    }
+
+    setFltrTasksPage = (listId, page) => {
+        api.getAllTasks(listId)
+            .then(Response => {
+                const completed = this.props.filterValue === 'Completed' ? true : false
+                const tasks = Response.data.items;
+                this.props.setFltrTasksPage(listId, page, tasks, completed)
+            })
+    }
+
     deleteTask = () => {
-        const { listId, page, tasksLength } = this.props;
+        const { listId, page, tasksLength, filterValue } = this.props;
         const { id: taskId } = this.props.task;
         this.setState({ updateInProgress: true });
         api.deleteTask(listId, taskId)
             .then((Response) => {
                 if (Response.data.resultCode === 0) {
                     if (tasksLength === 10 && page < this.getPagesCount()) {
-                        api.setTasksPage(listId, page)
-                            .then((Response) => {
-                                this.props.setTasksPage(this.props.listId, page, 
-                                        Response.data.items, Response.data.totalCount )
-                            })
-                    } else if ( tasksLength === 1 && page !== 1 ){
-                        api.setTasksPage(listId, page-1)
-                        .then((Response) => {
-                            this.props.setTasksPage(this.props.listId, page-1, 
-                                    Response.data.items, Response.data.totalCount )
-                        })
+                        if (filterValue === 'All') {
+                            this.setAllTasksPage(listId, page)
+                        } else
+                            this.setFltrTasksPage(listId, page)
+
+                    } else if (tasksLength === 1 && page !== 1) {
+                        if (filterValue === 'All') {
+                            this.setAllTasksPage(listId, page - 1)
+                        } else this.setFltrTasksPage(listId, page - 1)
+
+                    } else if (tasksLength === 1 && page === 1 && filterValue !== 'All') {
+                        this.setAllTasksPage(listId, 1)
+                        .then( () => this.props.changeFilter('All') )
                     } else {
-                        this.props.deleteTask(listId, taskId);
-                        this.setState({ updateInProgress: false })
+                        if (filterValue === 'All') {
+                            this.props.deleteTask(listId, taskId, page);
+                        } else {
+                            this.props.deleteFltrTask( listId, taskId, page )
+                        }
                     }
+                    this.setState({ updateInProgress: false })
                 }
             })
     };
 
-    updateTask = (dataObj) => {
-        const listId = this.props.listId;
-        const taskId = this.props.task.id;
+    updateTask = (dataObj, isNewStatus) => {
+        const { listId, task: { id: taskId }, filterValue } = this.props;
         this.setState({ updateInProgress: true });
         api.updateTask(listId, taskId, { ...this.props.task, ...dataObj })
             .then(Response => {
-                this.props.updateTask(Response.data.data.item)
+                /* if (isNewStatus && true) {
+                    if (tasksLength === 10 && page < this.getPagesCount()) {
+                    this.props.setFltrTasksPage
+                    }
+                } else */ 
+                    this.props.updateTask(Response.data.data.item)
                 this.setState({ updateInProgress: false })
             })
     }
@@ -88,7 +117,7 @@ class TodoListTask extends React.Component {
 
     changeTaskStatus = (e) => {
         const completed = e.currentTarget.checked;
-        this.updateTask({ completed })
+        this.updateTask({ completed }, true)
     }
 
     setTaskPriority = (e) => {
@@ -158,7 +187,7 @@ class TodoListTask extends React.Component {
 }
 
 
-const actionCreators = {deleteTask, updateTask, setTasksPage}
+const actionCreators = {deleteTask, updateTask, setTasksPage, setFltrTasksPage, deleteFltrTask}
 
 export default connect(null, actionCreators)(TodoListTask);
 

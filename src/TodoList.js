@@ -10,27 +10,13 @@ class TodoList extends React.Component {
         this.props.restoreTasks(this.props.list.id)
     }
 
-   /*  state = {
+    state = {
         filterValue: 'All'
     };
 
-    changeFilter = (newFilterValue) => {
-        this.setState({ filterValue: newFilterValue })
-    };
+    changeFilter = (filterValue) => this.setState({ filterValue })
 
-    getFilteredTasks = () => {
-        return (
-            this.props.list.tasks.filter((task) => {
-                switch (this.state.filterValue) {
-                    case 'Completed': return task.completed;
-                    case 'Active': return !task.completed;
-                    default: return true;
-                }
-            })
-        )
-    }; */
-
-
+    
     render = () => {
         const { title, id, page, totalCount, countOnPage, tasks } = this.props.list;
         return (
@@ -41,18 +27,24 @@ class TodoList extends React.Component {
                         listId = { id }
                         page = { page }
                         totalCount={totalCount} />
-                    <TodoListTasks 
-                        listId = { id } 
-                        tasks={ tasks }
-                        page= {page}
-                        totalCount={ totalCount } 
-                        countOnPage={countOnPage} />
+                    <TodoListTasks
+                        tasks= {tasks}
+                        dataObj={
+                            {
+                                listId: id,
+                                page: page,
+                                totalCount: totalCount,
+                                countOnPage: countOnPage,
+                                filterValue: this.state.filterValue,
+                                changeFilter: this.changeFilter
+                            }
+                        } />
                 </section>
                 <TodoListFooter 
-                    // filterValue={this.state.filterValue} 
-                    // changeFilter={this.changeFilter}
+                    changeFilter={this.changeFilter}
                     listId={id}
                     page = {page}
+                    filterValue = { this.state.filterValue }
                     countOnPage ={ countOnPage }
                     totalCount={totalCount} />
             </div>

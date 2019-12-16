@@ -13,6 +13,7 @@ const initialState =  {
 const reducer = (state = initialState, action) => {
 
     const countOnPage = 10;
+    const renderBasis = (action.page - 1)*10 +1;
 
     switch (action.type) {
 
@@ -67,7 +68,6 @@ const reducer = (state = initialState, action) => {
             }
 
         case SET_TASKS_PAGE:
-            const renderBasisAll = (action.page - 1)*10 +1;
             return {
                 ...state,
                 lists: state.lists.map( (list) => {
@@ -77,28 +77,7 @@ const reducer = (state = initialState, action) => {
                             totalCount: action.totalCount ? action.totalCount : list.totalCount,
                             page: action.page,
                             tasks: action.tasks
-                                .map((task, index) => ({ ...task, renderIndex: renderBasisAll + index }))
-                        }
-                    } else return list
-                })
-            }
-
-        case SET_FLTR_TASKS_PAGE:
-            const renderBasisFltr = (action.page - 1) * 10 + 1;
-            const totalCount = action.tasks.filter( (task) => task.completed === action.completed ).length;
-            return {
-                ...state,
-                lists: state.lists.map((list) => {
-                    if (list.id === action.listId) {
-                        return {
-                            ...list,
-                            page: action.page,
-                            totalCount,
-                            tasks: action.tasks
-                                .filter((task) => task.completed === action.completed)
-                                .filter( ( task, index) => 
-                                    (index >= (action.page - 1)*countOnPage && index < action.page * countOnPage) )
-                                .map((task, index) => ({ ...task, renderIndex: renderBasisFltr + index }))
+                                .map((task, index) => ({ ...task, renderIndex: renderBasis + index }))
                         }
                     } else return list
                 })
@@ -130,7 +109,7 @@ const reducer = (state = initialState, action) => {
                             totalCount: list.totalCount-1,
                             tasks:
                                 list.tasks.filter((task) => task.id !== action.taskId)
-                                    .map( (task, index) => ({ ...task, renderIndex: index + 1 })  )
+                                    .map( (task, index) => ({ ...task, renderIndex: renderBasis + index })  )
                         }
                     } else return list
                 })
@@ -154,6 +133,40 @@ const reducer = (state = initialState, action) => {
                 })
             }
 
+        case SET_FLTR_TASKS_PAGE:
+            const totalCount = action.tasks.filter((task) => task.completed === action.completed).length;
+            return {
+                ...state,
+                lists: state.lists.map((list) => {
+                    if (list.id === action.listId) {
+                        return {
+                            ...list,
+                            page: action.page,
+                            totalCount,
+                            tasks: action.tasks
+                                .filter((task) => task.completed === action.completed)
+                                .map((task, index) => ({ ...task, renderIndex: index + 1}))
+                                .filter((task, index) =>
+                                    (index >= (action.page - 1) * countOnPage && index < action.page * countOnPage))
+                        }
+                    } else return list
+                })
+            }
+
+        case DELETE_FLTR_TASK:
+            return {
+                ...state,
+                lists: state.lists.map((list) => {
+                    if (list.id === action.listId) {
+                        return {
+                            ...list,
+                            tasks: list.tasks.filter((task) => task.id !== action.taskId)
+                                .map((task, index) => ({ ...task, renderIndex: renderBasis + index }))
+                        }
+                    } else return list
+                })
+            }
+
         default: return state;
     }
 
@@ -161,7 +174,7 @@ const reducer = (state = initialState, action) => {
 
 export default reducer;
 
-const  RESTORE_LISTS = 'RESTORE-LISTS';
+const RESTORE_LISTS = 'RESTORE-LISTS';
 export const restoreLists = (lists) => ({ type: RESTORE_LISTS, lists })
 
 const ADD_LIST = 'ADD_LIST';
@@ -188,7 +201,10 @@ const ADD_TASK = 'ADD_TASK';
 export const addTask = (task) => ({type: ADD_TASK, task})
 
 const DELETE_TASK = 'DELETE_TASK';
-export const deleteTask = (listId, taskId) => ({type: DELETE_TASK, listId, taskId})
+export const deleteTask = (listId, taskId, page) => ({ type: DELETE_TASK, listId, taskId, page })
+
+const DELETE_FLTR_TASK = 'DELETE_FLTR_TASK';
+export const deleteFltrTask = (listId, taskId, page) => ({ type: DELETE_FLTR_TASK, listId, taskId, page })
 
 const UPDATE_TASK = 'UPDATE_TASK';
 export const updateTask = (task) => ({type: UPDATE_TASK, task })
