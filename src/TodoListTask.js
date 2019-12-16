@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { deleteTask, updateTask } from './reducer';
+import { deleteTask, updateTask, setTasksPage } from './reducer';
 import Preloader from './Preloader/Preloader'
 import { api } from './api';
 
@@ -16,30 +16,49 @@ class TodoListTask extends React.Component {
         updateInProgress: false
     }
 
+    getPagesCount = () => 
+        this.props.totalCount ? Math.ceil(this.props.totalCount/this.props.countOnPage) : 1;
+
     deleteTask = () => {
-        const listId = this.props.listId;
-        const taskId = this.props.task.id;
+        const { listId, page, tasksLength } = this.props;
+        const { id: taskId } = this.props.task;
         this.setState({ updateInProgress: true });
         api.deleteTask(listId, taskId)
-        .then( () => {
-        this.props.deleteTask(listId, taskId);
-        this.setState({ updateInProgress: false })
-        })
+            .then((Response) => {
+                if (Response.data.resultCode === 0) {
+                    if (tasksLength === 10 && page < this.getPagesCount()) {
+                        api.setTasksPage(listId, page)
+                            .then((Response) => {
+                                this.props.setTasksPage(this.props.listId, page, 
+                                        Response.data.items, Response.data.totalCount )
+                            })
+                    } else if ( tasksLength === 1 && page !== 1 ){
+                        api.setTasksPage(listId, page-1)
+                        .then((Response) => {
+                            this.props.setTasksPage(this.props.listId, page-1, 
+                                    Response.data.items, Response.data.totalCount )
+                        })
+                    } else {
+                        this.props.deleteTask(listId, taskId);
+                        this.setState({ updateInProgress: false })
+                    }
+                }
+            })
     };
 
     updateTask = (dataObj) => {
         const listId = this.props.listId;
         const taskId = this.props.task.id;
         this.setState({ updateInProgress: true });
-        api.updateTask( listId, taskId, {...this.props.task, ...dataObj} )
-        .then( Response => {
-            this.props.updateTask ( Response.data.data.item )
-            this.setState({ updateInProgress: false })
-        })
+        api.updateTask(listId, taskId, { ...this.props.task, ...dataObj })
+            .then(Response => {
+                this.props.updateTask(Response.data.data.item)
+                this.setState({ updateInProgress: false })
+            })
     }
 
     setTitleEditMode = () => {
-        this.setState( { editTitleMode: !this.state.editTitleMode, title: this.props.task.title } ); 
+        this.setState({ editTitleMode: !this.state.editTitleMode, title: this.props.task.title });
     }
 
     setDisplayMode = () => {
@@ -66,22 +85,22 @@ class TodoListTask extends React.Component {
             if (this.state.inputError) this.setState({ inputError: false })
         }
     }
-    
+
     changeTaskStatus = (e) => {
         const completed = e.currentTarget.checked;
         this.updateTask({ completed })
     }
-       
+
     setTaskPriority = (e) => {
-        const priority = this.priorityArray.findIndex( (prior) => prior === e.currentTarget.value);
+        const priority = this.priorityArray.findIndex((prior) => prior === e.currentTarget.value);
         this.updateTask({ priority });
         this.setPriorityMode()
     }
 
     priorityArray = ['Low', 'Middle', 'High', 'Urgent', 'Later']
 
-    priorityOptions = this.priorityArray.map( prior => 
-        <option className={prior} >{prior}</option> )
+    priorityOptions = this.priorityArray.map(prior =>
+        <option className={prior} >{prior}</option>)
 
     getTaskPriority = () => this.priorityArray[this.props.task.priority]
 
@@ -139,7 +158,7 @@ class TodoListTask extends React.Component {
 }
 
 
-const actionCreators = {deleteTask, updateTask}
+const actionCreators = {deleteTask, updateTask, setTasksPage}
 
 export default connect(null, actionCreators)(TodoListTask);
 
