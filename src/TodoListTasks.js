@@ -3,10 +3,11 @@ import TodoListTask from './TodoListTask';
 
 const TodoListTasks = (props) => {
 
-    const tasksArray = props.tasks.map((task) => {
+    const tasksArray = props.tasks.filter(( task, index ) => index < props.countOnPage )
+    .map((task) => {
         return <TodoListTask
-            task={task}
             key={task.id}
+            task={task}
             listId={props.listId} />
 
     });

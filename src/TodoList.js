@@ -32,22 +32,23 @@ class TodoList extends React.Component {
 
 
     render = () => {
-        const { title, id, page, totalCount } = this.props.list;
+        const { title, id, page, totalCount, countOnPage } = this.props.list;
         return (
             <div className="todoList">
                 <section>
                     <TodoListHeader 
                         title = { title } 
                         listId = { id }
-                        page = { page } 
+                        page = { page }
                         totalCount={totalCount} />
-                    <TodoListTasks listId = { id } tasks={this.getFilteredTasks()} />
+                    <TodoListTasks listId = { id } tasks={this.getFilteredTasks()} countOnPage={countOnPage} />
                 </section>
                 <TodoListFooter 
                     filterValue={this.state.filterValue} 
                     changeFilter={this.changeFilter}
                     listId={id}
                     page = {page}
+                    countOnPage ={ countOnPage }
                     totalCount={totalCount} />
             </div>
         );

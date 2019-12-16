@@ -1,11 +1,18 @@
 
 const initialState =  {
         lists: []
-        //lists: [{id: 0, title: 'Спорт', nextTaskId: 2, totalCount: 1, tasks: [{ id: 1, title: 'CSS', isDone: false, priority: 'medium' }]  }]
+        //lists: [
+    //         {
+    //             id: 0, title: 'Спорт', nextTaskId: 2, totalCount: 1, countOnPage: 10,
+    //             tasks: [{ id: 1, title: 'CSS', isDone: false, priority: 'medium' }]  
+    //          }
+    //  ]
     };
 
 
 const reducer = (state = initialState, action) => {
+
+    const countOnPage = 10;
 
     switch (action.type) {
 
@@ -14,13 +21,13 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 lists: action.lists.map( (list) => {
                     return !list.tasks
-                        ? { ...list, page: 1, tasks: [] } 
-                        : { ...list, page: 1 }
+                        ? { ...list, page: 1, countOnPage, tasks: [] } 
+                        : { ...list, page: 1, countOnPage }
                 } )
             }
 
         case ADD_LIST:
-            const extendedList = { ...action.list, page: 1, tasks: [] };
+            const extendedList = { ...action.list, page: 1, countOnPage, tasks: [] };
             return {
                 ...state,
                 lists: [ extendedList, ...state.lists ]

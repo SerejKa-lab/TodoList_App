@@ -8,7 +8,6 @@ class TodoListFooter extends React.Component {
 
     state = {
         isHidden: false,
-        tasksCountOnPage: 10
     }
 
     onAllFilterClick = () => { this.props.changeFilter('All') }
@@ -25,7 +24,7 @@ class TodoListFooter extends React.Component {
     }
 
     getPagesCount = () => 
-        this.props.totalCount ? Math.ceil(this.props.totalCount/this.state.tasksCountOnPage) : 1;
+        this.props.totalCount ? Math.ceil(this.props.totalCount/this.props.countOnPage) : 1;
 
     getPagesLinks = () => {
         const {page} = this.props;
