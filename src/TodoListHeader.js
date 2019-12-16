@@ -24,15 +24,18 @@ class TodoListHeader extends React.Component {
 
 
     render() {
+
+        const {listId, title, page, totalCount} = this.props
+
         return (
             <div className="list_header">
-                <ListTitle listId={this.props.listId} title={this.props.title} />
+                <ListTitle listId={listId} title={title} page={page} />
 {/* форма добавления задач */}
-                {this.props.totalCount < this.state.maxTasksCount && this.props.page === 1 &&
+                {totalCount < this.state.maxTasksCount && page === 1 &&
                     <div className='list_header_add_form'>
                         <AddItemForm
                             placeholder='Add new task'
-                            listId={this.props.listId}
+                            listId={listId}
                             addItem={this.addTask} />
                         {this.state.taskLoading && <Preloader />}
                     </div>}
