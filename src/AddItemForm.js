@@ -28,13 +28,20 @@ class AddItemForm extends React.Component {
         if (this.state.inputError && this.state.itemTitle.length <= 100) this.setState({ inputError: false })
     }
 
+    actionOnKey = (e) => { 
+        if (e.key === 'Enter') this.addItem()
+        if ( e.keyCode === 27 ) {
+            this.setState({ itemTitle: '', inputError: false })
+        }
+    }
+
     render() {
         return (
             <div className="todoList-newTaskForm">
                 <input
                     className={this.state.inputError ? 'error' : ''}
                     onChange={this.setItemTitle}
-                    onKeyPress={(e) => { if (e.key === 'Enter') this.addItem() }}
+                    onKeyDown={this.actionOnKey}
                     onBlur={this.actionOnBlur}
                     autoFocus={true}
                     type="text" placeholder={this.props.placeholder} value={this.state.itemTitle} />
