@@ -10,12 +10,12 @@ class TodoList extends React.Component {
         this.props.restoreTasks(this.props.list.id)
     }
 
-    state = {
+   /*  state = {
         filterValue: 'All'
     };
 
     changeFilter = (newFilterValue) => {
-        this.setState({ filterValue: newFilterValue }, this.saveState )
+        this.setState({ filterValue: newFilterValue })
     };
 
     getFilteredTasks = () => {
@@ -28,11 +28,11 @@ class TodoList extends React.Component {
                 }
             })
         )
-    };
+    }; */
 
 
     render = () => {
-        const { title, id, page, totalCount, countOnPage } = this.props.list;
+        const { title, id, page, totalCount, countOnPage, tasks } = this.props.list;
         return (
             <div className='todoList'>
                 <section className='todoList_main'>
@@ -43,14 +43,14 @@ class TodoList extends React.Component {
                         totalCount={totalCount} />
                     <TodoListTasks 
                         listId = { id } 
-                        tasks={this.getFilteredTasks()}
+                        tasks={ tasks }
                         page= {page}
                         totalCount={ totalCount } 
                         countOnPage={countOnPage} />
                 </section>
                 <TodoListFooter 
-                    filterValue={this.state.filterValue} 
-                    changeFilter={this.changeFilter}
+                    // filterValue={this.state.filterValue} 
+                    // changeFilter={this.changeFilter}
                     listId={id}
                     page = {page}
                     countOnPage ={ countOnPage }

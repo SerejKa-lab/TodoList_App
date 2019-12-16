@@ -43,6 +43,9 @@ export const api = {
 
     setTasksPage(listId, page = 1) {
         return instance.get(`/${listId}/tasks?count=10&page=${page}`)
-    }
-            
+    },
+
+    getAllTasks(listId) {
+        return instance.get(`/${listId}/tasks?count=100`)
+    }            
 }

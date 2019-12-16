@@ -2,25 +2,56 @@ import React from 'react';
 import { connect } from 'react-redux';
 import './App.css';
 import { api } from './api';
-import { setTasksPage } from './reducer';
+import { setTasksPage, setFltrTasksPage } from './reducer';
 
 class TodoListFooter extends React.Component {
 
     state = {
         isHidden: false,
+        filterValue: 'All'
     }
 
+    /* ------> вызов колл-бэков из TodoList        
     onAllFilterClick = () => { this.props.changeFilter('All') }
     onCompletedFilterClick = () => { this.props.changeFilter('Completed') }
-    onActiveFilterClick = () => { this.props.changeFilter('Active') }
+    onActiveFilterClick = () => { this.props.changeFilter('Active') } */
+    
+    
     onShowButtonClick = () => { this.setState({ isHidden: false }) }
     onHideButtonClick = () => { this.setState({ isHidden: true }) }
 
-    setTasksPage = (page) =>{
-        api.setTasksPage(this.props.listId, page)
-            .then( Response => {
-                this.props.setTasksPage(this.props.listId, page, Response.data.items ) 
-            })
+    getTasks = (filterValue) => {
+        this.setState({ filterValue }, () => this.setTasksPage(1))
+    }
+
+    setTasksPage = (page) => {
+        const { listId } = this.props;
+
+        switch (this.state.filterValue) {
+            
+            case 'Active':
+                api.getAllTasks(listId)
+                    .then( Response => {
+                        const tasks = Response.data.items;
+                        this.props.setFltrTasksPage(listId, page, tasks, false)
+                    } )
+            break
+
+            case 'Completed':
+                api.getAllTasks(listId)
+                    .then( Response => {
+                        const tasks = Response.data.items;
+                        this.props.setFltrTasksPage(listId, page, tasks, true)
+                    } )
+            break
+
+            default:
+                api.setTasksPage(listId, page)
+                    .then(Response => {
+                        const { items: tasks, totalCount} = Response.data;
+                        this.props.setTasksPage(listId, page, tasks, totalCount)
+                    })
+        }
     }
 
     getPagesCount = () => 
@@ -40,18 +71,18 @@ class TodoListFooter extends React.Component {
 
 
     render = () => {
-        let buttonAll = this.props.filterValue === 'All' ? 'filter-active' : '';
-        let buttonActive = this.props.filterValue === 'Active' ? 'filter-active' : '';
-        let buttonCompleted = this.props.filterValue === 'Completed' ? 'filter-active' : '';
+        let buttonAll = this.state.filterValue === 'All' ? 'filter-active' : '';
+        let buttonActive = this.state.filterValue === 'Active' ? 'filter-active' : '';
+        let buttonCompleted = this.state.filterValue === 'Completed' ? 'filter-active' : '';
         return (
             <div className="todoList-footer">
                 {this.getPagesCount() > 1 && 
                     <div className='tasksPagesLinks'>{ this.getPagesLinks() }</div>}
                 {!this.state.isHidden &&
                     <div className='filter_buttons'>
-                        <button onClick={ this.onAllFilterClick } className={buttonAll}>All</button>
-                        <button onClick={ this.onCompletedFilterClick } className={buttonCompleted}>Completed</button>
-                        <button onClick={ this.onActiveFilterClick } className={buttonActive}>Active</button>
+                        <button onClick={ () => this.getTasks('All') } className={buttonAll}>All</button>
+                        <button onClick={ () => this.getTasks('Completed') } className={buttonCompleted}>Completed</button>
+                        <button onClick={ () => this.getTasks('Active') } className={buttonActive}>Active</button>
                     </div>
                 }
                 {!this.state.isHidden && <span onClick={ this.onHideButtonClick } >Hide</span>}
@@ -61,5 +92,6 @@ class TodoListFooter extends React.Component {
     }
 }
 
-export default connect(null, { setTasksPage } )(TodoListFooter);
+
+export default connect(null, { setTasksPage, setFltrTasksPage } )(TodoListFooter);
 
