@@ -19,7 +19,7 @@ class TodoListFooter extends React.Component {
     setTasksPage = (page) =>{
         api.setTasksPage(this.props.listId, page)
             .then( Response => {
-                this.props.setTasksPage(this.props.listId, Response.data.items, page) 
+                this.props.setTasksPage(this.props.listId, page, Response.data.items ) 
             })
     }
 

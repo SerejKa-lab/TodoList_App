@@ -73,6 +73,7 @@ const reducer = (state = initialState, action) => {
                     if (list.id === action.listId) {
                         return {
                             ...list,
+                            totalCount: action.totalCount ? action.totalCount : list.totalCount,
                             page: action.page,
                             tasks: action.tasks
                                 .map( (task, index) => ({...task, renderIndex: renderBasis + index }) )
@@ -154,7 +155,8 @@ const RESTORE_TASKS = 'RESTORE_TASKS';
 export const restoreTasks = (listId, tasks, totalCount) => ({ type: RESTORE_TASKS, listId, tasks, totalCount })
 
 const SET_TASKS_PAGE = 'SET_TASKS_PAGE';
-export const setTasksPage = (listId, tasks, page) => ({ type: SET_TASKS_PAGE, listId, tasks, page })
+export const setTasksPage = (listId, page, tasks, totalCount ) => 
+    ({ type: SET_TASKS_PAGE, listId, page, tasks, totalCount })
 
 const ADD_TASK = 'ADD-TASK';
 export const addTask = (task) => ({type: ADD_TASK, task})
