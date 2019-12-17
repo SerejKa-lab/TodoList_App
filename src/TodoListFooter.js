@@ -57,10 +57,8 @@ class TodoListFooter extends React.Component {
     }
 
     getPagesCount = () => {
-        const { filterValue, totalCount, countOnPage, generalCount } = this.props
-        return filterValue === 'Active'
-            ? generalCount ? Math.ceil(generalCount / countOnPage) : 1
-            : totalCount ? Math.ceil(totalCount / countOnPage) : 1
+        const { totalCount, countOnPage } = this.props
+            return totalCount ? Math.ceil(totalCount / countOnPage) : 1
     }
 
     getPagesLinks = () => {

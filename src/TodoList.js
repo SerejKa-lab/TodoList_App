@@ -18,7 +18,7 @@ class TodoList extends React.Component {
 
     
     render = () => {
-        const { title, id, page, totalCount, countOnPage, tasks } = this.props.list;
+        const { title, id, page, totalCount, countOnPage, tasks, generalCount } = this.props.list;
         return (
             <div className='todoList'>
                 <section className='todoList_main'>
@@ -28,6 +28,7 @@ class TodoList extends React.Component {
                         filterValue = { this.state.filterValue }
                         changeFilter = { this.changeFilter }
                         page = { page }
+                        generalCount = {generalCount}
                         totalCount={totalCount} />
                     <TodoListTasks
                         tasks= {tasks}

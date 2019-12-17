@@ -13,7 +13,7 @@ const initialState =  {
 const reducer = (state = initialState, action) => {
 
     const countOnPage = 10;
-    const renderBasis = (action.page - 1)*10 +1;
+    const renderBasis = (action.page - 1)*countOnPage +1;
 
     switch (action.type) {
 
@@ -143,6 +143,7 @@ const reducer = (state = initialState, action) => {
                             ...list,
                             page: action.page,
                             totalCount,
+                            generalCount: action.tasks.length,
                             tasks: action.tasks
                                 .filter((task) => task.completed === action.completed)
                                 .map((task, index) => ({ ...task, renderIndex: index + 1}))
