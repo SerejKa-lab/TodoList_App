@@ -13,18 +13,19 @@ class TodoListTask extends React.Component {
         editTitleMode: false,
         inputError: false,
         setPriorityMode: false,
-        updateInProgress: false
+        updateInProgress: false,
     }
 
     getPagesCount = () => 
         this.props.totalCount ? Math.ceil(this.props.totalCount/this.props.countOnPage) : 1;
 
-    setAllTasksPage = (listId, page) => {
+    setAllTasksPage = (page) => {
+        const { listId } = this.props;
         return (
             api.setTasksPage(listId, page)
                 .then((Response) => {
-                    this.props.setTasksPage(listId, page,
-                        Response.data.items, Response.data.totalCount)
+                    const { items: tasks, totalCount } = Response.data;
+                    this.props.setTasksPage(listId, page, tasks, totalCount)
                 })
         )
     }
@@ -47,17 +48,17 @@ class TodoListTask extends React.Component {
                 if (Response.data.resultCode === 0) {
                     if (tasksLength === 10 && page < this.getPagesCount()) {
                         if (filterValue === 'All') {
-                            this.setAllTasksPage(listId, page)
+                            this.setAllTasksPage(page)
                         } else
                             this.setFltrTasksPage(listId, page)
 
                     } else if (tasksLength === 1 && page !== 1) {
                         if (filterValue === 'All') {
-                            this.setAllTasksPage(listId, page - 1)
+                            this.setAllTasksPage(page-1)
                         } else this.setFltrTasksPage(listId, page - 1)
 
                     } else if (tasksLength === 1 && page === 1 && filterValue !== 'All') {
-                        this.setAllTasksPage(listId, 1)
+                        this.setAllTasksPage(1)
                         .then( () => this.props.changeFilter('All') )
                     } else {
                         if (filterValue === 'All') {
@@ -71,19 +72,38 @@ class TodoListTask extends React.Component {
             })
     };
 
-    updateTask = (dataObj, isNewStatus) => {
-        const { listId, task: { id: taskId }, filterValue } = this.props;
+    updateTask = (dataObj) => {
+        const { listId, page, tasksLength, task: { id: taskId },  filterValue } = this.props;
+        const {setFltrTasksPage, changeFilter } = this.props;
+        const { completed } = dataObj;
         this.setState({ updateInProgress: true });
-        api.updateTask(listId, taskId, { ...this.props.task, ...dataObj })
-            .then(Response => {
-                /* if (isNewStatus && true) {
-                    if (tasksLength === 10 && page < this.getPagesCount()) {
-                    this.props.setFltrTasksPage
+        if (completed !== undefined && filterValue !== 'All') {
+            api.updateTask(listId, taskId, { ...this.props.task, ...dataObj })
+                .then(Response => {
+                    if (Response.data.resultCode === 0) {
+                        api.getAllTasks(listId)
+                            .then( (Response) => {
+                                const tasks = Response.data.items;
+                                const completed = filterValue === 'Completed' ? true : false;
+                                if (tasksLength === 1 && page !==1) {
+                                    setFltrTasksPage( listId, page-1, tasks, completed )
+                                } else if ( tasksLength === 1 && page === 1) {
+                                    this.setAllTasksPage(1)
+                                    changeFilter('All')
+                                } else {
+                                    setFltrTasksPage( listId, page, tasks, completed )
+                                }
+                                this.setState({ updateInProgress: false })
+                            } )
                     }
-                } else */ 
-                    this.props.updateTask(Response.data.data.item)
-                this.setState({ updateInProgress: false })
             })
+        } else {
+            api.updateTask(listId, taskId, { ...this.props.task, ...dataObj })
+                .then(Response => {
+                    this.props.updateTask(Response.data.data.item)
+                    this.setState({ updateInProgress: false })
+                })
+        }
     }
 
     setTitleEditMode = () => {
@@ -115,9 +135,9 @@ class TodoListTask extends React.Component {
         }
     }
 
-    changeTaskStatus = (e) => {
+    setTaskStatus = (e) => {
         const completed = e.currentTarget.checked;
-        this.updateTask({ completed }, true)
+        this.updateTask({ completed })
     }
 
     setTaskPriority = (e) => {
@@ -129,7 +149,7 @@ class TodoListTask extends React.Component {
     priorityArray = ['Low', 'Middle', 'High', 'Urgent', 'Later']
 
     priorityOptions = this.priorityArray.map(prior =>
-        <option className={prior} >{prior}</option>)
+        <option className={prior} key={prior} >{prior}</option>)
 
     getTaskPriority = () => this.priorityArray[this.props.task.priority]
 
@@ -145,7 +165,7 @@ class TodoListTask extends React.Component {
                 <div className={ this.props.task.completed ? 'taskIsDone' : 'todoList-task' }>
 {/* чекбокс */}
                     <input 
-                        onChange = { this.changeTaskStatus } 
+                        onChange = { this.setTaskStatus } 
                         type="checkbox" 
                         checked={this.props.task.completed} />
                     <span> { this.props.task.renderIndex } - </span>
