@@ -161,6 +161,8 @@ const reducer = (state = initialState, action) => {
                     if (list.id === action.listId) {
                         return {
                             ...list,
+                            totalCount: list.totalCount -1,
+                            generalCount: list.generalCount -1,
                             tasks: list.tasks.filter((task) => task.id !== action.taskId)
                                 .map((task, index) => ({ ...task, renderIndex: renderBasis + index }))
                         }
