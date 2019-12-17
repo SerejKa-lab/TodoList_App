@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import './App.css';
 import { api } from './api';
 import { setTasksPage, setFltrTasksPage } from './reducer';
+import Preloader from './Preloader/Preloader';
 
 class TodoListFooter extends React.Component {
 
@@ -13,7 +14,8 @@ class TodoListFooter extends React.Component {
 
     state = {
         isHidden: false,
-        filterValue: 'All'
+        filterValue: 'All',
+        inProgress: false
     }
 
     onShowButtonClick = () => { this.setState({ isHidden: false }) }
@@ -28,6 +30,8 @@ class TodoListFooter extends React.Component {
         const { listId } = this.props;
         let completed = true;
 
+        this.setState({inProgress: true});
+
         switch (this.props.filterValue) {
             
             case 'Active':
@@ -36,6 +40,7 @@ class TodoListFooter extends React.Component {
                     .then( Response => {
                         const tasks = Response.data.items;
                         this.props.setFltrTasksPage(listId, page, tasks, completed)
+                        this.setState({ inProgress: false })
                     } )
             break
 
@@ -44,6 +49,7 @@ class TodoListFooter extends React.Component {
                     .then( Response => {
                         const tasks = Response.data.items;
                         this.props.setFltrTasksPage(listId, page, tasks, completed)
+                        this.setState({ inProgress: false })
                     } )
             break
 
@@ -52,6 +58,7 @@ class TodoListFooter extends React.Component {
                     .then(Response => {
                         const { items: tasks, totalCount} = Response.data;
                         this.props.setTasksPage(listId, page, tasks, totalCount)
+                        this.setState({ inProgress: false })
                     })
         }
     }
@@ -87,6 +94,7 @@ class TodoListFooter extends React.Component {
                         <button onClick={ () => this.getTasks('All') } className={buttonAll}>All</button>
                         <button onClick={ () => this.getTasks('Completed') } className={buttonCompleted}>Completed</button>
                         <button onClick={ () => this.getTasks('Active') } className={buttonActive}>Active</button>
+                        { this.state.inProgress && <Preloader /> }
                     </div>
                 }
                 {!this.state.isHidden && <span onClick={ this.onHideButtonClick } >Hide</span>}
