@@ -20,24 +20,22 @@ class TodoListFooter extends React.Component {
     onHideButtonClick = () => { this.setState({ isHidden: true }) }
 
     getTasks = (filterValue) => {
-        this.setState({ filterValue }, 
-            () => {
-                this.setTasksPage(1);
-                this.props.changeFilter(filterValue)
-            }
-        )
+        this.props.changeFilter(filterValue)
+            .then(() => this.setTasksPage(1))
     }
 
     setTasksPage = (page) => {
         const { listId } = this.props;
+        let completed = true;
 
-        switch (this.state.filterValue) {
+        switch (this.props.filterValue) {
             
             case 'Active':
+                completed = false
                 api.getAllTasks(listId)
                     .then( Response => {
                         const tasks = Response.data.items;
-                        this.props.setFltrTasksPage(listId, page, tasks, false)
+                        this.props.setFltrTasksPage(listId, page, tasks, completed)
                     } )
             break
 
@@ -45,7 +43,7 @@ class TodoListFooter extends React.Component {
                 api.getAllTasks(listId)
                     .then( Response => {
                         const tasks = Response.data.items;
-                        this.props.setFltrTasksPage(listId, page, tasks, true)
+                        this.props.setFltrTasksPage(listId, page, tasks, completed)
                     } )
             break
 
@@ -58,15 +56,19 @@ class TodoListFooter extends React.Component {
         }
     }
 
-    getPagesCount = () => 
-        this.props.totalCount ? Math.ceil(this.props.totalCount/this.props.countOnPage) : 1;
+    getPagesCount = () => {
+        const { filterValue, totalCount, countOnPage, generalCount } = this.props
+        return filterValue === 'Active'
+            ? generalCount ? Math.ceil(generalCount / countOnPage) : 1
+            : totalCount ? Math.ceil(totalCount / countOnPage) : 1
+    }
 
     getPagesLinks = () => {
         const {page} = this.props;
         
         const pagesLinks = []
         for ( let i = 1; i <= this.getPagesCount(); i++ ) {
-            const pageLink = <span className={ i === page ? 'pageLink active' : 'pageLink' }
+            const pageLink = <span className={ i === page ? 'pageLink active' : 'pageLink'} style={{ 'cursor': 'pointer' }}
                 onClick={() => this.setTasksPage(i)} key={i}>{i}</span>
             pagesLinks.push(pageLink)
         }
@@ -75,9 +77,9 @@ class TodoListFooter extends React.Component {
 
 
     render = () => {
-        let buttonAll = this.state.filterValue === 'All' ? 'filter-active' : '';
-        let buttonActive = this.state.filterValue === 'Active' ? 'filter-active' : '';
-        let buttonCompleted = this.state.filterValue === 'Completed' ? 'filter-active' : '';
+        let buttonAll = this.props.filterValue === 'All' ? 'filter-active' : '';
+        let buttonActive = this.props.filterValue === 'Active' ? 'filter-active' : '';
+        let buttonCompleted = this.props.filterValue === 'Completed' ? 'filter-active' : '';
         return (
             <div className="todoList-footer">
                 {this.getPagesCount() > 1 && 

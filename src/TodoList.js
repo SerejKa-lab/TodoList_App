@@ -14,7 +14,7 @@ class TodoList extends React.Component {
         filterValue: 'All'
     };
 
-    changeFilter = (filterValue) => this.setState({ filterValue })
+    changeFilter = async(filterValue) => this.setState({ filterValue })
 
     
     render = () => {
@@ -25,6 +25,8 @@ class TodoList extends React.Component {
                     <TodoListHeader 
                         title = { title } 
                         listId = { id }
+                        filterValue = { this.state.filterValue }
+                        changeFilter = { this.changeFilter }
                         page = { page }
                         totalCount={totalCount} />
                     <TodoListTasks
@@ -41,10 +43,10 @@ class TodoList extends React.Component {
                         } />
                 </section>
                 <TodoListFooter 
-                    changeFilter={this.changeFilter}
                     listId={id}
                     page = {page}
                     filterValue = { this.state.filterValue }
+                    changeFilter={this.changeFilter}
                     countOnPage ={ countOnPage }
                     totalCount={totalCount} />
             </div>
