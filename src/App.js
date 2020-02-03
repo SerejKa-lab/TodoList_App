@@ -4,7 +4,7 @@ import { NavLink, Route } from 'react-router-dom';
 import TodoList from './TodoList';
 import AddItemForm from './AddItemForm';
 import Preloader from './Preloader/Preloader';
-import { restoreLists, restoreTasks, addList } from './Redux/reducer';
+import {restoreLists, restoreTasks, addList} from './Redux/reducer';
 import { api } from './API/api';
 import book from './Assets/img/book.png';
 
@@ -12,7 +12,9 @@ import book from './Assets/img/book.png';
 class App extends React.Component {
 
     componentDidMount(){
-        this.restoreLists()
+        this.setState({listsLoading: true})
+        this.props.restoreLists()
+            .then( () => this.setState({listsLoading: false}) )
     }
 
     state = {
@@ -20,15 +22,6 @@ class App extends React.Component {
         tasksLoading: false,
         listAdding: false,
         maxListsCount: 10
-    }
-
-    restoreLists = () => {
-        this.setState({ listsLoading: true });
-        api.restoreLists()
-            .then(Response => {
-                this.props.restoreLists(Response.data);
-                this.setState({ listsLoading: false })
-            })
     }
 
     addList = (title) => {
@@ -72,10 +65,15 @@ class App extends React.Component {
             )
         } )
 
+        const preloaderStyles = {position: 'absolute', height: '12px', top: '1.75em', right: '34%'}
+
 
         return (
             <div className='app'>
                 <div className='app_header'>
+                    { (this.state.listAdding || this.state.listsLoading) 
+                        && <Preloader {...preloaderStyles}/>
+                    }
                     <NavLink to='/' exact className='app_title'>
                         <h2>
                             <img src={book} alt='book' className='app_header_icon' />
@@ -84,13 +82,12 @@ class App extends React.Component {
                     </NavLink>
                     {this.props.lists.length < this.state.maxListsCount 
                         && <AddItemForm addItem={this.addList} placeholder='Add list' />}
-                    {this.state.listAdding && <Preloader />}
                 </div>
                 <nav className='app_header_navigation'>
                     <ul>{allListsLinks}</ul>
                 </nav>
                 <div className='app_lists'>
-                    {listsRoutes}
+                    { listsRoutes }
                     <Route path='/' exact>{allLists}</Route>
                 </div>
             </div>
