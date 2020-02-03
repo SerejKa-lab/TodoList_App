@@ -61,7 +61,12 @@ class ListTitle extends React.Component {
          })
      }
 
+    
+
     render() {
+
+        const loaderStyle ={fill: 'rgb(143, 59, 26)', height: '10px', position: 'absolute', bottom: '5px'}
+
         if (this.state.editMode) {
             return (
                 <div className='list_header_title__input'>
@@ -79,7 +84,7 @@ class ListTitle extends React.Component {
             <div className='list_header_title'>
                 <span onClick={this.setEditMode}>{this.props.title} &nbsp;</span>
                 <button className='delete_button' onClick={this.deleteList}><i className="fa fa-close"></i></button>
-                {this.state.inProgress && <Preloader />}
+                {this.state.inProgress && <Preloader {...loaderStyle} />}
             </div>
         )
     }

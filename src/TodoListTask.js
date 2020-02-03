@@ -160,6 +160,9 @@ class TodoListTask extends React.Component {
 
     render = () => {
 
+        const loaderStyle ={
+            fill: 'rgb(143, 59, 26)', height: '8px'}
+
         return (
             <div className="todoList-tasks">
                 <div className={ this.props.task.completed ? 'taskIsDone' : 'todoList-task' }>
@@ -199,7 +202,7 @@ class TodoListTask extends React.Component {
                     <button className='delete_button' onClick={this.deleteTask}>
                         <i className="fa fa-close"></i></button>
                     
-                    {this.state.updateInProgress && <Preloader /> }
+                    {this.state.updateInProgress && <Preloader {...loaderStyle}/> }
                 </div>
             </div>
         );

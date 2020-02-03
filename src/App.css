@@ -60,11 +60,13 @@
   font-size: 1.2em;
   font-weight: bold;
   text-align: center;
+  position: relative;
 }
 
 .list_header_add_form {
   display: flex;
   justify-content: center;
+  position: relative;
 }
 
 .app_header_navigation {
@@ -126,6 +128,10 @@
   background-color: yellowgreen;
 }
 
+.delete_button {
+  margin-right: 15px;
+}
+
 .delete_button:hover {
   background: pink;
 }
@@ -168,6 +174,7 @@
 
 .filter_buttons {
   text-align: center;
+  position: relative;
 }
 
 .tasksPagesLinks {

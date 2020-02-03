@@ -82,9 +82,13 @@ class TodoListFooter extends React.Component {
 
 
     render = () => {
+        
         let buttonAll = this.props.filterValue === 'All' ? 'filter-active' : '';
         let buttonActive = this.props.filterValue === 'Active' ? 'filter-active' : '';
         let buttonCompleted = this.props.filterValue === 'Completed' ? 'filter-active' : '';
+        const loaderStyle ={
+            fill: 'rgb(143, 59, 26)', height: '10px', position: 'absolute', top: '5px', right: '5px'}
+
         return (
             <div className="todoList-footer">
                 {this.getPagesCount() > 1 && 
@@ -94,7 +98,7 @@ class TodoListFooter extends React.Component {
                         <button onClick={ () => this.getTasks('All') } className={buttonAll}>All</button>
                         <button onClick={ () => this.getTasks('Completed') } className={buttonCompleted}>Completed</button>
                         <button onClick={ () => this.getTasks('Active') } className={buttonActive}>Active</button>
-                        { this.state.inProgress && <Preloader /> }
+                        { this.state.inProgress && <Preloader {...loaderStyle} /> }
                     </div>
                 }
                 {!this.state.isHidden && <span onClick={ this.onHideButtonClick } >Hide</span>}

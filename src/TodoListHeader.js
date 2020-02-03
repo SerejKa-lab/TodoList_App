@@ -78,6 +78,8 @@ class TodoListHeader extends React.Component {
         const {listId, title, page, totalCount, filterValue, generalCount} = this.props
         const { maxTasksCount } = this.state
         const totalTasksCount = filterValue === 'All' ? totalCount : generalCount
+        const loaderStyle ={
+            fill: 'rgb(143, 59, 26)', height: '8px', position: 'absolute', right: '-3px', top: '5px'}
 
         return (
             <div className="list_header">
@@ -89,7 +91,7 @@ class TodoListHeader extends React.Component {
                             placeholder='Add new task'
                             listId={listId}
                             addItem={this.addTask} />
-                        {this.state.taskLoading && <Preloader />}
+                        {this.state.taskLoading && <Preloader {...loaderStyle} />}
                     </div>}
             </div>
         )
