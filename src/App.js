@@ -4,8 +4,8 @@ import { NavLink, Route } from 'react-router-dom';
 import TodoList from './TodoList';
 import AddItemForm from './AddItemForm';
 import Preloader from './Preloader/Preloader';
-import { restoreLists, restoreTasks, addList } from './reducer';
-import { api } from './api';
+import { restoreLists, restoreTasks, addList } from './Redux/reducer';
+import { api } from './API/api';
 import book from './Assets/img/book.png';
 
 
@@ -51,17 +51,27 @@ class App extends React.Component {
 
 
     render() {
-        const listsRoutes = this.props.lists.map((list) =>
-            <Route path={`/${list.title}`} key={list.id}>
-                <TodoList list={list} key={list.id} restoreTasks={this.restoreTasks} />
-            </Route>
-        )
+        console.log('-------------RENDER----------------')
+        const listsRoutes = this.props.lists.map((list) =>{
+            const path = list.title.replace(/\s/g, '-')
+            console.log('Route to '+path)
+            return (
+            <Route path={`/${path}`} key={list.id} render={() => 
+                <TodoList list={list} key={list.id} restoreTasks={this.restoreTasks} />} 
+            />) 
+        })
 
         const allLists = this.props.lists.map( (list) => 
             <TodoList list={list} key={list.id} restoreTasks={this.restoreTasks} /> )
 
-        const listLinks = this.props.lists.map( ( list ) => 
-            <li key={list.id}><NavLink to={`/${list.title}`}>{list.title}</NavLink></li> )
+        const allListsLinks = this.props.lists.map( ( list ) => {
+            const link = list.title.replace(/\s/g, '-')
+            console.log(link)
+            return(
+                <li key={list.id}><NavLink to={`/${link}`}>{list.title}</NavLink></li>
+            )
+        } )
+
 
         return (
             <div className='app'>
@@ -77,7 +87,7 @@ class App extends React.Component {
                     {this.state.listAdding && <Preloader />}
                 </div>
                 <nav className='app_header_navigation'>
-                    <ul>{listLinks}</ul>
+                    <ul>{allListsLinks}</ul>
                 </nav>
                 <div className='app_lists'>
                     {listsRoutes}

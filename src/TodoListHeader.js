@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import AddItemForm from './AddItemForm';
 import ListTitle from './ListTitle';
 import Preloader from './Preloader/Preloader';
-import { api } from './api';
-import { addTask, setTasksPage, setFltrTasksPage } from './reducer';
+import { api } from './API/api';
+import { addTask, setTasksPage, setFltrTasksPage } from './Redux/reducer';
 
 class TodoListHeader extends React.Component {
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { api } from './api';
-import { deleteList, updateListTitle } from './reducer';
+import { api } from './API/api';
+import { deleteList, updateListTitle } from './Redux/reducer';
 import Preloader from './Preloader/Preloader';
 
 

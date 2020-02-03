@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import './App.css';
-import { api } from './api';
-import { setTasksPage, setFltrTasksPage } from './reducer';
+import { api } from './API/api';
+import { setTasksPage, setFltrTasksPage } from './Redux/reducer';
 import Preloader from './Preloader/Preloader';
 
 class TodoListFooter extends React.Component {

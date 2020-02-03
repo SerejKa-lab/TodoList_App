@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { deleteTask, updateTask, setTasksPage, setFltrTasksPage, deleteFltrTask } from './reducer';
+import { deleteTask, updateTask, setTasksPage, setFltrTasksPage, deleteFltrTask } from './Redux/reducer';
 import Preloader from './Preloader/Preloader'
-import { api } from './api';
+import { api } from './API/api';
 
 
 
