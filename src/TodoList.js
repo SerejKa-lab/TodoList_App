@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import TodoListHeader from './TodoListHeader';
 import TodoListTasks from './TodoListTasks';
-import TodoListFooter from './TodoListFooter';
+import TodoListFooterContainer from './TodoListFooterContainer';
 
 class TodoList extends React.Component {
 
@@ -10,26 +10,23 @@ class TodoList extends React.Component {
         this.props.restoreTasks(this.props.list.id)
     }
 
-    state = {
-        filterValue: 'All'
-    };
-
-    changeFilter = async(filterValue) => this.setState({ filterValue })
-
     
     render = () => {
-        const { title, id, page, totalCount, countOnPage, tasks, generalCount } = this.props.list;
+        const { title, id, page, totalCount, countOnPage, tasks, generalCount, 
+                listDeliting, titleUpdating, taskIsAdding, filterValue } = this.props.list;
         return (
             <div className='todoList'>
                 <section className='todoList_main'>
                     <TodoListHeader 
                         title = { title } 
                         listId = { id }
-                        filterValue = { this.state.filterValue }
-                        changeFilter = { this.changeFilter }
+                        filterValue = { filterValue }
                         page = { page }
                         generalCount = {generalCount}
-                        totalCount={totalCount} />
+                        totalCount={totalCount} 
+                        listDeliting = {listDeliting}
+                        titleUpdating={titleUpdating} 
+                        taskIsAdding={taskIsAdding} />
                     <TodoListTasks
                         tasks= {tasks}
                         dataObj={
@@ -38,16 +35,14 @@ class TodoList extends React.Component {
                                 page: page,
                                 totalCount: totalCount,
                                 countOnPage: countOnPage,
-                                filterValue: this.state.filterValue,
-                                changeFilter: this.changeFilter
+                                filterValue: filterValue,
                             }
                         } />
                 </section>
-                <TodoListFooter 
+                <TodoListFooterContainer 
                     listId={id}
                     page = {page}
-                    filterValue = { this.state.filterValue }
-                    changeFilter={this.changeFilter}
+                    filterValue = { filterValue }
                     countOnPage ={ countOnPage }
                     totalCount={totalCount} />
             </div>
