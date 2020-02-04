@@ -56,7 +56,7 @@
 }
 
 .list_header_title {
-  margin: 10px;
+  margin: 20px 10px;
   font-size: 1.2em;
   font-weight: bold;
   text-align: center;
@@ -116,7 +116,7 @@
 }
 
 .list_header_title__input {
-  margin: 11px;
+  margin: 21px 11px;
   text-align: center;
 }
 

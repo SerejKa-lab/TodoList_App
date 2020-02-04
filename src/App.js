@@ -1,52 +1,34 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { NavLink, Route } from 'react-router-dom';
+import { NavLink, Route, withRouter } from 'react-router-dom';
 import TodoList from './TodoList';
 import AddItemForm from './AddItemForm';
 import Preloader from './Preloader/Preloader';
 import {restoreLists, restoreTasks, addList} from './Redux/reducer';
-import { api } from './API/api';
 import book from './Assets/img/book.png';
+import { compose } from 'redux';
 
 
 class App extends React.Component {
 
     componentDidMount(){
-        this.setState({listsLoading: true})
         this.props.restoreLists()
-            .then( () => this.setState({listsLoading: false}) )
-    }
-
-    state = {
-        listsLoading: false,
-        tasksLoading: false,
-        listAdding: false,
-        maxListsCount: 10
     }
 
     addList = (title) => {
-        this.setState({ listAdding: true });
-        api.addList(title)
-            .then(Response => {
-                this.props.addList(Response.data.data.item);
-                this.setState({ listAdding: false })
-            })
+        if (!title.match(/%/)) {
+            this.props.addList(title)
+            this.props.history.push('/')
+        }
     }
 
-    restoreTasks = (listId) => {
-        this.setState({ tasksLoading: true });
-        api.restoreTasks(listId)
-            .then(Response => {
-                this.props.restoreTasks(listId, Response.data.items, Response.data.totalCount);
-                this.setState({ tasksLoading: false })
-            })
-    }
+    restoreTasks = (listId) => this.props.restoreTasks(listId)
 
 
     render() {
-        console.log('-------------RENDER----------------')
+        console.log('--------RENDER-------------')
         const listsRoutes = this.props.lists.map((list) =>{
-            const path = list.title.replace(/\s/g, '-')
+            const path = list.title.replace(/\s|\?|#/g, '-')
             console.log('Route to '+path)
             return (
             <Route path={`/${path}`} key={list.id} render={() => 
@@ -58,21 +40,22 @@ class App extends React.Component {
             <TodoList list={list} key={list.id} restoreTasks={this.restoreTasks} /> )
 
         const allListsLinks = this.props.lists.map( ( list ) => {
-            const link = list.title.replace(/\s/g, '-')
+            const link = list.title.replace(/\s|\?|#/g, '-')
             console.log(link)
             return(
                 <li key={list.id}><NavLink to={`/${link}`}>{list.title}</NavLink></li>
             )
         } )
 
-        const preloaderStyles = {position: 'absolute', height: '12px', top: '1.75em', right: '34%'}
+        const preloaderStyles = {
+            position: 'absolute', height: '12px', top: '1.75em', right: '34%', fill: 'white'
+        }
 
 
         return (
             <div className='app'>
                 <div className='app_header'>
-                    { (this.state.listAdding || this.state.listsLoading) 
-                        && <Preloader {...preloaderStyles}/>
+                    { this.props.listsLoading && <Preloader {...preloaderStyles}/>
                     }
                     <NavLink to='/' exact className='app_title'>
                         <h2>
@@ -80,7 +63,7 @@ class App extends React.Component {
                             Органайзер задач
                         </h2>
                     </NavLink>
-                    {this.props.lists.length < this.state.maxListsCount 
+                    {this.props.lists.length < this.props.maxListsCount 
                         && <AddItemForm addItem={this.addList} placeholder='Add list' />}
                 </div>
                 <nav className='app_header_navigation'>
@@ -97,11 +80,15 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        lists: state.lists
+        lists: state.lists,
+        listsLoading: state.listsProgress.listsLoading,
+        maxListsCount: state.maxListsCount
     }
 }
 
 
-const actionCreators = {restoreLists, restoreTasks ,addList}
 
-export default connect(mapStateToProps, actionCreators)(App);
+export default compose(
+    connect(mapStateToProps, {restoreLists, restoreTasks ,addList}),
+    withRouter
+)(App);

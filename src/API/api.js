@@ -25,8 +25,16 @@ export const api = {
         return instance.delete(`/${listId}`)
     },
 
-    restoreTasks(listId) {
-        return instance.get(`/${listId}/tasks?count=10`)
+    getTasks(listId, count = 10) {
+        return instance.get(`/${listId}/tasks?count=${count}`)
+    },
+
+    getAllTasks(listId) {
+        return instance.get(`/${listId}/tasks?count=100`)
+    },
+
+    getTasksOnPage(listId, page = 1) {
+        return instance.get(`/${listId}/tasks?count=10&page=${page}`)
     },
 
     addTask(listId, title) {
@@ -39,13 +47,5 @@ export const api = {
 
     deleteTask(listId, taskId) {
         return instance.delete(`/${listId}/tasks/${taskId}`)
-    },
-
-    setTasksPage(listId, page = 1) {
-        return instance.get(`/${listId}/tasks?count=10&page=${page}`)
-    },
-
-    getAllTasks(listId) {
-        return instance.get(`/${listId}/tasks?count=100`)
-    }            
+    }
 }

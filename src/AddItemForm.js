@@ -10,7 +10,8 @@ class AddItemForm extends React.Component {
     setItemTitle = (e) => {
         if (this.state.inputError) this.setState({ inputError: false });
         this.setState({ itemTitle: e.currentTarget.value }, () => {
-            if (this.state.itemTitle === '' || this.state.itemTitle.length > 100)
+            const newTitle = this.state.itemTitle
+            if (newTitle === '' || newTitle.length > 100 || newTitle.match(/%/))
                 this.setState({ inputError: true })
         });
     }
