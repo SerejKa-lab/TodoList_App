@@ -3,79 +3,33 @@ import { connect } from 'react-redux';
 import AddItemForm from './AddItemForm';
 import ListTitle from './ListTitle';
 import Preloader from './Preloader/Preloader';
-import { api } from './API/api';
-import { addTask, setTasksPage, setFltrTasksPage } from './Redux/reducer';
+import { addTask, addTaskActive, setTasksPage, 
+    setFltrTasksPage, setFilterValue, setAllTasksPage } from './Redux/reducer';
 
 class TodoListHeader extends React.Component {
 
     state = {
-        taskLoading: false,
         maxTasksCount: 33
     }
 
-    setFirstTasksPage = () => {
-        return api.setTasksPage(this.props.listId, 1)
-            .then((Response) => {
-                this.props.setTasksPage(this.props.listId, 1,
-                    Response.data.items, Response.data.totalCount)
-            })
-    }
 
     addTask = (title) => {
-        const { listId, page, filterValue } = this.props;
-        this.setState({ taskLoading: true });
-        
-        if (filterValue === 'Completed') {
-            api.addTask(listId, title)
-                .then((Response) => {
-                    if (Response.data.resultCode === 0) {
-                        this.setFirstTasksPage()
-                            .then(() => {
-                                this.props.changeFilter('All')
-                                this.setState({ taskLoading: false })
-                            })
-                    }
-                })
-        
-        } else if (filterValue === 'All') {
-            if (page === 1) {
-                api.addTask(listId, title)
-                    .then(Response => {
-                        if (Response.data.resultCode === 0) {
-                            this.props.addTask(Response.data.data.item)
-                            this.setState({ taskLoading: false })
-                        }
-                    })
-            } else {
-                api.addTask(listId, title)
-                    .then((Response) => {
-                        if (Response.data.resultCode === 0) {
-                            this.setFirstTasksPage()
-                                .then(() => this.setState({ taskLoading: false }))
-                        }
-                    })
-            }
+        const { listId, filterValue } = this.props;
 
-        } else if (filterValue === 'Active') {
-            api.addTask(listId, title)
-                .then(Response => {
-                    if (Response.data.resultCode === 0) {
-                        api.getAllTasks(listId)
-                            .then((Response) => {
-                                const completed = false;
-                                const tasks = Response.data.items;
-                                this.props.setFltrTasksPage(listId, 1, tasks, completed)
-                                this.setState({ taskLoading: false })
-                            })
-                    }
-                })
+        if ( filterValue === 'Completed' || filterValue === 'All' )  {
+            this.props.addTask(listId, title)
+        }
+
+        if (filterValue === 'Active') {
+            this.props.addTaskActive(listId, title)
         }
     }
 
 
     render() {
 
-        const {listId, title, page, totalCount, filterValue, generalCount} = this.props
+        const {listId, title, page, totalCount, filterValue,
+            generalCount, listDeliting, titleUpdating, taskIsAdding} = this.props
         const { maxTasksCount } = this.state
         const totalTasksCount = filterValue === 'All' ? totalCount : generalCount
         const loaderStyle ={
@@ -83,7 +37,8 @@ class TodoListHeader extends React.Component {
 
         return (
             <div className="list_header">
-                <ListTitle listId={listId} title={title} page={page} />
+                <ListTitle listId={listId} title={title} page={page} 
+                listDeliting={listDeliting} titleUpdating={titleUpdating} />
 {/* форма добавления задач */}
                 { totalTasksCount < maxTasksCount 
                     && <div className='list_header_add_form'>
@@ -91,7 +46,7 @@ class TodoListHeader extends React.Component {
                             placeholder='Add new task'
                             listId={listId}
                             addItem={this.addTask} />
-                        {this.state.taskLoading && <Preloader {...loaderStyle} />}
+                        {taskIsAdding && <Preloader {...loaderStyle} />}
                     </div>}
             </div>
         )
@@ -100,6 +55,11 @@ class TodoListHeader extends React.Component {
 }
 
 
+const mdtp = { 
+    addTask, addTaskActive, setTasksPage, 
+    setFltrTasksPage, setFilterValue, setAllTasksPage,
+}
 
-export default connect(null, { addTask, setTasksPage, setFltrTasksPage } )(TodoListHeader);
+export default 
+    connect(null, mdtp )(TodoListHeader);
 
