@@ -1,71 +1,66 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { api } from './API/api';
 import { deleteList, updateListTitle } from './Redux/reducer';
 import Preloader from './Preloader/Preloader';
+import { withRouter } from 'react-router-dom';
+import { compose } from 'redux';
 
 
 class ListTitle extends React.Component {
 
-    state = { 
-        taskLoading: false,
+    state = {
         editMode: false,
         title: '',
-        inputError: false
-     }
-
-     deleteList = () => {
-        this.setState({ inProgress: true });
-        api.deleteList(this.props.listId)
-            .then(() => {
-                this.props.deleteList(this.props.listId);
-                this.setState({ inProgress: false })
-            })
+        inputError: false,
     }
 
-     setEditMode = () => this.setState({ editMode: true, title: this.props.title })
-     setDisplayMode =() => {
-         if (this.state.inputError) this.setState({ inputError: false })
-         this.setState({ editMode: false })
-     }
- 
-     editListTitle = (e) => {
-         const newTitle = e.currentTarget.value;
-         if (this.state.inputError) this.setState({ inputError: false });
-         if (newTitle.trim() === '' || newTitle.length > 100) {
-             this.setState({ title: newTitle, inputError: true })
-         } else this.setState({ title: newTitle })
-     }
- 
-     setTitleOnKey = (e) => {
-         const title = e.currentTarget.value;
-         if (e.key === 'Enter' && !this.state.inputError) {
-             this.setDisplayMode()
-             this.updateListTitle( title );
-         }
-         if (e.keyCode === 27) {
-             this.setDisplayMode()
-             if (this.state.inputError) this.setState({ inputError: false })
-         }
-     }
- 
-     updateListTitle = (title) => {
-         const listId = this.props.listId;
-         this.setState({ updateInProgress: true });
-         api.updateListTitle(listId, title)
-             .then(Response => {
-                 if (Response.data.resultCode === 0) {
-                     this.props.updateListTitle(listId, title)
-                     this.setState({ updateInProgress: false })
-                 }
-         })
-     }
+    deleteList = () => {
+        this.props.deleteList(this.props.listId)
+        this.props.history.push('/')
+    }
 
-    
+    updateListTitle = (title) => {
+        if (!title.match(/%/)) {
+            this.props.updateListTitle(this.props.listId, title)
+            if (this.props.history.location.pathname !== '/') {
+                this.props.history.push(`/${title.replace(/\s|\?|#/g, '-')}`)
+            }
+        }
+    }
+
+    setEditMode = () => this.setState({ editMode: true, title: this.props.title })
+    setDisplayMode = () => {
+        if (this.state.inputError) this.setState({ inputError: false })
+        this.setState({ editMode: false })
+    }
+
+    editListTitle = (e) => {
+        const newTitle = e.currentTarget.value;
+        if (this.state.inputError) this.setState({ inputError: false });
+        if (newTitle.trim() === '' || newTitle.length > 100 || newTitle.match(/%/)) {
+            this.setState({ title: newTitle, inputError: true })
+        } else this.setState({ title: newTitle })
+    }
+
+    setTitleOnKey = (e) => {
+        const title = e.currentTarget.value;
+        if (e.key === 'Enter' && !this.state.inputError) {
+            this.setDisplayMode()
+            this.updateListTitle(title);
+        }
+        if (e.keyCode === 27) {
+            this.setDisplayMode()
+            if (this.state.inputError) this.setState({ inputError: false })
+        }
+    }
+
+
 
     render() {
 
-        const loaderStyle ={fill: 'rgb(143, 59, 26)', height: '10px', position: 'absolute', bottom: '5px'}
+        const loaderStyle = {
+            fill: 'rgb(143, 59, 26)', height: '10px', position: 'absolute', bottom: '-12px', right: '50%'
+        }
 
         if (this.state.editMode) {
             return (
@@ -83,13 +78,16 @@ class ListTitle extends React.Component {
         } else return (
             <div className='list_header_title'>
                 <span onClick={this.setEditMode}>{this.props.title} &nbsp;</span>
-                <button className='delete_button' onClick={this.deleteList}><i className="fa fa-close"></i></button>
-                {this.state.inProgress && <Preloader {...loaderStyle} />}
+                <button className='delete_button' onClick={this.deleteList} disabled={this.props.listDeliting}><i className="fa fa-close"></i></button>
+                {(this.props.listDeliting || this.props.titleUpdating)
+                    && <Preloader {...loaderStyle} />}
             </div>
         )
     }
 }
 
 
-
-export default connect(null, { deleteList, updateListTitle })(ListTitle)
+export default compose (
+    connect(null, { deleteList, updateListTitle }),
+    withRouter
+)(ListTitle)
