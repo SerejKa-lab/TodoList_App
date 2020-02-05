@@ -1,14 +1,13 @@
 import React from 'react';
 import TodoListTask from './TodoListTask';
 
-const TodoListTasks = (props) => {
+const TodoListTasks = ({ tasks, countOnPage, ...restProps}) => {
 
-    const { countOnPage } = props.dataObj;
-    const tasksLength = props.tasks.length;
+    const tasksLength = tasks.length;
 
-    const tasksArray = props.tasks.filter(( task, index ) => index < countOnPage )
+    const tasksArray = tasks.filter(( task, index ) => index < countOnPage )
     .map((task) => 
-        <TodoListTask key={task.id} task={task} tasksLength={tasksLength} { ...props.dataObj } /> 
+        <TodoListTask key={task.id} task={task} tasksLength={tasksLength} { ...restProps } /> 
     );
 
 

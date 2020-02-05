@@ -28,16 +28,12 @@ class TodoList extends React.Component {
                         titleUpdating={titleUpdating} 
                         taskIsAdding={taskIsAdding} />
                     <TodoListTasks
-                        tasks= {tasks}
-                        dataObj={
-                            {
-                                listId: id,
-                                page: page,
-                                totalCount: totalCount,
-                                countOnPage: countOnPage,
-                                filterValue: filterValue,
-                            }
-                        } />
+                        tasks={tasks}
+                        listId={id}
+                        page={page}
+                        countOnPage={countOnPage}
+                        filterValue={filterValue}
+                    />
                 </section>
                 <TodoListFooterContainer 
                     listId={id}

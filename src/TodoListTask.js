@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { deleteTask, updateTask, setTasksPage, setFltrTasksPage, deleteFltrTask } from './Redux/reducer';
+import { delTaskFromPage, updateTask, setTasksPage, setAllTasksPage,
+        setFltrTasksPage, setFilterValue } from './Redux/reducer';
 import Preloader from './Preloader/Preloader'
 import { api } from './API/api';
 
@@ -16,65 +17,16 @@ class TodoListTask extends React.Component {
         updateInProgress: false,
     }
 
-    getPagesCount = () => 
-        this.props.totalCount ? Math.ceil(this.props.totalCount/this.props.countOnPage) : 1;
-
-    setAllTasksPage = (page) => {
-        const { listId } = this.props;
-        return (
-            api.setTasksPage(listId, page)
-                .then((Response) => {
-                    const { items: tasks, totalCount } = Response.data;
-                    this.props.setTasksPage(listId, page, tasks, totalCount)
-                })
-        )
-    }
-
-    setFltrTasksPage = (listId, page) => {
-        api.getAllTasks(listId)
-            .then(Response => {
-                const completed = this.props.filterValue === 'Completed' ? true : false
-                const tasks = Response.data.items;
-                this.props.setFltrTasksPage(listId, page, tasks, completed)
-            })
-    }
 
     deleteTask = () => {
-        const { listId, page, tasksLength, filterValue } = this.props;
-        const { id: taskId } = this.props.task;
-        this.setState({ updateInProgress: true });
-        api.deleteTask(listId, taskId)
-            .then((Response) => {
-                if (Response.data.resultCode === 0) {
-                    if (tasksLength === 10 && page < this.getPagesCount()) {
-                        if (filterValue === 'All') {
-                            this.setAllTasksPage(page)
-                        } else
-                            this.setFltrTasksPage(listId, page)
-
-                    } else if (tasksLength === 1 && page !== 1) {
-                        if (filterValue === 'All') {
-                            this.setAllTasksPage(page-1)
-                        } else this.setFltrTasksPage(listId, page - 1)
-
-                    } else if (tasksLength === 1 && page === 1 && filterValue !== 'All') {
-                        this.setAllTasksPage(1)
-                        .then( () => this.props.changeFilter('All') )
-                    } else {
-                        if (filterValue === 'All') {
-                            this.props.deleteTask(listId, taskId, page);
-                        } else {
-                            this.props.deleteFltrTask( listId, taskId, page )
-                        }
-                    }
-                    this.setState({ updateInProgress: false })
-                }
-            })
+        const {listId, delTaskFromPage} = this.props
+        const {id: taskId} = this.props.task
+        delTaskFromPage(listId, taskId)
     };
 
     updateTask = (dataObj) => {
         const { listId, page, tasksLength, task: { id: taskId },  filterValue } = this.props;
-        const {setFltrTasksPage, changeFilter } = this.props;
+        const {setFltrTasksPage, setFilterValue, setAllTasksPage } = this.props;
         const { completed } = dataObj;
         this.setState({ updateInProgress: true });
         if (completed !== undefined && filterValue !== 'All') {
@@ -88,8 +40,8 @@ class TodoListTask extends React.Component {
                                 if (tasksLength === 1 && page !==1) {
                                     setFltrTasksPage( listId, page-1, tasks, completed )
                                 } else if ( tasksLength === 1 && page === 1) {
-                                    this.setAllTasksPage(1)
-                                    changeFilter('All')
+                                    setAllTasksPage(listId, 1)
+                                    setFilterValue('All')
                                 } else {
                                     setFltrTasksPage( listId, page, tasks, completed )
                                 }
@@ -160,6 +112,10 @@ class TodoListTask extends React.Component {
 
     render = () => {
 
+        const { editTitleMode, title, inputError, 
+                setPriorityMode, updateInProgress } = this.state
+        const { taskDeliting  } = this.props.task
+
         const loaderStyle ={
             fill: 'rgb(143, 59, 26)', height: '8px'}
 
@@ -173,11 +129,11 @@ class TodoListTask extends React.Component {
                         checked={this.props.task.completed} />
                     <span> { this.props.task.renderIndex } - </span>
 {/* заголовок */}
-                    { this.state.editTitleMode // активируем режим редактирования названия задачи
+                    { editTitleMode // активируем режим редактирования названия задачи
                    
                         ? <input type="text" 
-                                value = { this.state.title }
-                                className = { this.state.inputError ? 'error' : ''}
+                                value = { title }
+                                className = { inputError ? 'error' : ''}
                                 onChange = { this.editTaskTitle }
                                 autoFocus ={ true } 
                                 onBlur = { this.setDisplayMode } 
@@ -185,7 +141,7 @@ class TodoListTask extends React.Component {
                         : <span onClick = { this.setTitleEditMode } >{this.props.task.title}, </span>
                     }
 {/* статус */}
-                    {this.state.setPriorityMode
+                    {setPriorityMode
                         ? <select 
                             defaultValue={this.getTaskPriority()} 
                             className={this.getTaskPriority()} 
@@ -199,10 +155,11 @@ class TodoListTask extends React.Component {
                         </span>
                     }
 {/* кнопка delete */}
-                    <button className='delete_button' onClick={this.deleteTask}>
+                    <button className='delete_button' onClick={this.deleteTask} 
+                        disabled={updateInProgress || taskDeliting}>
                         <i className="fa fa-close"></i></button>
                     
-                    {this.state.updateInProgress && <Preloader {...loaderStyle}/> }
+                    { (updateInProgress || taskDeliting) && <Preloader {...loaderStyle}/> }
                 </div>
             </div>
         );
@@ -210,7 +167,12 @@ class TodoListTask extends React.Component {
 }
 
 
-const actionCreators = {deleteTask, updateTask, setTasksPage, setFltrTasksPage, deleteFltrTask}
+const actionCreators = {
+    updateTask, delTaskFromPage,
+    setFltrTasksPage,
+    setFilterValue, setTasksPage,
+    setAllTasksPage
+}
 
 export default connect(null, actionCreators)(TodoListTask);
 
