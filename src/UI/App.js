@@ -1,13 +1,14 @@
 import React from 'react';
 import styles from './App.module.css'
 import { connect } from 'react-redux';
-import { NavLink, Route, withRouter } from 'react-router-dom';
+import { NavLink, Route, withRouter, Switch } from 'react-router-dom';
 import TodoList from './TodoList/TodoList';
 import AddItemForm from './AddItemForm/AddItemForm';
 import Preloader from './Preloader/Preloader';
 import {restoreLists, restoreTasks, addList} from '../Redux/reducer';
 import book from '../Assets/img/book.png';
 import { compose } from 'redux';
+import Error404 from './Error404/Error404';
 
 
 class App extends React.Component {
@@ -30,7 +31,7 @@ class App extends React.Component {
         const listsRoutes = this.props.lists.map((list) =>{
             const path = list.title.replace(/\s|\?|#/g, '-')
             return (
-            <Route path={`/${path}`} key={list.id} render={() => 
+            <Route path={`/${path}`} exact key={list.id} render={() => 
                 <TodoList list={list} key={list.id} restoreTasks={this.restoreTasks} />} 
             />) 
         })
@@ -68,8 +69,11 @@ class App extends React.Component {
                     <ul>{allListsLinks}</ul>
                 </nav>
                 <div className={styles.app_lists}>
-                    { listsRoutes }
-                    <Route path='/' exact>{allLists}</Route>
+                    <Switch>
+                        {listsRoutes}
+                        <Route path='/' exact>{allLists}</Route>
+                        <Route component={Error404} />
+                    </Switch>
                 </div>
             </div>
         )

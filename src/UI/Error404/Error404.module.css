@@ -1,0 +1,13 @@
+.error404 code {
+    color: mediumvioletred;
+}
+
+.error404 h3 {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgb(169, 169, 169, 0.7);
+    padding: 5px 10px;
+    border-radius: 2px;
+    color: white;
+}
