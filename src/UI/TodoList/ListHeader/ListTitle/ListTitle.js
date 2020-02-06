@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { deleteList, updateListTitle } from './Redux/reducer';
-import Preloader from './Preloader/Preloader';
+import { deleteList, updateListTitle } from '../../../../Redux/reducer';
+import Preloader from '../../../Preloader/Preloader';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 

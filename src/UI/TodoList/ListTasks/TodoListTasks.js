@@ -1,5 +1,5 @@
 import React from 'react';
-import TodoListTask from './TodoListTask';
+import TodoListTask from './ListTask/TodoListTask';
 
 const TodoListTasks = ({ tasks, countOnPage, ...restProps}) => {
 

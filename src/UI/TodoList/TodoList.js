@@ -1,8 +1,8 @@
 import React from 'react';
-import './App.css';
-import TodoListHeader from './TodoListHeader';
-import TodoListTasks from './TodoListTasks';
-import TodoListFooterContainer from './TodoListFooterContainer';
+import '../App.css';
+import TodoListHeader from '../TodoList/ListHeader/TodoListHeader';
+import TodoListTasks from './ListTasks/TodoListTasks';
+import TodoListFooterContainer from '../TodoList/ListFooter/TodoListFooterContainer';
 
 class TodoList extends React.Component {
 

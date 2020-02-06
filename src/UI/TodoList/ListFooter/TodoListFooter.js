@@ -1,6 +1,6 @@
 import React from 'react';
-import './App.css';
-import Preloader from './Preloader/Preloader';
+import '../../App.css';
+import Preloader from '../../Preloader/Preloader';
 
 const TodoListFooter = (props) => {
 

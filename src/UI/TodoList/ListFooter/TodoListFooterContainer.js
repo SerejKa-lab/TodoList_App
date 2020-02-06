@@ -1,5 +1,5 @@
 import React from 'react'
-import { setTasksPage, setFilterValue, setFilteredPage, setAllTasksPage } from './Redux/reducer'
+import { setTasksPage, setFilterValue, setFilteredPage, setAllTasksPage } from '../../../Redux/reducer'
 import { connect } from 'react-redux';
 import TodoListFooter from './TodoListFooter'
 

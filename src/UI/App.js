@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { NavLink, Route, withRouter } from 'react-router-dom';
-import TodoList from './TodoList';
-import AddItemForm from './AddItemForm';
+import TodoList from './TodoList/TodoList';
+import AddItemForm from './AddItemForm/AddItemForm';
 import Preloader from './Preloader/Preloader';
-import {restoreLists, restoreTasks, addList} from './Redux/reducer';
-import book from './Assets/img/book.png';
+import {restoreLists, restoreTasks, addList} from '../Redux/reducer';
+import book from '../Assets/img/book.png';
 import { compose } from 'redux';
 
 
@@ -26,10 +26,8 @@ class App extends React.Component {
 
 
     render() {
-        console.log('--------RENDER-------------')
         const listsRoutes = this.props.lists.map((list) =>{
             const path = list.title.replace(/\s|\?|#/g, '-')
-            console.log('Route to '+path)
             return (
             <Route path={`/${path}`} key={list.id} render={() => 
                 <TodoList list={list} key={list.id} restoreTasks={this.restoreTasks} />} 
@@ -41,7 +39,6 @@ class App extends React.Component {
 
         const allListsLinks = this.props.lists.map( ( list ) => {
             const link = list.title.replace(/\s|\?|#/g, '-')
-            console.log(link)
             return(
                 <li key={list.id}><NavLink to={`/${link}`}>{list.title}</NavLink></li>
             )
@@ -60,7 +57,7 @@ class App extends React.Component {
                     <NavLink to='/' exact className='app_title'>
                         <h2>
                             <img src={book} alt='book' className='app_header_icon' />
-                            Органайзер задач
+                            Tasks Organizer
                         </h2>
                     </NavLink>
                     {this.props.lists.length < this.props.maxListsCount 

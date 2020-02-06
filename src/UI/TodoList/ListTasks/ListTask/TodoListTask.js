@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { delTaskFromPage, updateTask, setTasksPage, setAllTasksPage,
-        setFltrTasksPage, setFilterValue } from './Redux/reducer';
-import Preloader from './Preloader/Preloader'
-import { api } from './API/api';
+        setFltrTasksPage, setFilterValue } from '../../../../Redux/reducer';
+import Preloader from '../../../Preloader/Preloader'
+// import { api } from './API/api';
 
 
 
@@ -13,8 +13,7 @@ class TodoListTask extends React.Component {
         title: '',
         editTitleMode: false,
         inputError: false,
-        setPriorityMode: false,
-        updateInProgress: false,
+        setPriorityMode: false
     }
 
 
@@ -24,12 +23,14 @@ class TodoListTask extends React.Component {
         delTaskFromPage(listId, taskId)
     };
 
-    updateTask = (dataObj) => {
-        const { listId, page, tasksLength, task: { id: taskId },  filterValue } = this.props;
+    updateTask = (updateObj) => {
+        const {listId, updateTask} = this.props
+        const {id: taskId} = this.props.task
+        updateTask(listId, taskId, updateObj)
+        /* const { listId, page, tasksLength, task: { id: taskId },  filterValue } = this.props;
         const {setFltrTasksPage, setFilterValue, setAllTasksPage } = this.props;
-        const { completed } = dataObj;
         this.setState({ updateInProgress: true });
-        if (completed !== undefined && filterValue !== 'All') {
+        if (filterValue !== 'All') {
             api.updateTask(listId, taskId, { ...this.props.task, ...dataObj })
                 .then(Response => {
                     if (Response.data.resultCode === 0) {
@@ -55,7 +56,7 @@ class TodoListTask extends React.Component {
                     this.props.updateTask(Response.data.data.item)
                     this.setState({ updateInProgress: false })
                 })
-        }
+        } */
     }
 
     setTitleEditMode = () => {
@@ -88,8 +89,8 @@ class TodoListTask extends React.Component {
     }
 
     setTaskStatus = (e) => {
-        const completed = e.currentTarget.checked;
-        this.updateTask({ completed })
+        const completed = e.currentTarget.checked ? 1 : 0;  // completed server module is no longer supported,
+        this.updateTask({ status: completed })              // so status server module is used
     }
 
     setTaskPriority = (e) => {
@@ -111,22 +112,21 @@ class TodoListTask extends React.Component {
     
 
     render = () => {
-
-        const { editTitleMode, title, inputError, 
-                setPriorityMode, updateInProgress } = this.state
-        const { taskDeliting  } = this.props.task
+        
+        const { editTitleMode, title, inputError, setPriorityMode } = this.state
+        const { taskInProcess } = this.props.task
 
         const loaderStyle ={
             fill: 'rgb(143, 59, 26)', height: '8px'}
 
         return (
             <div className="todoList-tasks">
-                <div className={ this.props.task.completed ? 'taskIsDone' : 'todoList-task' }>
+                <div className={ this.props.task.status ? 'taskIsDone' : 'todoList-task' }>
 {/* чекбокс */}
                     <input 
                         onChange = { this.setTaskStatus } 
                         type="checkbox" 
-                        checked={this.props.task.completed} />
+                        checked={this.props.task.status} />
                     <span> { this.props.task.renderIndex } - </span>
 {/* заголовок */}
                     { editTitleMode // активируем режим редактирования названия задачи
@@ -156,10 +156,10 @@ class TodoListTask extends React.Component {
                     }
 {/* кнопка delete */}
                     <button className='delete_button' onClick={this.deleteTask} 
-                        disabled={updateInProgress || taskDeliting}>
+                        disabled={taskInProcess}>
                         <i className="fa fa-close"></i></button>
                     
-                    { (updateInProgress || taskDeliting) && <Preloader {...loaderStyle}/> }
+                    { taskInProcess && <Preloader {...loaderStyle}/> }
                 </div>
             </div>
         );

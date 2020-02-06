@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import AddItemForm from './AddItemForm';
-import ListTitle from './ListTitle';
-import Preloader from './Preloader/Preloader';
+import AddItemForm from '../../AddItemForm/AddItemForm';
+import ListTitle from './ListTitle/ListTitle';
+import Preloader from '../../Preloader/Preloader';
 import { addTask, addTaskActive, setTasksPage, 
-    setFltrTasksPage, setFilterValue, setAllTasksPage } from './Redux/reducer';
+    setFltrTasksPage, setFilterValue, setAllTasksPage } from '../../../Redux/reducer';
 
 class TodoListHeader extends React.Component {
 
