@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './App.module.css'
 import { connect } from 'react-redux';
 import { NavLink, Route, withRouter } from 'react-router-dom';
 import TodoList from './TodoList/TodoList';
@@ -50,23 +51,23 @@ class App extends React.Component {
 
 
         return (
-            <div className='app'>
-                <div className='app_header'>
+            <div className={styles.app}>
+                <div className={styles.app_header}>
                     { this.props.listsLoading && <Preloader {...preloaderStyles}/>
                     }
-                    <NavLink to='/' exact className='app_title'>
+                    <NavLink to='/' exact className={styles.app_title}>
                         <h2>
-                            <img src={book} alt='book' className='app_header_icon' />
+                            <img src={book} alt='book' className={styles.app_header_icon} />
                             Tasks Organizer
                         </h2>
                     </NavLink>
                     {this.props.lists.length < this.props.maxListsCount 
                         && <AddItemForm addItem={this.addList} placeholder='Add list' />}
                 </div>
-                <nav className='app_header_navigation'>
+                <nav className={styles.app_header_navigation}>
                     <ul>{allListsLinks}</ul>
                 </nav>
-                <div className='app_lists'>
+                <div className={styles.app_lists}>
                     { listsRoutes }
                     <Route path='/' exact>{allLists}</Route>
                 </div>

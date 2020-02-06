@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './ListTitle.module.css'
 import { connect } from 'react-redux';
 import { deleteList, updateListTitle } from '../../../../Redux/reducer';
 import Preloader from '../../../Preloader/Preloader';
@@ -64,21 +65,23 @@ class ListTitle extends React.Component {
 
         if (this.state.editMode) {
             return (
-                <div className='list_header_title__input'>
+                <div className={styles.list_header_title__input}>
                     <input type="text"
                         value={this.state.title}
-                        className={this.state.inputError ? 'error' : ''}
+                        className={this.state.inputError ? styles.error : ''}
                         onChange={this.editListTitle}
                         autoFocus={true}
                         onBlur={this.setDisplayMode}
                         onKeyDown={this.setTitleOnKey} />
-                    <button className='delete_button' onClick={this.deleteList}><i className="fa fa-close"></i></button>
+                    <button className={styles.delete_button} onClick={this.deleteList}>
+                        <i className='fa fa-close'></i></button>
                 </div>
             )
         } else return (
-            <div className='list_header_title'>
+            <div className={styles.list_header_title}>
                 <span onClick={this.setEditMode}>{this.props.title} &nbsp;</span>
-                <button className='delete_button' onClick={this.deleteList} disabled={this.props.listDeliting}><i className="fa fa-close"></i></button>
+                <button className={styles.delete_button} onClick={this.deleteList} 
+                    disabled={this.props.listDeliting}><i className='fa fa-close'></i></button>
                 {(this.props.listDeliting || this.props.titleUpdating)
                     && <Preloader {...loaderStyle} />}
             </div>

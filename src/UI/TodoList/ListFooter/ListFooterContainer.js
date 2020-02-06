@@ -1,10 +1,11 @@
 import React from 'react'
+import styles from './ListFooter.module.css'
 import { setTasksPage, setFilterValue, setFilteredPage, setAllTasksPage } from '../../../Redux/reducer'
 import { connect } from 'react-redux';
-import TodoListFooter from './TodoListFooter'
+import ListFooter from './ListFooter'
 
 
-class TodoListFooterContainer extends React.Component {
+class ListFooterContainer extends React.Component {
 
     state = {
         isHidden: false,
@@ -51,9 +52,11 @@ class TodoListFooterContainer extends React.Component {
         const {page} = this.props;
         const pagesLinks = []
         for ( let i = 1; i <= this.getPagesCount(); i++ ) {
-            const pageLink = <span className={ i === page ? 'pageLink active' : 'pageLink'} 
-                style={{ 'cursor': 'pointer' }} key={i}
-                onClick={() => this.setTasksPage(i)} >{i}</span>
+            const pageLink = <span 
+                    className={ i === page ? `${styles.pageLink} ${styles.active}` : styles.pageLink} 
+                    style={{ 'cursor': 'pointer' }} key={i}
+                    onClick={() => this.setTasksPage(i)} >{i}
+                </span>
             pagesLinks.push(pageLink)
         }
         return pagesLinks
@@ -61,7 +64,7 @@ class TodoListFooterContainer extends React.Component {
 
     render() {
         return(
-            <TodoListFooter 
+            <ListFooter 
                 isHidden={this.state.isHidden}
                 inProcess={this.state.inProcess}
                 filterValue={this.props.filterValue}
@@ -78,4 +81,4 @@ class TodoListFooterContainer extends React.Component {
 
 const mdtp = { setTasksPage, setFilterValue, setFilteredPage, setAllTasksPage }
 
-export default connect(null, mdtp )(TodoListFooterContainer)
+export default connect(null, mdtp )(ListFooterContainer)

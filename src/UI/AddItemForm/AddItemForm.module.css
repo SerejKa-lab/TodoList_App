@@ -1,0 +1,11 @@
+.newTaskForm {
+  text-align: center;
+}
+
+.newTaskForm button:hover {
+  background-color: yellowgreen;
+}
+
+.error {
+  border-color: red;
+}

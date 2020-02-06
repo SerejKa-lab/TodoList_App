@@ -1,4 +1,5 @@
-import React from 'react';
+import React from 'react'
+import styles from './AddItemForm.module.css'
 
 class AddItemForm extends React.Component {
 
@@ -38,9 +39,9 @@ class AddItemForm extends React.Component {
 
     render() {
         return (
-            <div className="todoList-newTaskForm">
+            <div className={styles.newTaskForm}>
                 <input
-                    className={this.state.inputError ? 'error' : ''}
+                    className={this.state.inputError ? styles.error : ''}
                     onChange={this.setItemTitle}
                     onKeyDown={this.actionOnKey}
                     onBlur={this.actionOnBlur}

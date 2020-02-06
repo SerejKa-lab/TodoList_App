@@ -1,8 +1,8 @@
-import React from 'react';
-import '../App.css';
-import TodoListHeader from '../TodoList/ListHeader/TodoListHeader';
-import TodoListTasks from './ListTasks/TodoListTasks';
-import TodoListFooterContainer from '../TodoList/ListFooter/TodoListFooterContainer';
+import React from 'react'
+import styles from './TodoList.module.css'
+import ListHeader from './ListHeader/ListHeader'
+import ListTasks from './ListTasks/ListTasks'
+import ListFooterContainer from './ListFooter/ListFooterContainer'
 
 class TodoList extends React.Component {
 
@@ -15,9 +15,9 @@ class TodoList extends React.Component {
         const { title, id, page, totalCount, countOnPage, tasks, generalCount, 
                 listDeliting, titleUpdating, taskIsAdding, filterValue } = this.props.list;
         return (
-            <div className='todoList'>
-                <section className='todoList_main'>
-                    <TodoListHeader 
+            <div className={styles.todoList}>
+                <section className={styles.todoList_main}>
+                    <ListHeader 
                         title = { title } 
                         listId = { id }
                         filterValue = { filterValue }
@@ -27,7 +27,7 @@ class TodoList extends React.Component {
                         listDeliting = {listDeliting}
                         titleUpdating={titleUpdating} 
                         taskIsAdding={taskIsAdding} />
-                    <TodoListTasks
+                    <ListTasks
                         tasks={tasks}
                         listId={id}
                         page={page}
@@ -35,7 +35,7 @@ class TodoList extends React.Component {
                         filterValue={filterValue}
                     />
                 </section>
-                <TodoListFooterContainer 
+                <ListFooterContainer 
                     listId={id}
                     page = {page}
                     filterValue = { filterValue }

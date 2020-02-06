@@ -1,13 +1,14 @@
-import React from 'react';
+import React from 'react'
+import styles from './ListTask.module.css'
 import { connect } from 'react-redux';
 import { delTaskFromPage, updateTask, setTasksPage, setAllTasksPage,
-        setFltrTasksPage, setFilterValue } from '../../../../Redux/reducer';
+        setFltrTasksPage, setFilterValue } from '../../../../Redux/reducer'
 import Preloader from '../../../Preloader/Preloader'
 // import { api } from './API/api';
 
 
 
-class TodoListTask extends React.Component {
+class ListTask extends React.Component {
 
     state = {
         title: '',
@@ -102,9 +103,10 @@ class TodoListTask extends React.Component {
     priorityArray = ['Low', 'Middle', 'High', 'Urgent', 'Later']
 
     priorityOptions = this.priorityArray.map(prior =>
-        <option className={prior} key={prior} >{prior}</option>)
+        <option className={styles[prior]} key={prior} >{prior}</option>)
 
     getTaskPriority = () => this.priorityArray[this.props.task.priority]
+    getTaskPriorityStyle = () => styles[ this.priorityArray[this.props.task.priority] ]
 
     setPriorityMode = () => this.setState({ setPriorityMode: !this.state.setPriorityMode })
 
@@ -120,8 +122,8 @@ class TodoListTask extends React.Component {
             fill: 'rgb(143, 59, 26)', height: '8px'}
 
         return (
-            <div className="todoList-tasks">
-                <div className={ this.props.task.status ? 'taskIsDone' : 'todoList-task' }>
+            <div className={styles.todoList_task}>
+                <div className={ this.props.task.status ? styles.taskIsDone : '' }>
 {/* чекбокс */}
                     <input 
                         onChange = { this.setTaskStatus } 
@@ -133,7 +135,7 @@ class TodoListTask extends React.Component {
                    
                         ? <input type="text" 
                                 value = { title }
-                                className = { inputError ? 'error' : ''}
+                                className = { inputError ? styles.error : ''}
                                 onChange = { this.editTaskTitle }
                                 autoFocus ={ true } 
                                 onBlur = { this.setDisplayMode } 
@@ -144,20 +146,20 @@ class TodoListTask extends React.Component {
                     {setPriorityMode
                         ? <select 
                             defaultValue={this.getTaskPriority()} 
-                            className={this.getTaskPriority()} 
+                            className={this.getTaskPriorityStyle()} 
                             onChange={this.setTaskPriority}
                             onBlur={this.setPriorityMode}
                             onKeyDown={this.priorityOnKey}
                             autoFocus ={ true } > {this.priorityOptions} </select>
                         :<span 
                             onClick = { this.setPriorityMode } 
-                            className = { this.getTaskPriority() } > {this.getTaskPriority()} &nbsp;
+                            className = { this.getTaskPriorityStyle() } > {this.getTaskPriority()} &nbsp;
                         </span>
                     }
 {/* кнопка delete */}
-                    <button className='delete_button' onClick={this.deleteTask} 
+                    <button className={styles.delete_button} onClick={this.deleteTask} 
                         disabled={taskInProcess}>
-                        <i className="fa fa-close"></i></button>
+                        <i className='fa fa-close'></i></button>
                     
                     { taskInProcess && <Preloader {...loaderStyle}/> }
                 </div>
@@ -174,5 +176,5 @@ const actionCreators = {
     setAllTasksPage
 }
 
-export default connect(null, actionCreators)(TodoListTask);
+export default connect(null, actionCreators)(ListTask);
 

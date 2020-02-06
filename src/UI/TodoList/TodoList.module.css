@@ -1,0 +1,18 @@
+.todoList {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 275px;
+    min-height: 500px;
+    margin: 10px;
+    padding: 10px;
+    overflow-wrap: break-word;
+    border: 1px solid gray;
+    border-radius: 10px;
+    background-color: ghostwhite;
+  }
+
+.todoList_main {
+
+}
+

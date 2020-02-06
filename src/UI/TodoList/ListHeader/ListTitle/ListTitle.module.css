@@ -1,0 +1,24 @@
+.list_header_title__input {
+  margin: 21px 11px;
+  text-align: center;
+}
+
+.error {
+  border-color: red;
+}
+
+.delete_button {
+  margin-right: 15px;
+}
+
+.delete_button:hover {
+  background: pink;
+}
+
+.list_header_title {
+  margin: 20px 10px;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+  position: relative;
+}

@@ -1,0 +1,9 @@
+.list_header {
+    margin-bottom: 20px;
+}
+
+.list_header_add_form {
+    display: flex;
+    justify-content: center;
+    position: relative;
+}

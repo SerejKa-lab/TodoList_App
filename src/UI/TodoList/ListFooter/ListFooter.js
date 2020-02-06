@@ -1,15 +1,15 @@
-import React from 'react';
-import '../../App.css';
-import Preloader from '../../Preloader/Preloader';
+import React from 'react'
+import Preloader from '../../Preloader/Preloader'
+import styles from './ListFooter.module.css'
 
-const TodoListFooter = (props) => {
+const ListFooter = (props) => {
 
     const { isHidden, inProcess, filterValue, pagesCount, pagesLinks,
             hideOnButtonClick, showOnButtonClick, getTasks } = props
         
-        const buttonAll = filterValue === 'All' ? 'filter-active' : '';
-        const buttonActive = filterValue === 'Active' ? 'filter-active' : '';
-        const buttonCompleted = filterValue === 'Completed' ? 'filter-active' : '';
+        const buttonAll = filterValue === 'All' ? styles.filter_active : ''
+        const buttonActive = filterValue === 'Active' ? styles.filter_active : ''
+        const buttonCompleted = filterValue === 'Completed' ? styles.filter_active : ''
         const loaderStyle ={
             fill: 'rgb(143, 59, 26)', height: '10px', position: 'absolute', top: '5px', right: '5px'}
         
@@ -18,11 +18,11 @@ const TodoListFooter = (props) => {
         const getActiveTasks = () => getTasks('Active')
 
         return (
-            <div className="todoList-footer">
+            <div className={styles.todoList_footer}>
                 {pagesCount > 1 && 
-                    <div className='tasksPagesLinks'>{ pagesLinks }</div>}
+                    <div className={styles.tasksPagesLinks}>{ pagesLinks }</div>}
                 {!isHidden &&
-                    <div className='filter_buttons'>
+                    <div className={styles.filter_buttons}>
                         <button onClick={ getAllTasks } 
                             className={buttonAll} disabled={inProcess}>All</button>
                         <button onClick={ getCompletedTasks } 
@@ -40,5 +40,5 @@ const TodoListFooter = (props) => {
 }
 
 
-export default TodoListFooter
+export default ListFooter
 

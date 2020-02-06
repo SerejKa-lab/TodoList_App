@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './ListHeader.module.css'
 import { connect } from 'react-redux';
 import AddItemForm from '../../AddItemForm/AddItemForm';
 import ListTitle from './ListTitle/ListTitle';
@@ -6,7 +7,7 @@ import Preloader from '../../Preloader/Preloader';
 import { addTask, addTaskActive, setTasksPage, 
     setFltrTasksPage, setFilterValue, setAllTasksPage } from '../../../Redux/reducer';
 
-class TodoListHeader extends React.Component {
+class ListHeader extends React.Component {
 
     state = {
         maxTasksCount: 33
@@ -36,12 +37,12 @@ class TodoListHeader extends React.Component {
             fill: 'rgb(143, 59, 26)', height: '8px', position: 'absolute', right: '-3px', top: '5px'}
 
         return (
-            <div className="list_header">
+            <div className={styles.list_header}>
                 <ListTitle listId={listId} title={title} page={page} 
                 listDeliting={listDeliting} titleUpdating={titleUpdating} />
 {/* форма добавления задач */}
                 { totalTasksCount < maxTasksCount 
-                    && <div className='list_header_add_form'>
+                    && <div className={styles.list_header_add_form}>
                         <AddItemForm
                             placeholder='Add new task'
                             listId={listId}
@@ -61,5 +62,5 @@ const mdtp = {
 }
 
 export default 
-    connect(null, mdtp )(TodoListHeader);
+    connect(null, mdtp )(ListHeader);
 
