@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/TasksOrganizer/static/css/main.ae0dc146.chunk.css",
-    "main.js": "/TasksOrganizer/static/js/main.8b799827.chunk.js",
-    "main.js.map": "/TasksOrganizer/static/js/main.8b799827.chunk.js.map",
-    "runtime~main.js": "/TasksOrganizer/static/js/runtime~main.7ff27414.js",
-    "runtime~main.js.map": "/TasksOrganizer/static/js/runtime~main.7ff27414.js.map",
-    "static/js/2.c03d9f19.chunk.js": "/TasksOrganizer/static/js/2.c03d9f19.chunk.js",
-    "static/js/2.c03d9f19.chunk.js.map": "/TasksOrganizer/static/js/2.c03d9f19.chunk.js.map",
-    "index.html": "/TasksOrganizer/index.html",
-    "precache-manifest.b331ac45c3e291a51b3df7faea88d9b7.js": "/TasksOrganizer/precache-manifest.b331ac45c3e291a51b3df7faea88d9b7.js",
-    "service-worker.js": "/TasksOrganizer/service-worker.js",
-    "static/css/main.ae0dc146.chunk.css.map": "/TasksOrganizer/static/css/main.ae0dc146.chunk.css.map",
-    "static/media/book.png": "/TasksOrganizer/static/media/book.6d8795b6.png",
-    "static/media/App.module.css": "/TasksOrganizer/static/media/navigation.fbcb2c9d.jpg"
+    "main.css": "/TasksManager/static/css/main.69e307d9.chunk.css",
+    "main.js": "/TasksManager/static/js/main.8b799827.chunk.js",
+    "main.js.map": "/TasksManager/static/js/main.8b799827.chunk.js.map",
+    "runtime~main.js": "/TasksManager/static/js/runtime~main.db7bcecc.js",
+    "runtime~main.js.map": "/TasksManager/static/js/runtime~main.db7bcecc.js.map",
+    "static/js/2.c03d9f19.chunk.js": "/TasksManager/static/js/2.c03d9f19.chunk.js",
+    "static/js/2.c03d9f19.chunk.js.map": "/TasksManager/static/js/2.c03d9f19.chunk.js.map",
+    "index.html": "/TasksManager/index.html",
+    "precache-manifest.89aba528d3461d67d58ff199b69dc748.js": "/TasksManager/precache-manifest.89aba528d3461d67d58ff199b69dc748.js",
+    "service-worker.js": "/TasksManager/service-worker.js",
+    "static/css/main.69e307d9.chunk.css.map": "/TasksManager/static/css/main.69e307d9.chunk.css.map",
+    "static/media/book.png": "/TasksManager/static/media/book.6d8795b6.png",
+    "static/media/App.module.css": "/TasksManager/static/media/navigation.fbcb2c9d.jpg"
   }
 }
