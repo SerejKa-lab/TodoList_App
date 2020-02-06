@@ -5,7 +5,7 @@ import AddItemForm from '../../AddItemForm/AddItemForm';
 import ListTitle from './ListTitle/ListTitle';
 import Preloader from '../../Preloader/Preloader';
 import { addTask, addTaskActive, setTasksPage, 
-    setFltrTasksPage, setFilterValue, setAllTasksPage } from '../../../Redux/reducer';
+        setFilterValue, setAllTasksPage } from '../../../Redux/reducer';
 
 class ListHeader extends React.Component {
 
@@ -15,13 +15,13 @@ class ListHeader extends React.Component {
 
 
     addTask = (title) => {
-        const { listId, filterValue } = this.props;
+        const { listId, filterValue, taskIsAdding } = this.props;
 
-        if ( filterValue === 'Completed' || filterValue === 'All' )  {
+        if ( (filterValue === 'Completed' || filterValue === 'All') && !taskIsAdding )  {
             this.props.addTask(listId, title)
         }
 
-        if (filterValue === 'Active') {
+        if (filterValue === 'Active' && !taskIsAdding) {
             this.props.addTaskActive(listId, title)
         }
     }
@@ -58,7 +58,7 @@ class ListHeader extends React.Component {
 
 const mdtp = { 
     addTask, addTaskActive, setTasksPage, 
-    setFltrTasksPage, setFilterValue, setAllTasksPage,
+    setFilterValue, setAllTasksPage
 }
 
 export default 

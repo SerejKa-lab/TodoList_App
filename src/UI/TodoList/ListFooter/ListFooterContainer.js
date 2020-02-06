@@ -28,12 +28,12 @@ class ListFooterContainer extends React.Component {
         switch (this.props.filterValue) {
             
             case 'Active':
-                setFilteredPage(listId, page, false)   // completed = false
+                setFilteredPage(listId, page, 0)   // status = 0
                     .then(() => this.setState({ inProcess: false }) )
             break
 
             case 'Completed':
-                setFilteredPage(listId, page, true)   // completed = true
+                setFilteredPage(listId, page, 1)   // status = 1
                     .then(() => this.setState({ inProcess: false }) )
             break
 

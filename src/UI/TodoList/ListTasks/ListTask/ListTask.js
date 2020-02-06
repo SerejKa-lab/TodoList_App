@@ -1,10 +1,8 @@
 import React from 'react'
 import styles from './ListTask.module.css'
 import { connect } from 'react-redux';
-import { delTaskFromPage, updateTask, setTasksPage, setAllTasksPage,
-        setFltrTasksPage, setFilterValue } from '../../../../Redux/reducer'
+import { delTaskFromPage, updateTask } from '../../../../Redux/reducer'
 import Preloader from '../../../Preloader/Preloader'
-// import { api } from './API/api';
 
 
 
@@ -22,46 +20,16 @@ class ListTask extends React.Component {
         const {listId, delTaskFromPage} = this.props
         const {id: taskId} = this.props.task
         delTaskFromPage(listId, taskId)
-    };
+    }
 
     updateTask = (updateObj) => {
         const {listId, updateTask} = this.props
         const {id: taskId} = this.props.task
         updateTask(listId, taskId, updateObj)
-        /* const { listId, page, tasksLength, task: { id: taskId },  filterValue } = this.props;
-        const {setFltrTasksPage, setFilterValue, setAllTasksPage } = this.props;
-        this.setState({ updateInProgress: true });
-        if (filterValue !== 'All') {
-            api.updateTask(listId, taskId, { ...this.props.task, ...dataObj })
-                .then(Response => {
-                    if (Response.data.resultCode === 0) {
-                        api.getAllTasks(listId)
-                            .then( (Response) => {
-                                const tasks = Response.data.items;
-                                const completed = filterValue === 'Completed' ? true : false;
-                                if (tasksLength === 1 && page !==1) {
-                                    setFltrTasksPage( listId, page-1, tasks, completed )
-                                } else if ( tasksLength === 1 && page === 1) {
-                                    setAllTasksPage(listId, 1)
-                                    setFilterValue('All')
-                                } else {
-                                    setFltrTasksPage( listId, page, tasks, completed )
-                                }
-                                this.setState({ updateInProgress: false })
-                            } )
-                    }
-            })
-        } else {
-            api.updateTask(listId, taskId, { ...this.props.task, ...dataObj })
-                .then(Response => {
-                    this.props.updateTask(Response.data.data.item)
-                    this.setState({ updateInProgress: false })
-                })
-        } */
     }
 
     setTitleEditMode = () => {
-        this.setState({ editTitleMode: !this.state.editTitleMode, title: this.props.task.title });
+        this.setState({ editTitleMode: !this.state.editTitleMode, title: this.props.task.title })
     }
 
     setDisplayMode = () => {
@@ -71,7 +39,7 @@ class ListTask extends React.Component {
 
     editTaskTitle = (e) => {
         const newTitle = e.currentTarget.value;
-        if (this.state.inputError) this.setState({ inputError: false });
+        if (this.state.inputError) this.setState({ inputError: false })
         if (newTitle.trim() === '' || newTitle.length > 100) {
             this.setState({ title: newTitle, inputError: true })
         } else this.setState({ title: newTitle })
@@ -90,7 +58,7 @@ class ListTask extends React.Component {
     }
 
     setTaskStatus = (e) => {
-        const completed = e.currentTarget.checked ? 1 : 0;  // completed server module is no longer supported,
+        const completed = e.currentTarget.checked ? 1 : 0  // completed server module is no longer supported,
         this.updateTask({ status: completed })              // so status server module is used
     }
 
@@ -170,10 +138,7 @@ class ListTask extends React.Component {
 
 
 const actionCreators = {
-    updateTask, delTaskFromPage,
-    setFltrTasksPage,
-    setFilterValue, setTasksPage,
-    setAllTasksPage
+    updateTask, delTaskFromPage
 }
 
 export default connect(null, actionCreators)(ListTask);
