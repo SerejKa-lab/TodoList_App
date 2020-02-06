@@ -1,0 +1,19 @@
+.Middle {
+    color: rgb(15, 162, 13);
+}
+
+.Low {
+    color: rgb(169, 171, 34);
+}
+
+.High {
+    color: rgb(147, 112, 219);
+}
+
+.Urgent {
+    color: crimson
+}
+
+.Later {
+    color: grey
+}

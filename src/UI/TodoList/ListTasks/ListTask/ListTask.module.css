@@ -13,27 +13,3 @@
 .delete_button:hover {
   background: pink;
 }
-
-.error {
-  border-color: red;
-}
-
-.Low {
-  color: rgb(15, 162, 13);
-}
-
-.Middle {
-  color: rgb(169, 171, 34);
-}
-
-.High {
-  color: rgb(147, 112, 219);
-}
-
-.Urgent {
-  color: crimson
-}
-
-.Later {
-  color: grey
-}
