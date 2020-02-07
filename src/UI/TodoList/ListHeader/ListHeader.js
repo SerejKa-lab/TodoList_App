@@ -55,8 +55,12 @@ class ListHeader extends React.Component {
                             addItem={this.addTask} />
                         {taskIsAdding && <Preloader {...loaderStyle} />}
                     </div>}
-                <span className={styles.delete_button} onClick={this.deleteList} 
-                    disabled={listDeliting}>{/* <i className='fa fa-close'></i> */}<b>x</b></span>
+                { !listDeliting
+                    &&<i className={'fa fa-close ' + styles.delete_button} onClick={this.deleteList} />
+                }
+                { listDeliting
+                    &&<i className={'fa fa-close ' + styles.delete_button}/>
+                }
             </div>
         )
     }

@@ -7,9 +7,11 @@
 }
 
 .delete_button {
-  margin-right: 15px;
+  padding: 0 5px;
+  color: rgb(85, 47, 11);
 }
 
 .delete_button:hover {
-  background: pink;
+  color: mediumvioletred;
+  cursor: pointer;
 }

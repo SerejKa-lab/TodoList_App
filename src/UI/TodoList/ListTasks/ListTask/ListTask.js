@@ -38,11 +38,12 @@ const ListTask = (props) => {
                 <TaskPriority priority={priority} updateTask={updateTask} />
 
                 {/* кнопка delete */}
-                <button className={styles.delete_button} onClick={deleteTask}
-                    disabled={taskInProcess}>
-                    <i className='fa fa-close'></i></button>
-
-                {taskInProcess && <Preloader {...loaderStyle} />}
+                {!taskInProcess
+                    && < i className={'fa fa-close ' + styles.delete_button} onClick={deleteTask}/> }
+                {taskInProcess
+                    && < i className={'fa fa-close ' + styles.delete_button}/> 
+                    && <Preloader {...loaderStyle} /> }
+                 {/* {taskInProcess && <Preloader {...loaderStyle} />} */}
             </div>
         </div>
     )
