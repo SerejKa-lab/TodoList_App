@@ -11,14 +11,14 @@ const ListFooter = (props) => {
         const buttonActive = filterValue === 'Active' ? styles.filter_active : ''
         const buttonCompleted = filterValue === 'Completed' ? styles.filter_active : ''
         const loaderStyle ={
-            fill: 'rgb(143, 59, 26)', height: '10px', position: 'absolute', top: '5px', right: '5px'}
+            fill: 'rgb(143, 59, 26)', height: '8px', position: 'absolute', top: '8px', right: '5px'}
         
         const getAllTasks = () => getTasks('All')
         const getCompletedTasks = () => getTasks('Completed')
         const getActiveTasks = () => getTasks('Active')
 
         return (
-            <div className={styles.todoList_footer}>
+            <div className={styles.list_footer}>
                 {pagesCount > 1 && 
                     <div className={styles.tasksPagesLinks}>{ pagesLinks }</div>}
                 {!isHidden &&
@@ -32,8 +32,8 @@ const ListFooter = (props) => {
                         { inProcess && <Preloader {...loaderStyle} /> }
                     </div>
                 }
-                {!isHidden && <span onClick={ hideOnButtonClick } >Hide</span>}
-                {isHidden && <span onClick={ showOnButtonClick } >Show</span>}
+                {!isHidden && <span className={styles.show_hide} onClick={ hideOnButtonClick } >Hide</span>}
+                {isHidden && <span className={styles.show_hide} onClick={ showOnButtonClick } >Show</span>}
             </div>
         );
     

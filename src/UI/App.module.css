@@ -34,6 +34,17 @@
   height: 50px;
 }
 
+.app_addItemForm button {
+  font-size: 17px;
+  border-radius: 4px;
+  margin-left: 1px;
+}
+
+.app_addItemForm input {
+  font-size: 17px;
+  border-radius: 3px;
+}
+
 .app_header {
   display: flex;
   flex-direction: column;

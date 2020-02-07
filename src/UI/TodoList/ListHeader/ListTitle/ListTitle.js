@@ -3,6 +3,8 @@ import styles from './ListTitle.module.css'
 import { connect } from 'react-redux';
 import { deleteList, updateListTitle } from '../../../../Redux/reducer';
 import Preloader from '../../../Preloader/Preloader';
+import { compose } from 'redux';
+import { withRouter } from 'react-router-dom';
 
 
 class ListTitle extends React.Component {
@@ -14,7 +16,7 @@ class ListTitle extends React.Component {
     }
 
     updateListTitle = (title) => {
-        if (!title.match(/%/)) {
+        if (!title.match(/%/)) {debugger
             this.props.updateListTitle(this.props.listId, title)
             if (this.props.history.location.pathname !== '/') {
                 this.props.history.push(`/${title.replace(/\s|\?|#/g, '-')}`)
@@ -58,7 +60,7 @@ class ListTitle extends React.Component {
 
         if (this.state.editMode) {
             return (
-                <div className={styles.list_header_title__input}>
+                <div className={styles.list_title__input}>
                     <input type="text"
                         value={this.state.title}
                         className={this.state.inputError ? styles.error : ''}
@@ -69,7 +71,7 @@ class ListTitle extends React.Component {
                 </div>
             )
         } else return (
-            <div className={styles.list_header_title}>
+            <div className={styles.list_title}>
                 <span onClick={this.setEditMode}>{this.props.title}</span>
                 {(this.props.listDeliting || this.props.titleUpdating)
                     && <Preloader {...loaderStyle} />}
@@ -79,4 +81,7 @@ class ListTitle extends React.Component {
 }
 
 
-export default connect(null, { deleteList, updateListTitle })(ListTitle)
+export default compose(
+    connect(null, { deleteList, updateListTitle }),
+    withRouter
+)(ListTitle)

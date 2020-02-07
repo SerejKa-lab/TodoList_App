@@ -1,5 +1,5 @@
-.list_header_title__input {
-  margin: 21px 11px;
+.list_title__input {
+  margin: 20.5px 11px;
   text-align: center;
 }
 
@@ -7,10 +7,14 @@
   border-color: red;
 }
 
-.list_header_title {
+.list_title {
   margin: 20px 10px;
   font-size: 1.2em;
   font-weight: bold;
   text-align: center;
   position: relative;
+}
+
+.list_title span {
+  cursor: pointer;
 }

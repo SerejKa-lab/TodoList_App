@@ -6,9 +6,20 @@
     background-color: lightgoldenrodyellow;
 }
 
+.show_hide {
+    cursor: pointer;
+}
+
 .filter_buttons {
     text-align: center;
     position: relative;
+}
+
+.filter_buttons button {
+    border-radius: 4px;
+    font-size: 15px;
+    margin: 0 1px;
+    cursor: pointer;
 }
 
 .filter_active {

@@ -8,6 +8,19 @@
     position: relative;
 }
 
+.list_header_add_form button {
+    font-size: 15px;
+    margin-left: 1px;
+    margin-bottom: 1px;
+    border-radius: 4px;
+    cursor: pointer
+}
+
+.list_header_add_form input {
+    font-size: 15px;
+    border-radius: 4px;
+}
+
 .delete_button {
     position: absolute;
     top: -5px;

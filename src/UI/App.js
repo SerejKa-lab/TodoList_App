@@ -63,7 +63,9 @@ class App extends React.Component {
                         </h2>
                     </NavLink>
                     {this.props.lists.length < this.props.maxListsCount 
-                        && <AddItemForm addItem={this.addList} placeholder='Add list' />}
+                        && <div className={styles.app_addItemForm}>
+                                <AddItemForm addItem={this.addList} placeholder='Add list' />
+                            </div>}
                 </div>
                 <nav className={styles.app_header_navigation}>
                     <ul>{allListsLinks}</ul>
