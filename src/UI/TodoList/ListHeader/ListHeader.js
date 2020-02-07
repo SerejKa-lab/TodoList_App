@@ -5,7 +5,9 @@ import AddItemForm from '../../AddItemForm/AddItemForm';
 import ListTitle from './ListTitle/ListTitle';
 import Preloader from '../../Preloader/Preloader';
 import { addTask, addTaskActive, setTasksPage, 
-        setFilterValue, setAllTasksPage } from '../../../Redux/reducer';
+        setFilterValue, setAllTasksPage, deleteList } from '../../../Redux/reducer';
+import { compose } from 'redux';
+import { withRouter } from 'react-router-dom';
 
 class ListHeader extends React.Component {
 
@@ -13,6 +15,10 @@ class ListHeader extends React.Component {
         maxTasksCount: 33
     }
 
+    deleteList = () => {
+        this.props.deleteList(this.props.listId)
+        this.props.history.push('/')
+    }
 
     addTask = (title) => {
         const { listId, filterValue, taskIsAdding } = this.props;
@@ -39,9 +45,9 @@ class ListHeader extends React.Component {
         return (
             <div className={styles.list_header}>
                 <ListTitle listId={listId} title={title} page={page} 
-                listDeliting={listDeliting} titleUpdating={titleUpdating} />
-{/* форма добавления задач */}
-                { totalTasksCount < maxTasksCount 
+                    listDeliting={listDeliting} titleUpdating={titleUpdating} />
+                {/* форма добавления задач */}
+                {totalTasksCount < maxTasksCount
                     && <div className={styles.list_header_add_form}>
                         <AddItemForm
                             placeholder='Add new task'
@@ -49,6 +55,8 @@ class ListHeader extends React.Component {
                             addItem={this.addTask} />
                         {taskIsAdding && <Preloader {...loaderStyle} />}
                     </div>}
+                <span className={styles.delete_button} onClick={this.deleteList} 
+                    disabled={listDeliting}>{/* <i className='fa fa-close'></i> */}<b>x</b></span>
             </div>
         )
     }
@@ -58,9 +66,12 @@ class ListHeader extends React.Component {
 
 const mdtp = { 
     addTask, addTaskActive, setTasksPage, 
-    setFilterValue, setAllTasksPage
+    setFilterValue, setAllTasksPage,
+    deleteList
 }
 
-export default 
-    connect(null, mdtp )(ListHeader);
+export default compose (
+    connect(null, mdtp ),
+    withRouter
+)(ListHeader);
 

@@ -3,8 +3,6 @@ import styles from './ListTitle.module.css'
 import { connect } from 'react-redux';
 import { deleteList, updateListTitle } from '../../../../Redux/reducer';
 import Preloader from '../../../Preloader/Preloader';
-import { withRouter } from 'react-router-dom';
-import { compose } from 'redux';
 
 
 class ListTitle extends React.Component {
@@ -13,11 +11,6 @@ class ListTitle extends React.Component {
         editMode: false,
         title: '',
         inputError: false,
-    }
-
-    deleteList = () => {
-        this.props.deleteList(this.props.listId)
-        this.props.history.push('/')
     }
 
     updateListTitle = (title) => {
@@ -60,7 +53,7 @@ class ListTitle extends React.Component {
     render() {
 
         const loaderStyle = {
-            fill: 'rgb(143, 59, 26)', height: '10px', position: 'absolute', bottom: '-12px', right: '50%'
+            fill: 'rgb(143, 59, 26)', height: '10px', position: 'absolute', bottom: '-12px', right: '43%'
         }
 
         if (this.state.editMode) {
@@ -73,15 +66,11 @@ class ListTitle extends React.Component {
                         autoFocus={true}
                         onBlur={this.setDisplayMode}
                         onKeyDown={this.setTitleOnKey} />
-                    <button className={styles.delete_button} onClick={this.deleteList}>
-                        <i className='fa fa-close'></i></button>
                 </div>
             )
         } else return (
             <div className={styles.list_header_title}>
-                <span onClick={this.setEditMode}>{this.props.title} &nbsp;</span>
-                <button className={styles.delete_button} onClick={this.deleteList} 
-                    disabled={this.props.listDeliting}><i className='fa fa-close'></i></button>
+                <span onClick={this.setEditMode}>{this.props.title}</span>
                 {(this.props.listDeliting || this.props.titleUpdating)
                     && <Preloader {...loaderStyle} />}
             </div>
@@ -90,7 +79,4 @@ class ListTitle extends React.Component {
 }
 
 
-export default compose (
-    connect(null, { deleteList, updateListTitle }),
-    withRouter
-)(ListTitle)
+export default connect(null, { deleteList, updateListTitle })(ListTitle)

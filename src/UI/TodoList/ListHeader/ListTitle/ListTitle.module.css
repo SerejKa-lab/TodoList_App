@@ -7,14 +7,6 @@
   border-color: red;
 }
 
-.delete_button {
-  margin-right: 15px;
-}
-
-.delete_button:hover {
-  background: pink;
-}
-
 .list_header_title {
   margin: 20px 10px;
   font-size: 1.2em;

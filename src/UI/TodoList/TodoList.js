@@ -16,7 +16,7 @@ class TodoList extends React.Component {
                 listDeliting, titleUpdating, taskIsAdding, filterValue } = this.props.list;
         return (
             <div className={styles.todoList}>
-                <section className={styles.todoList_main}>
+                <section className={styles.todoList_wrapper}>
                     <ListHeader 
                         title = { title } 
                         listId = { id }
