@@ -36,7 +36,8 @@ const ListFooter = (props) => {
                 {!isHidden && <span className={styles.show_hide} onClick={ hideOnButtonClick } >Hide</span>}
                 {isHidden && <span className={styles.show_hide} onClick={ showOnButtonClick } >Show</span>}
 
-                {displayOrder && <ListOrder order={order} listsCount={listsCount} listId={listId} />}
+                {displayOrder && listsCount !== 1
+                    && <ListOrder order={order} listsCount={listsCount} listId={listId} />}
             </div>
         );
     

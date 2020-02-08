@@ -18,7 +18,16 @@ class App extends React.Component {
     }
 
     addList = (title) => {
-        if (!title.match(/%/)) {
+        
+        const listsPaths = this.props.lists.map((list) => {         // generate path's array for equal path's check
+            const path = list.title.replace(/\s|\?|#/g, '-')
+            return path
+        })
+
+        const equalPaths = listsPaths.find((path) => 
+            path.toLowerCase() === title.replace(/\s|\?|#/g, '-').toLowerCase() )
+        
+        if (!title.match(/%/) && !equalPaths) {     //  equal path's & % sign check
             this.props.addList(title)
             if (this.props.history.location.pathname !== '/'){
                 this.props.history.push('/')
@@ -30,17 +39,21 @@ class App extends React.Component {
 
 
     render() {
+
+        const listTitles = this.props.lists.map((list) => ({title: list.title, id: list.id}) )
+
         const listsRoutes = this.props.lists.map((list) =>{
             const path = list.title.replace(/\s|\?|#/g, '-')
             return (
             <Route path={`/${path}`} exact key={list.id} render={() => 
-                <TodoList list={list} key={list.id} restoreTasks={this.restoreTasks} />} 
+                <TodoList list={list} key={list.id} 
+                    restoreTasks={this.restoreTasks} listTitles={listTitles} />} 
             />) 
         })
 
         const allLists = this.props.lists.map((list) => {
             return( 
-                <TodoList list={list} key={list.id} 
+                <TodoList list={list} key={list.id} listTitles={listTitles}
                     restoreTasks={this.restoreTasks} listsCount={this.props.listsCount}/>
             )}
         )

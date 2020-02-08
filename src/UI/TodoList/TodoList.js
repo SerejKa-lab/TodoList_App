@@ -12,7 +12,7 @@ class TodoList extends React.Component {
 
     
     render = () => {
-        const { listsCount } = this.props
+        const { listsCount, listTitles } = this.props
         const { title, id, page, totalCount, countOnPage, tasks, generalCount, order,
                 listDeliting, titleUpdating, taskIsAdding, filterValue } = this.props.list;
         return (
@@ -25,6 +25,7 @@ class TodoList extends React.Component {
                         page = { page }
                         generalCount = {generalCount}
                         totalCount={totalCount} 
+                        listTitles={listTitles}
                         listDeliting = {listDeliting}
                         titleUpdating={titleUpdating} 
                         taskIsAdding={taskIsAdding} />

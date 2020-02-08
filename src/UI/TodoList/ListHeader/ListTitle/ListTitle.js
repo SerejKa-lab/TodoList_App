@@ -32,8 +32,13 @@ class ListTitle extends React.Component {
 
     editListTitle = (e) => {
         const newTitle = e.currentTarget.value;
+        const equalTitles = this.props.listTitles.find((el) => {
+            return (el.title.toLowerCase() === newTitle.toLowerCase() && el.id !== this.props.listId)
+        })
+        
         if (this.state.inputError) this.setState({ inputError: false });
-        if (newTitle.trim() === '' || newTitle.length > 100 || newTitle.match(/%/)) {
+        if (newTitle.trim() === '' || newTitle.length > 100 
+            || newTitle.match(/%/) || equalTitles) {
             this.setState({ title: newTitle, inputError: true })
         } else this.setState({ title: newTitle })
     }

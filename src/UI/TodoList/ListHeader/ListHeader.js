@@ -39,16 +39,16 @@ class ListHeader extends React.Component {
 
     render() {
 
-        const {listId, title, page, totalCount, filterValue,
+        const {listId, title, page, totalCount, filterValue, listTitles,
             generalCount, listDeliting, titleUpdating, taskIsAdding} = this.props
         const { maxTasksCount } = this.state
         const totalTasksCount = filterValue === 'All' ? totalCount : generalCount
         const loaderStyle ={
-            fill: 'rgb(143, 59, 26)', height: '8px', position: 'absolute', right: '-3px', top: '5px'}
+            fill: 'rgb(143, 59, 26)', height: '8px', position: 'absolute', right: '50%', bottom: '-14px'}
 
         return (
             <div className={styles.list_header}>
-                <ListTitle listId={listId} title={title} page={page} 
+                <ListTitle listId={listId} title={title} page={page} listTitles={listTitles}
                     listDeliting={listDeliting} titleUpdating={titleUpdating} />
                 {/* форма добавления задач */}
                 {totalTasksCount < maxTasksCount
@@ -59,6 +59,8 @@ class ListHeader extends React.Component {
                             addItem={this.addTask} />
                         {taskIsAdding && <Preloader {...loaderStyle} />}
                     </div>}
+                
+                {/*delete icon display modes */}
                 { !listDeliting
                     &&<i className={'fa fa-close ' + styles.delete_button} onClick={this.deleteList} />
                 }
