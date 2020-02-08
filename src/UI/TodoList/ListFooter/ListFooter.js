@@ -1,11 +1,12 @@
 import React from 'react'
 import Preloader from '../../Preloader/Preloader'
 import styles from './ListFooter.module.css'
+import ListOrder from './ListOrder/ListOrder'
 
 const ListFooter = (props) => {
 
-    const { isHidden, inProcess, filterValue, pagesCount, pagesLinks,
-            hideOnButtonClick, showOnButtonClick, getTasks } = props
+    const { isHidden, inProcess, filterValue, pagesCount, pagesLinks, order, displayOrder, 
+        listsCount, hideOnButtonClick, showOnButtonClick, getTasks, listId } = props
         
         const buttonAll = filterValue === 'All' ? styles.filter_active : ''
         const buttonActive = filterValue === 'Active' ? styles.filter_active : ''
@@ -34,6 +35,8 @@ const ListFooter = (props) => {
                 }
                 {!isHidden && <span className={styles.show_hide} onClick={ hideOnButtonClick } >Hide</span>}
                 {isHidden && <span className={styles.show_hide} onClick={ showOnButtonClick } >Show</span>}
+
+                {displayOrder && <ListOrder order={order} listsCount={listsCount} listId={listId} />}
             </div>
         );
     

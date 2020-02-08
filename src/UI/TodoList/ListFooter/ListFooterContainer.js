@@ -3,6 +3,8 @@ import styles from './ListFooter.module.css'
 import { setTasksPage, setFilterValue, setFilteredPage, setAllTasksPage } from '../../../Redux/reducer'
 import { connect } from 'react-redux';
 import ListFooter from './ListFooter'
+import { compose } from 'redux';
+import { withRouter } from 'react-router-dom';
 
 
 class ListFooterContainer extends React.Component {
@@ -63,8 +65,15 @@ class ListFooterContainer extends React.Component {
     }
 
     render() {
+
+        const displayOrder = this.props.history.location.pathname === '/' ? true : false
+
         return(
-            <ListFooter 
+            <ListFooter
+                listId={this.props.listId}
+                order={this.props.order}
+                displayOrder={displayOrder}
+                listsCount={this.props.listsCount}
                 isHidden={this.state.isHidden}
                 inProcess={this.state.inProcess}
                 filterValue={this.props.filterValue}
@@ -81,4 +90,7 @@ class ListFooterContainer extends React.Component {
 
 const mdtp = { setTasksPage, setFilterValue, setFilteredPage, setAllTasksPage }
 
-export default connect(null, mdtp )(ListFooterContainer)
+export default compose(
+    connect(null, mdtp),
+    withRouter
+)(ListFooterContainer)

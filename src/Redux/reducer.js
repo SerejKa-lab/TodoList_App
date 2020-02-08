@@ -1,8 +1,9 @@
 import {api} from '../API/api'
 
 const initialState =  {
-    lists: [],
-    listsProgress: { listsLoading: false, tasksLoading: false },
+    lists: [],  
+    listsOrder: [],
+    listsProgress: { listsLoading: false },
     maxListsCount: 10
     /* lists: [
         {
@@ -26,20 +27,24 @@ const reducer = (state = initialState, action) => {
         case RESTORE_LISTS:
             return {
                 ...state,
-                lists: action.lists.map( (list) => {
-                    return !list.tasks
-                        ? { ...list, page: 1, countOnPage, filterValue: 'All', tasks: [],
+                lists: action.lists.map( (list, index) => {
+                    if (!list.tasks) return(
+                        { ...list, order: index, page: 1, countOnPage, filterValue: 'All', tasks: [],
                             footerProcess: false } 
-                        : { ...list, page: 1, countOnPage, filterValue: 'All',
+                    )
+                    else return (
+                        { ...list, order: index, page: 1, countOnPage, filterValue: 'All',
                             footerProcess: false }
-                } )
+                    )
+                } ),
+                listsOrder: action.lists.map( (list) => list.id )
             }
 
         case ADD_LIST:
             const extendedList = { ...action.list, page: 1, countOnPage, filterValue: 'All', tasks: [] };
             return {
                 ...state,
-                lists: [ extendedList, ...state.lists ]
+                lists: [ ...state.lists, extendedList ].map((list, index) => ({...list, order: index}))
             }
 
         case UPDATE_LIST_TITLE:
@@ -51,11 +56,20 @@ const reducer = (state = initialState, action) => {
                 } )
             }
 
+        case REORDER_LIST:
+            return {
+                ...state,
+                lists: action.reorderedLists.map( (list, index) => ({...list, order: index }) ),
+                listsOrder: action.reorderedLists.map((list) => list.id)
+            }
+
         case DELETE_LIST:
             return {
                 ...state,
                 lists: 
-                    state.lists.filter((list) => list.id !== action.listId)
+                    state.lists
+                        .filter((list) => list.id !== action.listId)
+                        .map( (list, index) => ({...list, order: index}) )  // change list order
             }
 
         case LIST_IS_LOADING:
@@ -222,6 +236,11 @@ const reducer = (state = initialState, action) => {
 
 export default reducer;
 
+// ------------------------------ TEMPORARY ----------------------------------
+
+
+
+
 
 // --------------------------- Lists Actions -----------------------------------
 
@@ -237,12 +256,9 @@ export const restoreLists = () => (dispatch) => {
         })
 }
 
-const LIST_IS_LOADING = 'LIST_IS_LOADING'
-const listIsLoadingAC = (value) => ({ type: LIST_IS_LOADING, value })
 
 const ADD_LIST = 'ADD_LIST';
 const addListAC = (list) => ({type: ADD_LIST, list})
-
 
 export const addList = (title) => (dispatch) => {
     dispatch(listIsLoadingAC(true))
@@ -267,27 +283,88 @@ export const updateListTitle = (listId, title) => (dispatch) => {
         })
 }
 
-const LIST_IN_PROCESS = 'LIST_IN_PROCESS'
-const listInProcessAC = (listId, process, value) => ({type: LIST_IN_PROCESS, listId, process, value})
 
 const DELETE_LIST = 'DELETE_LIST';
 const deleteListAC = (listId) => ({type: DELETE_LIST, listId})
 
 export const deleteList = (listId) => (dispatch) => {
     dispatch(listInProcessAC(listId, 'listDeliting', true))
-    api.deleteList(listId)
-            .then(() => {
-                dispatch(deleteListAC(listId))
-                dispatch(listInProcessAC(listId, 'listDeliting', false))
-            })
+    return api.deleteList(listId)
+            .then((res) => {
+                if (res.data.resultCode === 0) {
+                    dispatch(deleteListAC(listId))
+                }
+            }).then( () => dispatch(listInProcessAC(listId, 'listDeliting', false)) )
 }
 
+
+const LIST_IS_LOADING = 'LIST_IS_LOADING'
+const listIsLoadingAC = (value) => ({ type: LIST_IS_LOADING, value })
+
+const LIST_IN_PROCESS = 'LIST_IN_PROCESS'
+const listInProcessAC = (listId, process, value) => ({type: LIST_IN_PROCESS, listId, process, value})
 
 const SET_FILTER_VALUE = 'SET_FILTER_VALUE'
 const setFilterValueAC = (listId, value) => ({type: SET_FILTER_VALUE, listId, value})
 
 export const setFilterValue = (listId, value) => async (dispatch) => {
     dispatch( setFilterValueAC(listId, value) )
+}
+
+
+const REORDER_LIST = 'REORDER_LIST'
+export const reorderListAC = (reorderedLists) => ({type: REORDER_LIST, reorderedLists })
+
+export const reorderList = (listId, currPos, nextOrdNumb) => (dispatch, getState) => {
+    
+    const nextPos = nextOrdNumb !== ( null || undefined ) ? +nextOrdNumb - 1 : null   //define next element position
+   
+    const getAfterId = () => {
+        // if nextOrdNumb undefined or null element position should'n change
+        // this is insurence check or for case of using reorderListAC
+        if (nextPos === null && currPos === 0) return null
+        if (nextPos === null) return getState().listsOrder[currPos-1]
+        
+        // if next position defined find 'put after element' Id
+        if (nextPos === 0) return null
+        if (nextPos <= +currPos) return getState().listsOrder[nextPos-1]
+        if (nextPos > +currPos) return getState().listsOrder[nextPos]
+    }
+    
+    const getReorderedLists = () => {
+        const lists = [...getState().lists]
+        if (nextPos < currPos) {
+            const currList = lists[currPos]
+            for (let i = currPos-1; i >= nextPos; i--) {
+                lists[i+1] = lists[i]
+            }
+            lists[nextPos] = currList
+            return lists
+        }
+        if (nextPos > currPos) {
+            const currList = lists[currPos]
+            for (let i = currPos; i < nextPos; i++) {
+                lists[i] = lists[i+1]
+            }
+            lists[nextPos] = currList
+            return lists
+        }
+        return lists    // default value for unchanged lists ---> insurance check
+    }
+
+    if ( nextPos !== null && nextPos !== +currPos ) {
+        const putAfterItemId = getAfterId()              // get putAfterItemId for API request
+        const reorderedLists = getReorderedLists()       // get reordered lists for dispatch
+
+        dispatch(listIsLoadingAC(true))
+        api.reorderList(listId, putAfterItemId)
+            .then((response) => {
+                if (response.data.resultCode === 0) {
+                    dispatch(reorderListAC(reorderedLists))
+                    dispatch(listIsLoadingAC(false))
+                }
+            })
+    }
 }
 
 
@@ -349,7 +426,7 @@ export const setFilteredPage = (listId, page, status) => (dispatch) => {
 }
 
 
-// ------------------------- Specified Tasks Actions -----------------------
+// ------------------------- Composite Tasks Actions -----------------------
 
 
 export const addTask = (listId, title) => (dispatch) => {

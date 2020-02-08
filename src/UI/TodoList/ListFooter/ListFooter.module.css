@@ -1,3 +1,7 @@
+.list_footer {
+    position: relative;
+}
+
 .tasksPagesLinks {
     text-align: center;
     margin-bottom: 10px;

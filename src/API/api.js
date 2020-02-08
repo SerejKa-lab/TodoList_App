@@ -21,6 +21,10 @@ export const api = {
         return instance.post('', { title } )
     },
 
+    reorderList(listId, putAfterItemId) {
+        return instance.put(`/${listId}/reorder`, { putAfterItemId })
+    },
+
     deleteList(listId) {
         return instance.delete(`/${listId}`)
     },
