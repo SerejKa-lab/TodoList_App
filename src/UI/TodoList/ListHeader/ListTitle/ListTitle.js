@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './ListTitle.module.css'
 import { connect } from 'react-redux';
-import { deleteList, updateListTitle } from '../../../../Redux/reducer';
+import { updateListTitle } from '../../../../Redux/reducer';
 import Preloader from '../../../Preloader/Preloader';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
@@ -16,7 +16,7 @@ class ListTitle extends React.Component {
     }
 
     updateListTitle = (title) => {
-        if (!title.match(/%/)) {debugger
+        if (!title.match(/%/)) {
             this.props.updateListTitle(this.props.listId, title)
             if (this.props.history.location.pathname !== '/') {
                 this.props.history.push(`/${title.replace(/\s|\?|#/g, '-')}`)
@@ -82,6 +82,6 @@ class ListTitle extends React.Component {
 
 
 export default compose(
-    connect(null, { deleteList, updateListTitle }),
+    connect(null, { updateListTitle }),
     withRouter
 )(ListTitle)

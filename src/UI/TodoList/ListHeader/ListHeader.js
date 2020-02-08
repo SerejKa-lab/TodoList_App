@@ -17,7 +17,11 @@ class ListHeader extends React.Component {
 
     deleteList = () => {
         this.props.deleteList(this.props.listId)
-        this.props.history.push('/')
+            .then(() => {
+                if (this.props.history.location.pathname !== '/') {
+                    this.props.history.push('/')
+                }
+            })
     }
 
     addTask = (title) => {

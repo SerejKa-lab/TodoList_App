@@ -20,7 +20,9 @@ class App extends React.Component {
     addList = (title) => {
         if (!title.match(/%/)) {
             this.props.addList(title)
-            this.props.history.push('/')
+            if (this.props.history.location.pathname !== '/'){
+                this.props.history.push('/')
+            }
         }
     }
 
@@ -36,8 +38,12 @@ class App extends React.Component {
             />) 
         })
 
-        const allLists = this.props.lists.map( (list) => 
-            <TodoList list={list} key={list.id} restoreTasks={this.restoreTasks} /> )
+        const allLists = this.props.lists.map((list) => {
+            return( 
+                <TodoList list={list} key={list.id} 
+                    restoreTasks={this.restoreTasks} listsCount={this.props.listsCount}/>
+            )}
+        )
 
         const allListsLinks = this.props.lists.map( ( list ) => {
             const link = list.title.replace(/\s|\?|#/g, '-')
@@ -85,6 +91,7 @@ class App extends React.Component {
 const mapStateToProps = (state) => {
     return {
         lists: state.lists,
+        listsCount: state.lists.length,
         listsLoading: state.listsProgress.listsLoading,
         maxListsCount: state.maxListsCount
     }
