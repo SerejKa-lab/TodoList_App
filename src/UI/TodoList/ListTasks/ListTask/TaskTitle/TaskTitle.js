@@ -43,7 +43,7 @@ const TaskTitle = (props) => {
 
     if (!editMode) {
         return (
-            <span onClick={setTitleEditMode} >{props.title}, </span>
+            <span onClick={setTitleEditMode} className={styles.taskTitle}>{props.title}, </span>
         )
     } else {
         return (

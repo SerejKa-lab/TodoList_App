@@ -18,7 +18,7 @@ const TaskPriority = (props) => {
         <option className={styles[prior]} key={prior} >{prior}</option>)
 
     const getTaskPriority = () => priorityArray[props.priority]
-    const getTaskPriorityStyle = () => styles[ priorityArray[props.priority] ]
+    const getTaskPriorityStyle = () => styles[ priorityArray[props.priority] ] + ' ' + styles.taskPriority
 
     const setEditMode = () => setMode(true)
     const resetEditMode = () => setMode(false)

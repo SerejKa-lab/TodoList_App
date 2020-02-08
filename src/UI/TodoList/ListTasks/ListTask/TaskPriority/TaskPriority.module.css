@@ -1,3 +1,7 @@
+.taskPriority {
+    cursor: pointer;
+}
+
 .Middle {
     color: rgb(15, 162, 13);
 }

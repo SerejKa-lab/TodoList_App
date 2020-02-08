@@ -29,6 +29,7 @@ const ListTask = (props) => {
             <div className={status ? styles.taskIsDone : ''}>
                 {/* чекбокс */}
                 <input
+                    className={styles.isDoneCheck}
                     onChange={setTaskStatus}
                     type="checkbox"
                     checked={status} />

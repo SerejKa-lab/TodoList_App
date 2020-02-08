@@ -15,3 +15,7 @@
   color: mediumvioletred;
   cursor: pointer;
 }
+
+.isDoneCheck {
+  cursor: pointer;
+}

@@ -1,3 +1,7 @@
+.taskTitle {
+  cursor: pointer;
+}
+
 .error {
     border-color: red;
   }
