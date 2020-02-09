@@ -1,6 +1,7 @@
 .list_title__input {
   margin: 20.5px 11px;
   text-align: center;
+  position: relative;
 }
 
 .error {
@@ -17,4 +18,18 @@
 
 .list_title span {
   cursor: pointer;
+}
+
+.tooltip {
+  position: absolute;
+  top: 30px;
+  left: -10px;
+  background-color: rgb(240, 240, 240);
+  color: rgb(85, 47, 11);
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid rgb(112, 45, 29);
+  font-style: italic;
+  width: 100%;
+  z-index: 5
 }

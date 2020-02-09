@@ -56,12 +56,14 @@ class ListTitle extends React.Component {
     }
 
 
-
     render() {
 
         const loaderStyle = {
             fill: 'rgb(143, 59, 26)', height: '10px', position: 'absolute', bottom: '-12px', right: '43%'
         }
+
+        const listTitleHint = 
+            'Please, check that the % sign is missing and enter a unique title with length from 1 to 100 chars, or press "Esc" to exit'
 
         if (this.state.editMode) {
             return (
@@ -73,6 +75,12 @@ class ListTitle extends React.Component {
                         autoFocus={true}
                         onBlur={this.setDisplayMode}
                         onKeyDown={this.setTitleOnKey} />
+                    
+                    {this.state.inputError && 
+                        <div className={styles.tooltip}>
+                            {listTitleHint}
+                        </div> 
+                    }
                 </div>
             )
         } else return (
