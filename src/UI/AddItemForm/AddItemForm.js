@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './AddItemForm.module.css'
+import Tooltip from './Tooltip';
 
 class AddItemForm extends React.Component {
 
@@ -12,7 +13,9 @@ class AddItemForm extends React.Component {
         if (this.state.inputError) this.setState({ inputError: false });
         this.setState({ itemTitle: e.currentTarget.value }, () => {
             const newTitle = this.state.itemTitle
-            if (newTitle === '' || newTitle.length > 100 || newTitle.match(/%/))
+            const validationResult = this.props.validationFunc 
+                ? this.props.validationFunc(newTitle) : null
+            if (validationResult)
                 this.setState({ inputError: true })
         });
     }
@@ -21,13 +24,17 @@ class AddItemForm extends React.Component {
         if (this.state.itemTitle === '') this.setState({ inputError: true })
         else
             if (!this.state.inputError) {
-                this.props.addItem(this.state.itemTitle, this.props.listId);
+                this.props.addItem(this.state.itemTitle);
                 this.setState({ itemTitle: '' })
             }
     }
 
     actionOnBlur = () => {
-        if (this.state.inputError && this.state.itemTitle.length <= 100) this.setState({ inputError: false })
+        const validationResult = this.props.validationFunc 
+                ? this.props.validationFunc(this.state.itemTitle) : null
+        if (this.state.inputError && !validationResult) {
+            this.setState({ inputError: false })
+        }
     }
 
     actionOnKey = (e) => { 
@@ -39,7 +46,7 @@ class AddItemForm extends React.Component {
 
     render() {
         return (
-            <div className={styles.newTaskForm}>
+            <div className={styles.newItemForm}>
                 <input
                     className={this.state.inputError ? styles.error : ''}
                     onChange={this.setItemTitle}
@@ -47,7 +54,10 @@ class AddItemForm extends React.Component {
                     onBlur={this.actionOnBlur}
                     autoFocus={true}
                     type="text" placeholder={this.props.placeholder} value={this.state.itemTitle} />
+
                 <button onClick={this.addItem} >Add</button>
+                
+                { this.state.inputError && <Tooltip hint={this.props.hint} /> }
             </div>
         )
     }

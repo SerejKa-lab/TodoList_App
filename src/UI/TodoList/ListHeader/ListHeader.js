@@ -43,8 +43,18 @@ class ListHeader extends React.Component {
             generalCount, listDeliting, titleUpdating, taskIsAdding} = this.props
         const { maxTasksCount } = this.state
         const totalTasksCount = filterValue === 'All' ? totalCount : generalCount
+
+        const taskTitleValidation = (newTitle) => {
+            if (newTitle === '' || newTitle.length > 100) {
+                return true
+            }
+        }
+
         const loaderStyle ={
             fill: 'rgb(143, 59, 26)', height: '8px', position: 'absolute', right: '50%', bottom: '-14px'}
+
+            const addTaskHint = 
+            'Please, enter a title with length from 1 to 100 chars or press "Esc" to reset'
 
         return (
             <div className={styles.list_header}>
@@ -55,7 +65,8 @@ class ListHeader extends React.Component {
                     && <div className={styles.list_header_add_form}>
                         <AddItemForm
                             placeholder='Add new task'
-                            listId={listId}
+                            hint={addTaskHint}
+                            validationFunc={taskTitleValidation}
                             addItem={this.addTask} />
                         {taskIsAdding && <Preloader {...loaderStyle} />}
                     </div>}

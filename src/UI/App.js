@@ -65,10 +65,19 @@ class App extends React.Component {
             )
         } )
 
+        const listTitleValidation = (newTitle) => {
+            const equalTitles = listTitles.find((el) => el.title === newTitle)
+            if (newTitle === '' || newTitle.length > 100 || newTitle.match(/%/) || equalTitles) {
+                return true
+            }
+        }
+
         const preloaderStyles = {
             position: 'absolute', height: '12px', top: '1.75em', right: '34%', fill: 'white'
         }
 
+        const addListHint = 
+            'Please, check the % sign and enter a unique title with length from 1 to 100 chars, or press "Esc" to reset'
 
         return (
             <div className={styles.app}>
@@ -83,7 +92,8 @@ class App extends React.Component {
                     </NavLink>
                     {this.props.lists.length < this.props.maxListsCount 
                         && <div className={styles.app_addItemForm}>
-                                <AddItemForm addItem={this.addList} placeholder='Add list' />
+                                <AddItemForm addItem={this.addList} hint={addListHint}
+                                    validationFunc={listTitleValidation} placeholder='Add list' />
                             </div>}
                 </div>
                 <nav className={styles.app_header_navigation}>

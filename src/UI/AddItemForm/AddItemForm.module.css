@@ -1,11 +1,47 @@
-.newTaskForm {
+.newItemForm {
   text-align: center;
+  position: relative;
 }
 
-.newTaskForm button:hover {
+.newItemForm button:hover {
   background-color: yellowgreen;
 }
 
 .error {
   border-color: red;
+}
+
+.tooltip {
+  position: absolute;
+  top: 30px;
+  left: -10px;
+  background-color: rgb(240, 240, 240);
+  color: rgb(85, 47, 11);
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid rgb(112, 45, 29);
+  font-style: italic;
+  width: 100%;
+  z-index: 5
+}
+
+.isHidden {
+  display: none;
+}
+
+.delete_button {
+  position: absolute;
+  top: -1px;
+  right: -3px;
+  padding: 0 5px;
+  color: rgb(85, 47, 11)
+}
+
+.delete_button:hover {
+  color: mediumvioletred;
+  cursor: pointer;
+}
+
+.delete_button:active {
+  outline: none;
 }
