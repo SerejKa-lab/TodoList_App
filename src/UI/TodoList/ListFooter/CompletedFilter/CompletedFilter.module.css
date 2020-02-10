@@ -1,0 +1,11 @@
+
+/* base buttons styles are located in ListFooter.module.css */
+
+.completedFilter {
+    margin: 5px 0;
+    padding: 5px 0;
+}
+
+.filter_active {
+    border-style: inset;
+}

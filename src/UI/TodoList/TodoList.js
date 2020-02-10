@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './TodoList.module.css'
 import ListHeader from './ListHeader/ListHeader'
 import ListTasks from './ListTasks/ListTasks'
-import ListFooterContainer from './ListFooter/ListFooterContainer'
+import ListFooter from './ListFooter/ListFooter'
 
 class TodoList extends React.Component {
 
@@ -13,8 +13,8 @@ class TodoList extends React.Component {
     
     render = () => {
         const { listsCount, listTitles } = this.props
-        const { title, id, page, totalCount, countOnPage, tasks, generalCount, order,
-                listDeliting, titleUpdating, taskIsAdding, filterValue } = this.props.list;
+        const { title, id, page, totalCount, countOnPage, tasks, generalCount, order, filterValue,
+                listDeliting, titleUpdating, taskIsAdding, footerProcessing } = this.props.list;
         return (
             <div className={styles.todoList}>
                 <section className={styles.todoList_wrapper}>
@@ -37,14 +37,15 @@ class TodoList extends React.Component {
                         filterValue={filterValue}
                     />
                 </section>
-                <ListFooterContainer 
+                <ListFooter 
                     listId={id}
                     page = {page}
                     order={order}
                     listsCount={listsCount}
                     filterValue = { filterValue }
                     countOnPage ={ countOnPage }
-                    totalCount={totalCount} />
+                    totalCount={totalCount} 
+                    footerProcessing={footerProcessing} />
             </div>
         );
     }

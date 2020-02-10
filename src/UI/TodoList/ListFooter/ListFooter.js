@@ -1,48 +1,57 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Preloader from '../../Preloader/Preloader'
 import styles from './ListFooter.module.css'
 import ListOrder from './ListOrder/ListOrder'
+import CompletedFilter from './CompletedFilter/CompletedFilter'
+import PriorityFilter from './PriorityFilter/PriorityFilter'
+import PagesLinks from './PagesLinks/PagesLinks'
+import { withRouter } from 'react-router-dom'
 
 const ListFooter = (props) => {
 
-    const { isHidden, inProcess, filterValue, pagesCount, pagesLinks, order, displayOrder, 
-        listsCount, hideOnButtonClick, showOnButtonClick, getTasks, listId } = props
-        
-        const buttonAll = filterValue === 'All' ? styles.filter_active : ''
-        const buttonActive = filterValue === 'Active' ? styles.filter_active : ''
-        const buttonCompleted = filterValue === 'Completed' ? styles.filter_active : ''
-        const loaderStyle ={
-            fill: 'rgb(143, 59, 26)', height: '8px', position: 'absolute', top: '8px', right: '5px'}
-        
-        const getAllTasks = () => getTasks('All')
-        const getCompletedTasks = () => getTasks('Completed')
-        const getActiveTasks = () => getTasks('Active')
+    const { listId, filterValue, listsCount, order,
+            totalCount, countOnPage, page, footerProcessing } = props
 
-        return (
-            <div className={styles.list_footer}>
-                {pagesCount > 1 && 
-                    <div className={styles.tasksPagesLinks}>{ pagesLinks }</div>}
-                {!isHidden &&
-                    <div className={styles.filter_buttons}>
-                        <button onClick={ getAllTasks } 
-                            className={buttonAll} disabled={inProcess}>All</button>
-                        <button onClick={ getCompletedTasks } 
-                            className={buttonCompleted} disabled={inProcess}>Completed</button>
-                        <button onClick={ getActiveTasks } 
-                            className={buttonActive} disabled={inProcess}>Active</button>
-                        { inProcess && <Preloader {...loaderStyle} /> }
-                    </div>
-                }
-                {!isHidden && <span className={styles.show_hide} onClick={ hideOnButtonClick } >Hide</span>}
-                {isHidden && <span className={styles.show_hide} onClick={ showOnButtonClick } >Show</span>}
+    const loaderStyle = {
+        fill: 'rgb(85, 47, 11)', height: '10px', position: 'absolute', bottom: '5px', right: '45%'
+    }
 
-                {displayOrder && listsCount !== 1
-                    && <ListOrder order={order} listsCount={listsCount} listId={listId} />}
-            </div>
-        );
+    const pagesCount = totalCount ? Math.ceil(totalCount / countOnPage) : 1
     
+    // define conditions to show/hide order button
+    const showOrder = props.history.location.pathname === '/' ? true : false
+
+    const [isHidden, setHidden] = useState(true)
+    const toggleOnClick = () => setHidden(!isHidden)
+
+    const filterButtonStyle = 
+        isHidden ? styles.filterButton : styles.filterButton + ' '+ styles.pressed
+
+
+    return (
+        <div className={styles.list_footer}>
+            {pagesCount > 1 
+                && <PagesLinks page={page} pagesCount={pagesCount} listId={listId} filterValue={filterValue} />}
+            {!isHidden &&
+                <div className={styles.filterBlock}>
+                    <CompletedFilter
+                        listId={listId}
+                        filterValue={filterValue}
+                        footerProcessing={footerProcessing} />
+                    <PriorityFilter />
+                </div>
+            }
+            
+            <button className={filterButtonStyle} onClick={toggleOnClick} >Filter</button>
+
+            {showOrder && listsCount !== 1
+                && <ListOrder order={order} listsCount={listsCount} listId={listId} />}
+            {footerProcessing && <Preloader {...loaderStyle} />}
+        </div>
+    );
+
 }
 
 
-export default ListFooter
+export default withRouter(ListFooter)
 

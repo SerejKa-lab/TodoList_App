@@ -8,7 +8,7 @@ const initialState =  {
     /* lists: [
         {
             id: 0, title: 'Спорт', nextTaskId: 2, totalCount: 1, countOnPage: 10, filterValue: 'All',
-            page: 1, titleUpdating: false, taskIsAdding: false, listDeliting: false,
+            page: 1, titleUpdating: false, taskIsAdding: false, listDeliting: false, footerProcessing: false,
             tasks: [{ id: 1, title: 'CSS', status: 0, priority: 'medium', taskDeliting: false}]
         }
     ] */
@@ -30,11 +30,11 @@ const reducer = (state = initialState, action) => {
                 lists: action.lists.map( (list, index) => {
                     if (!list.tasks) return(
                         { ...list, order: index, page: 1, countOnPage, filterValue: 'All', tasks: [],
-                            footerProcess: false } 
+                            footerProcessing: false } 
                     )
                     else return (
                         { ...list, order: index, page: 1, countOnPage, filterValue: 'All',
-                            footerProcess: false }
+                            footerProcessing: false }
                     )
                 } ),
                 listsOrder: action.lists.map( (list) => list.id )
@@ -244,6 +244,16 @@ export default reducer;
 
 // --------------------------- Lists Actions -----------------------------------
 
+
+const LIST_IS_LOADING = 'LIST_IS_LOADING'
+const listIsLoadingAC = (value) => ({ type: LIST_IS_LOADING, value })
+
+const LIST_IN_PROCESS = 'LIST_IN_PROCESS'
+const listInProcessAC = (listId, process, value) => {
+    return({type: LIST_IN_PROCESS, listId, process, value})
+}
+
+
 const RESTORE_LISTS = 'RESTORE-LISTS';
 const restoreListsAC = (lists) => ({ type: RESTORE_LISTS, lists })
 
@@ -297,19 +307,6 @@ export const deleteList = (listId) => (dispatch) => {
             }).then( () => dispatch(listInProcessAC(listId, 'listDeliting', false)) )
 }
 
-
-const LIST_IS_LOADING = 'LIST_IS_LOADING'
-const listIsLoadingAC = (value) => ({ type: LIST_IS_LOADING, value })
-
-const LIST_IN_PROCESS = 'LIST_IN_PROCESS'
-const listInProcessAC = (listId, process, value) => ({type: LIST_IN_PROCESS, listId, process, value})
-
-const SET_FILTER_VALUE = 'SET_FILTER_VALUE'
-const setFilterValueAC = (listId, value) => ({type: SET_FILTER_VALUE, listId, value})
-
-export const setFilterValue = (listId, value) => async (dispatch) => {
-    dispatch( setFilterValueAC(listId, value) )
-}
 
 
 const REORDER_LIST = 'REORDER_LIST'
@@ -382,19 +379,8 @@ export const restoreTasks = (listId) => (dispatch) => {
 }
 
 const SET_TASKS_PAGE = 'SET_TASKS_PAGE';
-export const setTasksPage = (listId, page, tasks, totalCount) =>
+export const setTasksPageAC = (listId, page, tasks, totalCount) =>
     ({ type: SET_TASKS_PAGE, listId, page, tasks, totalCount })
-
-
-// set tasks page on "All" filter mode
-export const setAllTasksPage = (listId, page) => (dispatch) => {
-    return api.getTasksOnPage(listId, page)
-        .then(Response => {
-            const { items: tasks, totalCount } = Response.data;
-            dispatch(setTasksPage(listId, page, tasks, totalCount))
-        })
-}
-
 
 const DELETE_TASK = 'DELETE_TASK';
 export const deleteTask = (listId, taskId, page) => ({ type: DELETE_TASK, listId, taskId, page })
@@ -409,6 +395,17 @@ const taskInProcessAC = (listId, taskId, process, value) =>
 
 // ------------------------ Filtered Tasks Actions ----------------------
 
+
+
+const SET_FILTER_VALUE = 'SET_FILTER_VALUE'
+const setFilterValueAC = (listId, value) => ({type: SET_FILTER_VALUE, listId, value})
+
+export const setFilterValue = (listId, filterValue) => (dispatch) => {
+    dispatch( setFilterValueAC(listId, filterValue) )
+    dispatch(setTasksPage(listId, filterValue, 1))
+}
+
+
 const SET_FLTR_TASKS_PAGE = 'SET_FLTR_TASKS_PAGE';
 export const setFltrTasksPage = (listId, page, tasks, status) =>
     ({ type: SET_FLTR_TASKS_PAGE, listId, page, tasks, status })
@@ -416,8 +413,10 @@ export const setFltrTasksPage = (listId, page, tasks, status) =>
 const DELETE_FLTR_TASK = 'DELETE_FLTR_TASK';
 const deleteFltrTask = (listId, taskId, page) => ({ type: DELETE_FLTR_TASK, listId, taskId, page })
 
+
+
 // set tasks page on "Active" or "Completed" filter mode
-export const setFilteredPage = (listId, page, status) => (dispatch) => {
+const setFilteredPage = (listId, page, status) => (dispatch) => {
     return api.getAllTasks(listId)
         .then(Response => {
             const tasks = Response.data.items;
@@ -425,8 +424,37 @@ export const setFilteredPage = (listId, page, status) => (dispatch) => {
         })
 }
 
+// set tasks page on "All" filter mode
+const setAllTasksPage = (listId, page) => (dispatch) => {
+    return api.getTasksOnPage(listId, page)
+        .then(Response => {
+            const { items: tasks, totalCount } = Response.data;
+            dispatch(setTasksPageAC(listId, page, tasks, totalCount))
+        })
+}
 
-// ------------------------- Composite Tasks Actions -----------------------
+
+export const setTasksPage = (listId, filterValue, page) => (dispatch) => {
+    
+    dispatch( listInProcessAC(listId, 'footerProcessing', true) )
+
+    switch (filterValue) {
+        
+        case 'Active':
+            dispatch(setFilteredPage(listId, page, 0))   // status = 0
+                .then(() => dispatch(listInProcessAC(listId, 'footerProcessing', false)))
+        break
+
+        case 'Completed':
+            dispatch(setFilteredPage(listId, page, 1))   // status = 1
+                .then(() => dispatch(listInProcessAC(listId, 'footerProcessing', false)))
+        break
+
+        default:
+            dispatch(setAllTasksPage(listId, page))
+                .then(() => dispatch(listInProcessAC(listId, 'footerProcessing', false)))
+    }
+}
 
 
 export const addTask = (listId, title) => (dispatch) => {

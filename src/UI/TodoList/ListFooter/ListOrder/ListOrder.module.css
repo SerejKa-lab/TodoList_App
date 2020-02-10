@@ -2,11 +2,19 @@
     position: absolute;
     bottom: 0px;
     right: 2px;
-    border: 1px solid rgb(165, 164, 164);
+}
+
+.listOrder button{
     border-radius: 4px;
-    padding: 0 6px;
     cursor: pointer;
-    background-color: #f0f0f0;
+}
+
+.listOrder button:focus{
+    outline: none;
+}
+
+.pressed {
+    border-style: inset;
 }
 
 .orderBox {
@@ -17,18 +25,17 @@
     background-color: #f0f0f0;
     padding: 0 3px;
     cursor: auto;
-    border: 1px solid rgb(165, 164, 164);
+    border: 1px solid darkgray;
     border-radius: 5px;
 }
 
 .orderNumber {
     padding: 0 3px;
-    margin: 3px;
-    border: 1px solid rgb(165, 164, 164);
+    margin: 4px;
     border-radius: 4px;
     cursor: pointer;
 }
 
 .active {
-    background-color: yellowgreen
+    border-style: inset;
 }
