@@ -6,6 +6,7 @@ import { setTasksPage } from '../../../../Redux/reducer'
 
 const PagesLinks = ({listId, filterValue, page, pagesCount, setTasksPage}) => {
 
+    // block the button immediately after clicking on it
     const [disabled, setDisabled] = useState(false)
     useEffect(() => setDisabled(false), [page])
     

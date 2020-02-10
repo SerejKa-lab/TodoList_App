@@ -22,7 +22,7 @@ const ListTask = (props) => {
         updateTask({ status: completed })              // so status server module is used
     }
 
-    const loaderStyle = { fill: 'rgb(143, 59, 26)', height: '8px' }
+    const loaderStyle = { fill: 'rgb(85, 47, 11)', height: '8px' }
 
     return (
         <div className={styles.todoList_task}>

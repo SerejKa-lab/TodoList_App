@@ -59,7 +59,7 @@ class ListTitle extends React.Component {
     render() {
 
         const loaderStyle = {
-            fill: 'rgb(143, 59, 26)', height: '10px', position: 'absolute', bottom: '-12px', right: '43%'
+            fill: 'rgb(85, 47, 11)', height: '10px', position: 'absolute', bottom: '-12px', right: '43%'
         }
 
         const listTitleHint = 

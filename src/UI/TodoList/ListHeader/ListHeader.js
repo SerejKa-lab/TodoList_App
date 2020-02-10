@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import AddItemForm from '../../AddItemForm/AddItemForm';
 import ListTitle from './ListTitle/ListTitle';
 import Preloader from '../../Preloader/Preloader';
-import { addTask, addTaskActive, setTasksPage, 
-        setFilterValue, setAllTasksPage, deleteList } from '../../../Redux/reducer';
+import { addTask, addTaskActive, deleteList } from '../../../Redux/reducer';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 
@@ -51,7 +50,7 @@ class ListHeader extends React.Component {
         }
 
         const loaderStyle ={
-            fill: 'rgb(143, 59, 26)', height: '8px', position: 'absolute', right: '50%', bottom: '-14px'}
+            fill: 'rgb(85, 47, 11)', height: '8px', position: 'absolute', right: '50%', bottom: '-14px'}
 
             const addTaskHint = 
             'Please, enter a title with length from 1 to 100 chars or press "Esc" to reset'
@@ -85,11 +84,7 @@ class ListHeader extends React.Component {
 }
 
 
-const mdtp = { 
-    addTask, addTaskActive, setTasksPage, 
-    setFilterValue, setAllTasksPage,
-    deleteList
-}
+const mdtp = { addTask, addTaskActive, deleteList }
 
 export default compose (
     connect(null, mdtp ),
