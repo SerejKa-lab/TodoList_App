@@ -10,9 +10,8 @@ const Tooltip = (props) => {
     const tooltipStyle = display ? styles.tooltip : styles.isHidden
 
     return(
-        <div className={tooltipStyle}>
+        <div className={tooltipStyle} onClick={hideToollip}>
             {props.hint}
-            <i className={'fa fa-close ' + styles.delete_button} onClick={hideToollip} />
         </div>
     )
 }

@@ -22,7 +22,8 @@
   border: 1px solid rgb(112, 45, 29);
   font-style: italic;
   width: 100%;
-  z-index: 5
+  z-index: 5;
+  cursor: pointer;
 }
 
 .isHidden {
