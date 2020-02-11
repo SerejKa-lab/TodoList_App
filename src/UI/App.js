@@ -17,23 +17,6 @@ class App extends React.Component {
         this.props.restoreLists()
     }
 
-    addList = (title) => {
-        
-        const listsPaths = this.props.lists.map((list) => {         // generate path's array for equal path's check
-            const path = list.title.replace(/\s|\?|#/g, '-')
-            return path
-        })
-
-        const equalPaths = listsPaths.find((path) => 
-            path.toLowerCase() === title.replace(/\s|\?|#/g, '-').toLowerCase() )
-        
-        if (!title.match(/%/) && !equalPaths) {     //  equal path's & % sign check
-            this.props.addList(title)
-            if (this.props.history.location.pathname !== '/'){
-                this.props.history.push('/')
-            }
-        }
-    }
 
     restoreTasks = (listId) => this.props.restoreTasks(listId)
 
@@ -66,9 +49,20 @@ class App extends React.Component {
         } )
 
         const listTitleValidation = (newTitle) => {
-            const equalTitles = listTitles.find((el) => el.title === newTitle)
-            if (newTitle === '' || newTitle.length > 100 || newTitle.match(/%/) || equalTitles) {
+
+            const equalTitles = listTitles.find((el) => {
+                return (el.title.toLowerCase() === newTitle.toLowerCase() && el.id !== this.props.listId)
+            })
+
+            if (newTitle.trim() === '' || newTitle.length > 100 || newTitle.match(/%/) || equalTitles) {
                 return true
+            }
+        }
+
+        const addList = (title) => {
+            this.props.addList(title)
+            if (this.props.history.location.pathname !== '/') {
+                this.props.history.push('/')
             }
         }
 
@@ -92,7 +86,7 @@ class App extends React.Component {
                     </NavLink>
                     {this.props.lists.length < this.props.maxListsCount 
                         && <div className={styles.app_addItemForm}>
-                                <AddItemForm addItem={this.addList} hint={addListHint}
+                                <AddItemForm addItem={addList} hint={addListHint}
                                     validationFunc={listTitleValidation} placeholder='Add list' />
                             </div>}
                 </div>
