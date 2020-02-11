@@ -1,44 +1,62 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styles from './ListOrder.module.css'
 import { connect } from 'react-redux'
 import { reorderList } from '../../../../Redux/reducer'
+import onClickOutside from 'react-onclickoutside'
+import { compose } from 'redux'
 
 
-const ListOrder = (props) => {
+class ListOrder extends React.Component {
 
-    const [orderMode, setMode] = useState(false)
-    const toggleMode = () => setMode(!orderMode)
+    // configure the onClickOutside click handler
+    handleClickOutside = () => this.setState({ showOrder: false })
 
-    const reorderOnClick = (nextPos) => {
-        const { listId, order: currPos } = props
-
-        props.reorderList(listId, currPos, nextPos)
-        toggleMode()
+    state = {
+        showOrder: false
     }
 
-    const getPagesArr = () => {
-        let pagesArr = []
-        for (let i = 1; i <= props.listsCount; i++) {
-            const reorder = () => reorderOnClick(i)
-            const numberStyle = (i - 1) !== props.order
-                ? styles.orderNumber : styles.orderNumber + ' ' + styles.active
-            const page = <button className={numberStyle} onClick={reorder} key={i}>{i}</button>
-            pagesArr.push(page)
-        }
-        return pagesArr
+    toggleMode = () => this.setState({ showOrder: !this.state.showOrder })
+
+    reorderOnClick = (nextPos) => {
+        const { listId, order: currPos, reorderList } = this.props
+        reorderList(listId, currPos, nextPos)
+        this.toggleMode()
     }
-    const pagesArr = getPagesArr()
 
-    const orderBtnStyle = orderMode ? styles.pressed : ''
 
-    return (
-        <div className={styles.listOrder} onClick={toggleMode}>
-            <button className={orderBtnStyle}>{props.order + 1 + '/' + props.listsCount}</button>
-            {orderMode
-                && < div className={styles.orderBox}>{pagesArr}</div>
+    render() {
+
+        const { listsCount, order } = this.props
+
+        const getPagesArr = () => {
+            let pagesArr = []
+            for (let i = 1; i <= listsCount; i++) {
+                const reorder = () => this.reorderOnClick(i)
+                const numberStyle = (i - 1) !== order
+                    ? styles.orderNumber : styles.orderNumber + ' ' + styles.active
+                const page = <button className={numberStyle} onClick={reorder} key={i}>{i}</button>
+                pagesArr.push(page)
             }
-        </div>
-    )
+            return pagesArr
+        }
+        const pagesArr = getPagesArr()
+
+        const orderBtnStyle = this.state.showOrder ? styles.pressed : ''
+
+        return (
+            <div className={styles.listOrder}>
+                <button className={orderBtnStyle} onClick={this.toggleMode}>
+                    {order + 1 + '/' + listsCount}
+                </button>
+                {this.state.showOrder
+                    && < div className={styles.orderBox}>{pagesArr}</div>
+                }
+            </div>
+        )
+    }
 }
 
-export default connect(null, { reorderList })(ListOrder)
+export default compose(
+    connect(null, { reorderList }),
+    onClickOutside
+)(ListOrder)

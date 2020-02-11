@@ -1,42 +1,4 @@
+
 .list_footer {
     position: relative;
-}
-
-.filterButton {
-    cursor: pointer;
-    border-radius: 4px;
-    position: relative;
-    bottom: 0;
-    left: 0;
-}
-
-.pressed {
-    border-style: inset;
-}
-
-.filterButton:focus {
-    outline: none;
-}
-
-.filterBlock {
-    text-align: center;
-    position: absolute;
-    z-index: 1;
-    bottom: -37px;
-    left: 0;
-    padding: 4px;
-    background-color: rgb(240, 240, 240);
-    border: 1px solid darkgray;
-    border-radius: 4px;
-}
-
-.filterBlock button {
-    border-radius: 4px;
-    font-size: 15px;
-    margin: 0 1px;
-    cursor: pointer;
-}
-
-.filterBlock button:focus {
-    outline: none;
 }

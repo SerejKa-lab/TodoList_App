@@ -2,36 +2,63 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styles from './StatusFilter.module.css'
 import { setFilterValue, ALL_S, COMPLETED, ACTIVE } from '../../../../Redux/reducer'
+import onClickOutside from 'react-onclickoutside'
+import { compose } from 'redux'
 
 
-const StatusFilter = ({listId, filterValue, footerProcessing, setFilterValue}) => {
+class StatusFilter extends React.Component {
 
-    const buttonAll = filterValue === ALL_S ? styles.filter_active : ''
-    const buttonActive = filterValue === ACTIVE ? styles.filter_active : ''
-    const buttonCompleted = filterValue === COMPLETED ? styles.filter_active : ''
+    // configure the onClickOutside click handler
+    handleClickOutside = () => this.setState({ isHidden: true })
 
-   
-    const getAllTasks = () => {
-        if (filterValue !== ALL_S) setFilterValue(listId, ALL_S)
-    }
-    const getCompletedTasks = () => {
-        if (filterValue !== COMPLETED) setFilterValue(listId, COMPLETED)
-    }
-    const getActiveTasks = () => {
-        if (filterValue !== ACTIVE) setFilterValue(listId, ACTIVE)
+    state = {
+        isHidden: true
     }
 
+    toggleOnClick = () => this.setState({ isHidden: !this.state.isHidden })
 
-    return (
-        <div className={styles.StatusFilter}>
-            <button onClick={getAllTasks}
-                className={buttonAll} disabled={footerProcessing}>All</button>
-            <button onClick={getCompletedTasks}
-                className={buttonCompleted} disabled={footerProcessing}>Completed</button>
-            <button onClick={getActiveTasks}
-                className={buttonActive} disabled={footerProcessing}>Active</button>
-        </div>
-    )
+    render() {
+
+        const { listId, filterValue, footerProcessing, setFilterValue } = this.props
+
+        const buttonAll = filterValue === ALL_S ? styles.pressed : ''
+        const buttonActive = filterValue === ACTIVE ? styles.pressed : ''
+        const buttonCompleted = filterValue === COMPLETED ? styles.pressed : ''
+
+
+        const getAllTasks = () => {
+            if (filterValue !== ALL_S) setFilterValue(listId, ALL_S)
+        }
+        const getCompletedTasks = () => {
+            if (filterValue !== COMPLETED) setFilterValue(listId, COMPLETED)
+        }
+        const getActiveTasks = () => {
+            if (filterValue !== ACTIVE) setFilterValue(listId, ACTIVE)
+        }
+
+        const filterButtonStyle =
+            this.state.isHidden ? styles.frontButton : styles.frontButton + ' ' + styles.pressed
+
+        return (
+            <div className={styles.statusFilter}>
+                <button className={filterButtonStyle} onClick={this.toggleOnClick}>Filter</button>
+                {!this.state.isHidden &&
+                    <div className={styles.filterButtons}>
+                        <button onClick={getAllTasks}
+                            className={buttonAll} disabled={footerProcessing}>All</button>
+                        <button onClick={getCompletedTasks}
+                            className={buttonCompleted} disabled={footerProcessing}>Completed</button>
+                        <button onClick={getActiveTasks}
+                            className={buttonActive} disabled={footerProcessing}>Active</button>
+                    </div>
+                }
+            </div>
+        )
+    }
 }
 
-export default connect(null, { setFilterValue })(StatusFilter)
+
+export default compose(
+    connect(null, { setFilterValue }),
+    onClickOutside
+)(StatusFilter)

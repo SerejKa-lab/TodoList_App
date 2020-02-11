@@ -1,6 +1,35 @@
 
 /* base buttons styles are located in ListFooter.module.css */
 
-.filter_active {
+.statusFilter {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.statusFilter button {
+    border-radius: 4px;
+    font-size: 15px;
+    margin: 0 1px;
+    cursor: pointer;
+}
+
+.statusFilter button:focus {
+    outline: none;
+}
+
+.pressed {
     border-style: inset;
+}
+
+.filterButtons {
+    display: flex;
+    position: absolute;
+    z-index: 1;
+    bottom: -37px;
+    left: 0;
+    padding: 4px;
+    background-color: rgb(240, 240, 240);
+    border: 1px solid darkgray;
+    border-radius: 4px;
 }
