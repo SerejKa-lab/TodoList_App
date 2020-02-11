@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import AddItemForm from '../../AddItemForm/AddItemForm';
 import ListTitle from './ListTitle/ListTitle';
 import Preloader from '../../Preloader/Preloader';
-import { addTask, addTaskActive, deleteList } from '../../../Redux/reducer';
+import { addTask, addTaskActive, deleteList, ALL_S, COMPLETED, ACTIVE } from '../../../Redux/reducer';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 
@@ -26,11 +26,11 @@ class ListHeader extends React.Component {
     addTask = (title) => {
         const { listId, filterValue, taskIsAdding } = this.props;
 
-        if ( (filterValue === 'Completed' || filterValue === 'All') && !taskIsAdding )  {
+        if ( (filterValue === COMPLETED || filterValue === ALL_S) && !taskIsAdding )  {
             this.props.addTask(listId, title)
         }
 
-        if (filterValue === 'Active' && !taskIsAdding) {
+        if (filterValue === ACTIVE && !taskIsAdding) {
             this.props.addTaskActive(listId, title)
         }
     }
@@ -41,7 +41,7 @@ class ListHeader extends React.Component {
         const {listId, title, page, totalCount, filterValue, listTitles,
             generalCount, listDeliting, titleUpdating, taskIsAdding} = this.props
         const { maxTasksCount } = this.state
-        const totalTasksCount = filterValue === 'All' ? totalCount : generalCount
+        const totalTasksCount = filterValue === ALL_S ? totalCount : generalCount
 
         const taskTitleValidation = (newTitle) => {
             if (newTitle === '' || newTitle.length > 100) {

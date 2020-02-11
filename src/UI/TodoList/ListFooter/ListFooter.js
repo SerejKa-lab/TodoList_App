@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import Preloader from '../../Preloader/Preloader'
 import styles from './ListFooter.module.css'
 import ListOrder from './ListOrder/ListOrder'
-import CompletedFilter from './CompletedFilter/CompletedFilter'
-import PriorityFilter from './PriorityFilter/PriorityFilter'
+import StatusFilter from './StatusFilter/StatusFilter'
 import PagesLinks from './PagesLinks/PagesLinks'
 import { withRouter } from 'react-router-dom'
 
@@ -34,11 +33,10 @@ const ListFooter = (props) => {
                 && <PagesLinks page={page} pagesCount={pagesCount} listId={listId} filterValue={filterValue} />}
             {!isHidden &&
                 <div className={styles.filterBlock}>
-                    <CompletedFilter
+                    <StatusFilter
                         listId={listId}
                         filterValue={filterValue}
                         footerProcessing={footerProcessing} />
-                    <PriorityFilter />
                 </div>
             }
             

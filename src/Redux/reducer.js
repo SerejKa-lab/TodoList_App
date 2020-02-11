@@ -7,9 +7,9 @@ const initialState =  {
     maxListsCount: 10
     /* lists: [
         {
-            id: 0, title: 'Спорт', nextTaskId: 2, totalCount: 1, countOnPage: 10, filterValue: 'All',
+            id: 0, title: 'Спорт', nextTaskId: 2, totalCount: 1, countOnPage: 10, filterValue: ALL_S,
             page: 1, titleUpdating: false, taskIsAdding: false, listDeliting: false, footerProcessing: false,
-            tasks: [{ id: 1, title: 'CSS', status: 0, priority: 'medium', taskDeliting: false}]
+            tasks: [{ id: 1, title: 'CSS', status: 0, priority: 'Middle', taskDeliting: false}]
         }
     ] */
     };
@@ -29,11 +29,11 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 lists: action.lists.map( (list, index) => {
                     if (!list.tasks) return(
-                        { ...list, order: index, page: 1, countOnPage, filterValue: 'All', tasks: [],
+                        { ...list, order: index, page: 1, countOnPage, filterValue: ALL_S, tasks: [],
                             footerProcessing: false } 
                     )
                     else return (
-                        { ...list, order: index, page: 1, countOnPage, filterValue: 'All',
+                        { ...list, order: index, page: 1, countOnPage, filterValue: ALL_S,
                             footerProcessing: false }
                     )
                 } ),
@@ -41,7 +41,7 @@ const reducer = (state = initialState, action) => {
             }
 
         case ADD_LIST:
-            const extendedList = { ...action.list, page: 1, countOnPage, filterValue: 'All', tasks: [] };
+            const extendedList = { ...action.list, page: 1, countOnPage, filterValue: ALL_S, tasks: [] };
             return {
                 ...state,
                 lists: [ ...state.lists, extendedList ].map((list, index) => ({...list, order: index}))
@@ -396,6 +396,11 @@ const taskInProcessAC = (listId, taskId, process, value) =>
 // ------------------------ Filtered Tasks Actions ----------------------
 
 
+// status filter values
+export const ALL_S = 'ALL_S'
+export const COMPLETED = 'COMPLETED'
+export const ACTIVE = 'ACTIVE'
+
 
 const SET_FILTER_VALUE = 'SET_FILTER_VALUE'
 const setFilterValueAC = (listId, value) => ({type: SET_FILTER_VALUE, listId, value})
@@ -440,12 +445,12 @@ export const setTasksPage = (listId, filterValue, page) => (dispatch) => {
 
     switch (filterValue) {
         
-        case 'Active':
+        case ACTIVE:
             dispatch(setFilteredPage(listId, page, 0))   // status = 0
                 .then(() => dispatch(listInProcessAC(listId, 'footerProcessing', false)))
         break
 
-        case 'Completed':
+        case COMPLETED:
             dispatch(setFilteredPage(listId, page, 1))   // status = 1
                 .then(() => dispatch(listInProcessAC(listId, 'footerProcessing', false)))
         break
@@ -464,7 +469,7 @@ export const addTask = (listId, title) => (dispatch) => {
             if (Response.data.resultCode === 0) {
                 dispatch(setAllTasksPage(listId, 1))
                     .then(() => {
-                        dispatch(setFilterValueAC(listId, 'All'))
+                        dispatch(setFilterValueAC(listId, ALL_S))
                         dispatch(listInProcessAC(listId, 'taskIsAdding', false))
                     })
             }
@@ -502,30 +507,30 @@ export const delTaskFromPage = (listId, taskId) => (dispatch, getState) => {
                 if (Response.data.resultCode === 0) {
                     // delete task from not last page
                     if (tasksLength === 10 && page < pagesCount) {
-                        if (filterValue === 'All') {
+                        if (filterValue === ALL_S) {
                             dispatch( setAllTasksPage(listId, page) )
                         } else {
-                            const status = filterValue === 'Completed' ? 1 : 0
+                            const status = filterValue === COMPLETED ? 1 : 0
                             dispatch( setFilteredPage(listId, page, status) )
                         }
                     } 
                     // delete last task from not first page
                     if (tasksLength === 1 && page !== 1) {
-                        if (filterValue === 'All') {
+                        if (filterValue === ALL_S) {
                             dispatch( setAllTasksPage(listId, page-1) )
                         } else {
-                            const status = filterValue === 'Completed' ? 1 : 0
+                            const status = filterValue === COMPLETED ? 1 : 0
                             dispatch( setFilteredPage(listId, page - 1, status) )
                         }
 
                     }
                     // delete last task from first page
-                    if (tasksLength === 1 && page === 1 && filterValue !== 'All') {
+                    if (tasksLength === 1 && page === 1 && filterValue !== ALL_S) {
                         dispatch( setAllTasksPage(listId, 1) )
-                            .then(() => dispatch( setFilterValueAC(listId, 'All') ) )
+                            .then(() => dispatch( setFilterValueAC(listId, ALL_S) ) )
                     }
                     // regular delete task case -> must be located at the end of chain
-                    if (filterValue === 'All') {
+                    if (filterValue === ALL_S) {
                         dispatch( deleteTask(listId, taskId, page) )
                     } else {
                         dispatch( deleteFltrTask(listId, taskId, page) )
@@ -549,20 +554,20 @@ export const updateTask = (listId, taskId, updateObj) => (dispatch, getState) =>
     api.updateTask(listId, taskId, updatedTask)
         .then(Response => {
             if (Response.data.resultCode === 0) {
-                if (filterValue === 'All') {
+                if (filterValue === ALL_S) {
                     dispatch(updateTaskAC(Response.data.data.item))
                 } else {
                     api.getAllTasks(listId)
                         .then((Response) => {
                             if (!Response.data.error) {
                                 const tasks = Response.data.items;
-                                const status = filterValue === 'Completed' ? 1 : 0
+                                const status = filterValue === COMPLETED ? 1 : 0
                                 // set previous filtered page
                                 if (tasksLength === 1 && page !== 1 && updateObj.status !== undefined) {
                                     dispatch(setFltrTasksPage(listId, page - 1, tasks, status))
                                 } else if (tasksLength === 1 && page === 1 && updateObj.status !== undefined) {
                                         dispatch(setAllTasksPage(listId, 1))
-                                        dispatch(setFilterValueAC(listId, 'All'))
+                                        dispatch(setFilterValueAC(listId, ALL_S))
                                 } else
                                     dispatch(setFltrTasksPage(listId, page, tasks, status))
                             }
