@@ -63,7 +63,7 @@ class ListTitle extends React.Component {
         }
 
         const listTitleHint = 
-            'Please, check that the % sign is missing and enter a unique title with length from 1 to 100 chars, or press "Esc" to exit'
+            'Please, check the % sign is missing and enter a unique title between 1 and 100 chars long, or press "Esc" to exit'
 
         if (this.state.editMode) {
             return (

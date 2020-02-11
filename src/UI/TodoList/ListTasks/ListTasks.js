@@ -13,7 +13,7 @@ const ListTasks = ({ tasks, countOnPage, ...restProps}) => {
 
 
     return (
-        <div className={styles.todoList_Tasks}>
+        <div className={styles.listTasks}>
             {tasksArray}
         </div>
     );

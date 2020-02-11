@@ -3,8 +3,8 @@
   position: relative;
 }
 
-.newItemForm button:hover {
-  background-color: yellowgreen;
+.newItemForm button {
+  cursor: pointer;
 }
 
 .error {

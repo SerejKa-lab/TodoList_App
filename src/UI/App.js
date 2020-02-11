@@ -71,7 +71,7 @@ class App extends React.Component {
         }
 
         const addListHint = 
-            'Please, check the % sign and enter a unique title with length from 1 to 100 chars, or press "Esc" to reset'
+            'Please, check the % sign is missing and enter a unique title between 1 and 100 chars long, or press "Esc" to reset'
 
         return (
             <div className={styles.app}>
