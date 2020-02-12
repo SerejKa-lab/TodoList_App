@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './ListTask.module.css'
 import { connect } from 'react-redux';
-import { delTaskFromPage, updateTask } from '../../../../Redux/reducer'
+import { delTaskFromPage, updateTask, reorderTask, statusObj } from '../../../../Redux/reducer'
 import Preloader from '../../../Preloader/Preloader'
 import TaskPriority from './TaskPriority/TaskPriority';
 import TaskTitle from './TaskTitle/TaskTitle';
@@ -18,8 +18,15 @@ const ListTask = (props) => {
     const updateTask = (updateObj) => props.updateTask(listId, taskId, updateObj)
 
     const setTaskStatus = (e) => {
-        const completed = e.currentTarget.checked ? 1 : 0  // completed server module is no longer supported,
-        updateTask({ status: completed })              // so status server module is used
+        const completed = e.currentTarget.checked 
+            ? statusObj.completed 
+            : statusObj.active
+        updateTask({ status: completed })
+    }
+
+    const reorderTask = () => {
+        const nextPos = prompt('enter next postion', `${renderIndex}`)
+        props.reorderTask(listId, taskId, renderIndex-1, nextPos)
     }
 
     const loaderStyle = { fill: 'rgb(85, 47, 11)', height: '8px' }
@@ -33,7 +40,7 @@ const ListTask = (props) => {
                     onChange={setTaskStatus}
                     type="checkbox"
                     checked={status} />
-                <span> {renderIndex} - </span>
+                <span onClick={reorderTask}> {renderIndex} - </span>
 
                 <TaskTitle title={title} updateTask={updateTask} />
                 <TaskPriority priority={priority} updateTask={updateTask} />
@@ -52,5 +59,5 @@ const ListTask = (props) => {
 
 
 
-export default connect(null, {updateTask, delTaskFromPage})(ListTask);
+export default connect(null, {updateTask, delTaskFromPage, reorderTask})(ListTask);
 
