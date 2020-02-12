@@ -17,9 +17,9 @@ class ListOrder extends React.Component {
 
     toggleMode = () => this.setState({ showOrder: !this.state.showOrder })
 
-    reorderOnClick = (nextPos) => {
+    reorderOnClick = (nextRenderPos) => {
         const { listId, order: currPos, reorderList } = this.props
-        reorderList(listId, currPos, nextPos)
+        reorderList(listId, currPos, nextRenderPos)
         this.toggleMode()
     }
 
