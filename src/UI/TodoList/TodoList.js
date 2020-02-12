@@ -13,8 +13,12 @@ class TodoList extends React.Component {
     
     render = () => {
         const { listsCount, listTitles } = this.props
-        const { title, id, page, totalCount, countOnPage, tasks, generalCount, order, filterValue,
-                listDeliting, titleUpdating, taskIsAdding, footerProcessing } = this.props.list;
+        const { title, id, page, totalCount, countOnPage, tasks, generalCount, 
+            order, filterValue, listDeliting, titleUpdating, taskIsAdding, 
+                footerProcessing, tasksOrder } = this.props.list;
+        const tasksCount = tasksOrder ? tasksOrder.length : null
+
+
         return (
             <div className={styles.todoList}>
                 <section className={styles.todoList_wrapper}>
@@ -24,7 +28,7 @@ class TodoList extends React.Component {
                         filterValue = { filterValue }
                         page = { page }
                         generalCount = {generalCount}
-                        totalCount={totalCount} 
+                        totalCount={totalCount}
                         listTitles={listTitles}
                         listDeliting = {listDeliting}
                         titleUpdating={titleUpdating} 
@@ -32,9 +36,7 @@ class TodoList extends React.Component {
                     <ListTasks
                         tasks={tasks}
                         listId={id}
-                        page={page}
-                        countOnPage={countOnPage}
-                        filterValue={filterValue}
+                        tasksCount={tasksCount}
                     />
                 </section>
                 <ListFooter 

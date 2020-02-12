@@ -2,13 +2,10 @@ import React from 'react'
 import styles from './ListTasks.module.css'
 import ListTask from './ListTask/ListTask'
 
-const ListTasks = ({ tasks, countOnPage, ...restProps}) => {
+const ListTasks = ({ tasks, ...restProps}) => {
 
-    const tasksLength = tasks.length;
-
-    const tasksArray = tasks.filter(( task, index ) => index < countOnPage )
-    .map((task) => 
-        <ListTask key={task.id} task={task} tasksLength={tasksLength} { ...restProps } /> 
+    const tasksArray = tasks.map((task) => 
+        <ListTask key={task.id} task={task} { ...restProps } /> 
     );
 
 

@@ -51,5 +51,9 @@ export const api = {
 
     deleteTask(listId, taskId) {
         return instance.delete(`/${listId}/tasks/${taskId}`)
+    },
+
+    reorderTask(listId, taskId, putAfterItemId) {
+        return instance.put(`/${listId}/tasks/${taskId}/reorder`, {putAfterItemId})
     }
 }
