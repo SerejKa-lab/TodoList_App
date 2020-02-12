@@ -25,6 +25,7 @@ class StatusFilter extends React.Component {
         const buttonActive = filterValue === ACTIVE ? styles.pressed : ''
         const buttonCompleted = filterValue === COMPLETED ? styles.pressed : ''
 
+        const filter = { ALL_S: 'All', COMPLETED: 'Completed', ACTIVE: 'Active' }
 
         const getAllTasks = () => {
             if (filterValue !== ALL_S) setFilterValue(listId, ALL_S)
@@ -41,7 +42,8 @@ class StatusFilter extends React.Component {
 
         return (
             <div className={styles.statusFilter}>
-                <button className={filterButtonStyle} onClick={this.toggleOnClick}>Filter</button>
+                <button className={filterButtonStyle} onClick={this.toggleOnClick}>
+                   {filter[filterValue]}</button>
                 {!this.state.isHidden &&
                     <div className={styles.filterButtons}>
                         <button onClick={getAllTasks}
