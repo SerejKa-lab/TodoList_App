@@ -10,10 +10,6 @@ import { withRouter } from 'react-router-dom';
 
 class ListHeader extends React.Component {
 
-    state = {
-        maxTasksCount: 33
-    }
-
     deleteList = () => {
         this.props.deleteList(this.props.listId)
             .then(() => {
@@ -38,10 +34,10 @@ class ListHeader extends React.Component {
 
     render() {
 
-        const {listId, title, page, totalCount, filterValue, listTitles,
+        const {listId, title, page, totalCount, filterValue, listTitles, maxTasksCount,
             generalCount, listDeliting, titleUpdating, taskIsAdding} = this.props
-        const { maxTasksCount } = this.state
-        const totalTasksCount = filterValue === ALL_S ? totalCount : generalCount
+        
+            const totalTasksCount = filterValue === ALL_S ? totalCount : generalCount
 
         const taskTitleValidation = (newTitle) => {
             if (newTitle === '' || newTitle.length > 100 || newTitle.trim() === '') {

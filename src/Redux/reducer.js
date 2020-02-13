@@ -4,6 +4,7 @@ const initialState =  {
     lists: [],  
     listsOrder: [],
     listsProgress: { listsLoading: false },
+    maxTasksCount: 33,
     maxListsCount: 10
     /* lists: [
         {
@@ -726,7 +727,6 @@ export const reorderTask = (listId, taskId, currPos, nextRenderPos) => (dispatch
     // reorder functional block
     if (nextPos !== null && nextPos !== +currPos) {
         const putAfterItemId = getAfterId()              // get putAfterItemId for API request
-        console.log(putAfterItemId)
         const { countOnPage, filterValue } = targerList
         // determine status of filtered tasks for dispatch(setFilteredPage(...))
         const { status } = targerList.tasks.find((t) => t.id === taskId )

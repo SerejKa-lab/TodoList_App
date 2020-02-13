@@ -21,7 +21,7 @@ const TaskOrder = ({ listId, taskId, tasksCount, renderIndex, reorderTask }) => 
     const getOptions = () => {
         let optionArr = []
         for (let i = 1; i <= tasksCount; i++) {
-            const el = <option value={i}>{i}</option>
+            const el = <option value={i} key={i}>{i}</option>
             optionArr.push(el)
         }
         return optionArr

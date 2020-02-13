@@ -25,19 +25,23 @@ class App extends React.Component {
 
         const listTitles = this.props.lists.map((list) => ({title: list.title, id: list.id}) )
 
+        // generate list Routes for single list display
         const listsRoutes = this.props.lists.map((list) =>{
+            const { maxTasksCount } = this.props
             const path = list.title.replace(/\s|\?|#/g, '-')
             return (
             <Route path={`/${path}`} exact key={list.id} render={() => 
-                <TodoList list={list} key={list.id} 
+                <TodoList list={list} key={list.id} maxTasksCount={maxTasksCount}
                     restoreTasks={this.restoreTasks} listTitles={listTitles} />} 
             />) 
         })
 
+        // generate list Routes for lists general display
         const allLists = this.props.lists.map((list) => {
+            const { listsCount, maxTasksCount } = this.props
             return( 
-                <TodoList list={list} key={list.id} listTitles={listTitles}
-                    restoreTasks={this.restoreTasks} listsCount={this.props.listsCount}/>
+                <TodoList list={list} key={list.id} listTitles={listTitles} listsCount={listsCount}
+                    restoreTasks={this.restoreTasks} maxTasksCount={maxTasksCount}/>
             )}
         )
 
@@ -110,7 +114,8 @@ const mapStateToProps = (state) => {
         lists: state.lists,
         listsCount: state.lists.length,
         listsLoading: state.listsProgress.listsLoading,
-        maxListsCount: state.maxListsCount
+        maxListsCount: state.maxListsCount,
+        maxTasksCount: state.maxTasksCount
     }
 }
 
