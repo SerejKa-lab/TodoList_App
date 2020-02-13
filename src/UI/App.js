@@ -85,7 +85,7 @@ class App extends React.Component {
                     <NavLink to='/' exact className={styles.app_title}>
                         <h2>
                             <img src={book} alt='book' className={styles.app_header_icon} />
-                            Tasks Organizer
+                            Tasks Manager
                         </h2>
                     </NavLink>
                     {this.props.lists.length < this.props.maxListsCount 
