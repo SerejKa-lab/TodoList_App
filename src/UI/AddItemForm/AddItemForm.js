@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './AddItemForm.module.css'
-import Tooltip from './Tooltip';
+import Tooltip from '../Tooltip/Tooltip';
 
 class AddItemForm extends React.Component {
 

@@ -5,6 +5,7 @@ import { updateListTitle } from '../../../../Redux/reducer';
 import Preloader from '../../../Preloader/Preloader';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
+import Tooltip from '../../../Tooltip/Tooltip';
 
 
 class ListTitle extends React.Component {
@@ -76,11 +77,7 @@ class ListTitle extends React.Component {
                         onBlur={this.setDisplayMode}
                         onKeyDown={this.setTitleOnKey} />
                     
-                    {this.state.inputError && 
-                        <div className={styles.tooltip}>
-                            {listTitleHint}
-                        </div> 
-                    }
+                    { this.state.inputError && <Tooltip hint={listTitleHint} /> }
                 </div>
             )
         } else return (

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styles from './TaskTitle.module.css'
+import Tooltip from '../../../../Tooltip/Tooltip'
 
 
 const TaskTitle = (props) => {
@@ -40,6 +41,9 @@ const TaskTitle = (props) => {
         }
     }
 
+    const taskTitleHint = 
+            'Please, enter a title with length between 1 to 100 chars or press "Esc" to reset'
+
 
     if (!editMode) {
         return (
@@ -47,13 +51,16 @@ const TaskTitle = (props) => {
         )
     } else {
         return (
-            <input type="text"
-                value={title}
-                className={inputError ? styles.error : ''}
-                onChange={editTaskTitle}
-                autoFocus={true}
-                onBlur={setDisplayMode}
-                onKeyDown={setTitleOnKey} />
+            <span className={styles.taskTitle}>
+                <input type="text"
+                    value={title}
+                    className={inputError ? styles.error : ''}
+                    onChange={editTaskTitle}
+                    autoFocus={true}
+                    onBlur={setDisplayMode}
+                    onKeyDown={setTitleOnKey} />
+                { inputError && <Tooltip hint={taskTitleHint} /> }
+            </span>
         )
     }
 }

@@ -44,7 +44,7 @@ class ListHeader extends React.Component {
         const totalTasksCount = filterValue === ALL_S ? totalCount : generalCount
 
         const taskTitleValidation = (newTitle) => {
-            if (newTitle === '' || newTitle.length > 100) {
+            if (newTitle === '' || newTitle.length > 100 || newTitle.trim() === '') {
                 return true
             }
         }
@@ -53,7 +53,7 @@ class ListHeader extends React.Component {
             fill: 'rgb(85, 47, 11)', height: '8px', position: 'absolute', right: '50%', bottom: '-14px'}
 
             const addTaskHint = 
-            'Please, enter a title with length from 1 to 100 chars or press "Esc" to reset'
+            'Please, enter a title with length between 1 to 100 chars or press "Esc" to reset'
 
         return (
             <div className={styles.list_header}>

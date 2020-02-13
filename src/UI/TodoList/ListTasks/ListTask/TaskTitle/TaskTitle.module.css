@@ -1,5 +1,6 @@
 .taskTitle {
   cursor: text;
+  position: relative;
 }
 
 .error {
