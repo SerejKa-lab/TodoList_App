@@ -10,10 +10,17 @@ Used libraries and modules:
     - react-redux -> to simplify acsess to redux store using context API
     - redux-thunk -> to provide basic Redux side-effect logic, including complex synchronous logic that requires storage access, and simple asynchronous logic such as AJAX requests
     - react-router-dom -> Single Page Application approach implementation, to switch between components without reloading the html document
+    - gh-pages -> project deploy on gitHub pages
     
 
 
 Implemented functionality:
+
+    -> ServerAPI:
+        - all user data is stored on the remote server https://social-network.samuraijs.com/api/1.1
+        - all data changes are consistent with the data on the remote server
+        - server requests buttons disabling on data loading
+        - data loading indicators
 
     -> Lists functionality:
         - list adding
