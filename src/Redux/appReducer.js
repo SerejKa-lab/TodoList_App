@@ -1,11 +1,13 @@
 import {api} from '../API/api'
+import { setErrorAC } from './errorsReducer';
 
 const initialState =  {
     lists: [],  
     listsOrder: [],
     listsProgress: { listsLoading: false },
     maxTasksCount: 33,
-    maxListsCount: 10
+    maxListsCount: 10,
+    error: null
     /* lists: [
         {
             id: 0, title: 'Спорт', nextTaskId: 2, totalCount: 1, countOnPage: 10, filterValue: ALL_S,
@@ -17,7 +19,7 @@ const initialState =  {
     };
 
 
-const reducer = (state = initialState, action) => {
+const appReducer = (state = initialState, action) => {
 
     const countOnPage = 10;
     const renderBasis = (action.page - 1)*countOnPage +1;
@@ -261,17 +263,15 @@ const reducer = (state = initialState, action) => {
                 })
             }
 
-
+            
         default: return state;
     }
 
 }
 
-export default reducer;
+export default appReducer;
 
 // ------------------------------ TEMPORARY ----------------------------------
-
-
 
 
 
@@ -290,62 +290,75 @@ const listInProcessAC = (listId, process, value) => {
 const RESTORE_LISTS = 'RESTORE-LISTS';
 const restoreListsAC = (lists) => ({ type: RESTORE_LISTS, lists })
 
-export const restoreLists = () => (dispatch) => {
-    dispatch(listIsLoadingAC(true))
-    api.restoreLists()
-        .then( response => {
-            dispatch(restoreListsAC(response.data));
-            dispatch(listIsLoadingAC(false))
-        })
+export const restoreLists = () => async(dispatch) => {
+    try {
+        dispatch(listIsLoadingAC(true))
+        const response = await api.restoreLists()
+        dispatch(restoreListsAC(response.data));
+        dispatch(listIsLoadingAC(false))
+    } catch (error) {
+        dispatch(setErrorAC(error))
+        dispatch(listIsLoadingAC(false))
+    }
 }
 
 
 const ADD_LIST = 'ADD_LIST';
 const addListAC = (list) => ({type: ADD_LIST, list})
 
-export const addList = (title) => (dispatch) => {
-    dispatch(listIsLoadingAC(true))
-    api.addList(title)
-            .then(Response => {
-                dispatch(addListAC(Response.data.data.item))
-                dispatch(listIsLoadingAC(false))
-            })
+export const addList = (title) => async(dispatch) => {
+    try {
+        dispatch(listIsLoadingAC(true))
+        const response = await api.addList(title)
+        dispatch(addListAC(response.data.data.item))
+        dispatch(listIsLoadingAC(false))
+    } catch (error) {
+        dispatch(setErrorAC(error))
+        dispatch(listIsLoadingAC(false))
+    }
 }
 
 const UPDATE_LIST_TITLE = 'UPDATE_LIST_TITLE';
 const updateListTitleAC = (listId, title) => ({ type: UPDATE_LIST_TITLE, listId, title })
 
-export const updateListTitle = (listId, title) => (dispatch) => {
-    dispatch(listInProcessAC(listId, 'titleUpdating', true))
-    api.updateListTitle(listId, title)
-        .then(Response => {
-            if (Response.data.resultCode === 0) {
-                dispatch(updateListTitleAC(listId, title))
-                dispatch(listInProcessAC(listId, 'titleUpdating', false))
-            }
-        })
+export const updateListTitle = (listId, title) => async(dispatch) => {
+    try {
+        dispatch(listInProcessAC(listId, 'titleUpdating', true))
+        const response = await api.updateListTitle(listId, title)
+        if (response.data.resultCode === 0) {
+            dispatch(updateListTitleAC(listId, title))
+            dispatch(listInProcessAC(listId, 'titleUpdating', false))
+        }
+    } catch (error) {
+        dispatch(setErrorAC(error))
+        dispatch(listInProcessAC(listId, 'titleUpdating', false))
+    }
 }
 
 
 const DELETE_LIST = 'DELETE_LIST';
 const deleteListAC = (listId) => ({type: DELETE_LIST, listId})
 
-export const deleteList = (listId) => (dispatch) => {
-    dispatch(listInProcessAC(listId, 'listDeliting', true))
-    return api.deleteList(listId)
-            .then((res) => {
-                if (res.data.resultCode === 0) {
-                    dispatch(deleteListAC(listId))
-                }
-            }).then( () => dispatch(listInProcessAC(listId, 'listDeliting', false)) )
+export const deleteList = (listId) => async(dispatch) => {
+    try {
+        dispatch(listInProcessAC(listId, 'listDeliting', true))
+        const response = await api.deleteList(listId)
+        if (response.data.resultCode === 0) {
+            await dispatch(deleteListAC(listId))
+        }
+        dispatch(listInProcessAC(listId, 'listDeliting', false))
+        
+    } catch (error) {
+        dispatch(setErrorAC(error))
+        dispatch(listInProcessAC(listId, 'listDeliting', false))
+    }
 }
-
 
 
 const REORDER_LIST = 'REORDER_LIST'
 const reorderListAC = (reorderedLists) => ({type: REORDER_LIST, reorderedLists })
 
-export const reorderList = (listId, currPos, nextRenderPos) => (dispatch, getState) => {
+export const reorderList = (listId, currPos, nextRenderPos) => async(dispatch, getState) => {
     
     const nextPos = nextRenderPos !== ( null || undefined ) ? +nextRenderPos - 1 : null   //define next element position
    
@@ -353,16 +366,16 @@ export const reorderList = (listId, currPos, nextRenderPos) => (dispatch, getSta
         // if nextRenderPos undefined or null element position should'n change
         // this is insurence check or for case of using reorderListAC
         if (nextPos === null && currPos === 0) return null
-        if (nextPos === null) return getState().listsOrder[currPos-1]
+        if (nextPos === null) return getState().app.listsOrder[currPos-1]
         
         // if next position defined find 'put after element' Id
         if (nextPos === 0) return null
-        if (nextPos <= +currPos) return getState().listsOrder[nextPos-1]
-        if (nextPos > +currPos) return getState().listsOrder[nextPos]
+        if (nextPos <= +currPos) return getState().app.listsOrder[nextPos-1]
+        if (nextPos > +currPos) return getState().app.listsOrder[nextPos]
     }
     
     const getReorderedLists = () => {
-        const lists = [...getState().lists]
+        const lists = [...getState().app.lists]
         if (nextPos < currPos) {
             const currList = lists[currPos]
             for (let i = currPos-1; i >= nextPos; i--) {
@@ -386,14 +399,17 @@ export const reorderList = (listId, currPos, nextRenderPos) => (dispatch, getSta
         const putAfterItemId = getAfterId()              // get putAfterItemId for API request
         const reorderedLists = getReorderedLists()       // get reordered lists for dispatch
 
-        dispatch(listIsLoadingAC(true))
-        api.reorderList(listId, putAfterItemId)
-            .then((response) => {
-                if (response.data.resultCode === 0) {
-                    dispatch(reorderListAC(reorderedLists))
-                    dispatch(listIsLoadingAC(false))
-                }
-            })
+        try {
+            dispatch(listIsLoadingAC(true))
+            const response = await api.reorderList(listId, putAfterItemId)
+            if (response.data.resultCode === 0) {
+                dispatch(reorderListAC(reorderedLists))
+                dispatch(listIsLoadingAC(false))
+            }
+        } catch (error) {
+            dispatch(setErrorAC(error))
+            dispatch(listIsLoadingAC(false))
+        }
     }
 }
 
@@ -404,11 +420,13 @@ export const reorderList = (listId, currPos, nextRenderPos) => (dispatch, getSta
 const RESTORE_TASKS = 'RESTORE_TASKS';
 const restoreTasksAC = (listId, tasks, totalCount) => ({ type: RESTORE_TASKS, listId, tasks, totalCount })
 
-export const restoreTasks = (listId) => (dispatch) => {
-    api.getAllTasks(listId)
-            .then(Response => {
-                dispatch(restoreTasksAC(listId, Response.data.items, Response.data.totalCount))
-            })
+export const restoreTasks = (listId) => async(dispatch) => {
+    try {
+        const response = await api.getAllTasks(listId)
+        dispatch(restoreTasksAC(listId, response.data.items, response.data.totalCount))
+    } catch (error) {
+        dispatch(setErrorAC(error))
+    }
 }
 
 const SET_TASKS_PAGE = 'SET_TASKS_PAGE';
@@ -444,7 +462,7 @@ export const setFilterValue = (listId, filterValue) => (dispatch, getState) => {
     
     // get tasks id before the first completed task in list and save it to state
     // for reorderTasks in case of filterValue === COMPLETED
-    const targetList = getState().lists.find((l) => l.id === listId)
+    const targetList = getState().app.lists.find((l) => l.id === listId)
     const currFilter = targetList.filterValue
 
     if (currFilter !== COMPLETED) {
@@ -477,48 +495,55 @@ const deleteFltrTask = (listId, taskId, page) => ({ type: DELETE_FLTR_TASK, list
 
 
 // set tasks page on "Active" or "Completed" filter mode
-const setFilteredPage = (listId, page, status) => (dispatch) => {
-    return api.getAllTasks(listId)
-        .then(Response => {
-            const tasks = Response.data.items;
-            dispatch(setFilteredPageAC(listId, page, tasks, status))
-        })
+const setFilteredPage = (listId, page, status) => async(dispatch) => {
+    try {
+        const response = await api.getAllTasks(listId)
+        const tasks = response.data.items;
+        dispatch(setFilteredPageAC(listId, page, tasks, status))
+    } catch (error) {
+        dispatch(setErrorAC(error))
+    }
 }
 
 // set tasks page on "All" filter mode
-const setAllTasksPage = (listId, page) => (dispatch, getState) => {
+const setAllTasksPage = (listId, page) => async(dispatch, getState) => {
     
     //  get previous filterValue
-    const { filterValue: prevFilterVal } = getState().lists.find((list) => list.id === listId)
+    const { filterValue: prevFilterVal } = getState().app.lists.find((list) => list.id === listId)
 
     switch (prevFilterVal) {
 
         // if previous filter was 'Active' or 'Completed' --> set new tasksOrder
         case COMPLETED:
         case ACTIVE:
-            return api.getAllTasks(listId)
-                .then((res) => {
-                    const newTasksOrder = res.data.items.map((task) => task.id)
-                    dispatch(setTasksOrder(listId, newTasksOrder))
-                    api.getTasksOnPage(listId, page)
-                        .then(Response => {
-                            const { items: tasks, totalCount } = Response.data;
-                            dispatch(setTasksPageAC(listId, page, tasks, totalCount))
-                        })
-                })
+            try {
+                const response_1 = await api.getAllTasks(listId)
+                const newTasksOrder = response_1.data.items.map((task) => task.id)
+                dispatch(setTasksOrder(listId, newTasksOrder))
+                
+                const response_2 = await api.getTasksOnPage(listId, page)
+                const { items: tasks, totalCount } = response_2.data;
+                dispatch(setTasksPageAC(listId, page, tasks, totalCount))
+                break
+            } catch (error) {
+                dispatch(setErrorAC(error))
+                break
+            }
+
 
         default:      // case previous filterValue === ALL_S
-            return api.getTasksOnPage(listId, page)
-                .then(Response => {
-                    const { items: tasks, totalCount } = Response.data;
-                    dispatch(setTasksPageAC(listId, page, tasks, totalCount))
-                })
-
+            try {
+                const response = await api.getTasksOnPage(listId, page)
+                const { items: tasks, totalCount } = response.data;
+                dispatch(setTasksPageAC(listId, page, tasks, totalCount))
+            } catch (error) {
+                dispatch(setErrorAC(error))
+            }
     }
 }
 
 
-export const setTasksPage = (listId, filterValue, page) => (dispatch) => {
+export const setTasksPage = (listId, filterValue, page) => async(dispatch) => {
     
     dispatch( listInProcessAC(listId, 'footerProcessing', true) )
 
@@ -526,123 +551,129 @@ export const setTasksPage = (listId, filterValue, page) => (dispatch) => {
     switch (filterValue) {
         
         case ACTIVE:
-            dispatch(setFilteredPage(listId, page, status))
-                .then(() => dispatch(listInProcessAC(listId, 'footerProcessing', false)))
+            await dispatch(setFilteredPage(listId, page, status))
+            dispatch(listInProcessAC(listId, 'footerProcessing', false))
         break
 
         case COMPLETED:
             status = statusObj.completed
-            dispatch(setFilteredPage(listId, page, status))
-                .then(() => dispatch(listInProcessAC(listId, 'footerProcessing', false)))
+            await dispatch(setFilteredPage(listId, page, status))
+            dispatch(listInProcessAC(listId, 'footerProcessing', false))
         break
 
         default:    //case filterValue === ALL_S
-            dispatch(setAllTasksPage(listId, page))
-                .then(() => dispatch(listInProcessAC(listId, 'footerProcessing', false)))
+            await dispatch(setAllTasksPage(listId, page))
+            dispatch(listInProcessAC(listId, 'footerProcessing', false))
     }
 }
 
 
-export const addTask = (listId, title) => (dispatch, getState) => {
+export const addTask = (listId, title) => async(dispatch, getState) => {
 
     // get current tasksOrder
-    const tasksOrder = getState().lists.find((list) => list.id === listId).tasksOrder
+    const tasksOrder = getState().app.lists.find((list) => list.id === listId).tasksOrder
 
     dispatch(listInProcessAC(listId, 'taskIsAdding', true))
-    return api.addTask(listId, title)
-        .then((Response) => {
-            if (Response.data.resultCode === 0) {
-                const newTaskId = Response.data.data.item.id
-                const newTasksOrder = [newTaskId, ...tasksOrder]
-                dispatch(setTasksOrder(listId, newTasksOrder))
-                dispatch(setAllTasksPage(listId, 1))
-                    .then(() => {
-                        dispatch(setFilterValueAC(listId, ALL_S))
-                        dispatch(listInProcessAC(listId, 'taskIsAdding', false))
-                    })
-            }
-        })
+    try {
+        const response = await api.addTask(listId, title)
+        if (response.data.resultCode === 0) {
+            const newTaskId = response.data.data.item.id
+            const newTasksOrder = [newTaskId, ...tasksOrder]
+            dispatch(setTasksOrder(listId, newTasksOrder))
+            await dispatch(setAllTasksPage(listId, 1))
+            dispatch(setFilterValueAC(listId, ALL_S))
+            dispatch(listInProcessAC(listId, 'taskIsAdding', false))
+        }
+    } catch (error) {
+        dispatch(setErrorAC(error))
+        dispatch(listInProcessAC(listId, 'taskIsAdding', false))
+    }
 }
 
 
-export const addTaskActive = (listId, title) => (dispatch, getState) => {
+export const addTaskActive = (listId, title) => async(dispatch, getState) => {
 
     // get current tasksOrder
-    const tasksOrder = getState().lists.find((list) => list.id === listId).tasksOrder
+    const tasksOrder = getState().app.lists.find((list) => list.id === listId).tasksOrder
 
     dispatch( listInProcessAC(listId, 'taskIsAdding', true) )
-    return api.addTask(listId, title)
-        .then(Response => {
-            if (Response.data.resultCode === 0) {
-                const newTaskId = Response.data.data.item.id
-                const newTasksOrder = [newTaskId, ...tasksOrder]
-                dispatch(setTasksOrder(listId, newTasksOrder))
-                api.getAllTasks(listId)
-                    .then((Response) => {
-                        const status = statusObj.active
-                        const tasks = Response.data.items;
-                        dispatch( setFilteredPageAC(listId, 1, tasks, status) )
-                        dispatch( listInProcessAC(listId, 'taskIsAdding', false) )
-                    })
-            }
-        })
+    try {
+        const response_1 = await api.addTask(listId, title)
+        if (response_1.data.resultCode === 0) {
+            const newTaskId = response_1.data.data.item.id
+            const newTasksOrder = [newTaskId, ...tasksOrder]
+            dispatch(setTasksOrder(listId, newTasksOrder))
+            const response_2 = await api.getAllTasks(listId)
+            const status = statusObj.active
+            const tasks = response_2.data.items;
+            dispatch(setFilteredPageAC(listId, 1, tasks, status))
+            dispatch(listInProcessAC(listId, 'taskIsAdding', false))
+        }
+    } catch (error) {
+        dispatch(setErrorAC(error))
+        dispatch(listInProcessAC(listId, 'taskIsAdding', false))
+    }
 }
 
-export const delTaskFromPage = (listId, taskId) => (dispatch, getState) => {
+export const delTaskFromPage = (listId, taskId) => async(dispatch, getState) => {
     
     // extract the target object from lists array & get all required parametrs
-    const targetList = getState().lists.find( (item) => item.id === listId )
+    const targetList = getState().app.lists.find( (item) => item.id === listId )
     const {page, filterValue, totalCount, countOnPage} = targetList
     const tasksLength = targetList.tasks.length
     const pagesCount = totalCount ? Math.ceil(totalCount/countOnPage) : 1
     
     dispatch( taskInProcessAC(listId,taskId, 'taskInProcess', true) )
-    api.deleteTask(listId, taskId)
-            .then((Response) => {
-                if (Response.data.resultCode === 0) {
-                    // delete task from not last page
-                    if (tasksLength === 10 && page < pagesCount) {
-                        if (filterValue === ALL_S) {
-                            dispatch( setAllTasksPage(listId, page) )
-                        } else {
-                            const status = filterValue === COMPLETED 
-                                ? statusObj.completed
-                                : statusObj.active
-                            dispatch( setFilteredPage(listId, page, status) )
-                        }
-                    } 
-                    // delete last task from not first page
-                    if (tasksLength === 1 && page !== 1) {
-                        if (filterValue === ALL_S) {
-                            dispatch( setAllTasksPage(listId, page-1) )
-                        } else {
-                            const status = filterValue === COMPLETED 
-                                ? statusObj.completed
-                                : statusObj.active
-                            dispatch( setFilteredPage(listId, page - 1, status) )
-                        }
-
-                    }
-                    // delete last task from first page
-                    if (tasksLength === 1 && page === 1 && filterValue !== ALL_S) {
-                        dispatch( setAllTasksPage(listId, 1) )
-                            .then(() => dispatch( setFilterValueAC(listId, ALL_S) ) )
-                    }
-                    // regular delete task case -> must be located at the end of chain
-                    if (filterValue === ALL_S) {
-                        dispatch( deleteTask(listId, taskId, page) )
-                    } else {
-                        dispatch( deleteFltrTask(listId, taskId, page) )
-                    }
+    try {
+        const response = await api.deleteTask(listId, taskId)
+        if (response.data.resultCode === 0) {
+            // delete task from not last page
+            if (tasksLength === 10 && page < pagesCount) {
+                if (filterValue === ALL_S) {
+                    await dispatch(setAllTasksPage(listId, page))
+                } else {
+                    const status = filterValue === COMPLETED
+                        ? statusObj.completed
+                        : statusObj.active
+                    await dispatch(setFilteredPage(listId, page, status))
                 }
-            }).then( () => dispatch( taskInProcessAC(listId,taskId, 'taskInProcess', false) ) )
+            }
+            // delete last task from not first page
+            if (tasksLength === 1 && page !== 1) {
+                if (filterValue === ALL_S) {
+                    await dispatch(setAllTasksPage(listId, page - 1))
+                } else {
+                    const status = filterValue === COMPLETED
+                        ? statusObj.completed
+                        : statusObj.active
+                    await dispatch(setFilteredPage(listId, page - 1, status))
+                }
+
+            }
+            // delete last task from first page
+            if (tasksLength === 1 && page === 1 && filterValue !== ALL_S) {
+                await dispatch(setAllTasksPage(listId, 1))
+                dispatch(setFilterValueAC(listId, ALL_S))
+            }
+            // regular delete task case -> must be located at the end of chain
+            if (filterValue === ALL_S) {
+                await dispatch(deleteTask(listId, taskId, page))
+            } else {
+                await dispatch(deleteFltrTask(listId, taskId, page))
+            }
+        }
+            dispatch(taskInProcessAC(listId, taskId, 'taskInProcess', false))
+    } catch(error) {
+        dispatch(setErrorAC(error))
+        dispatch(taskInProcessAC(listId, taskId, 'taskInProcess', false))
+    }
 }
 
 
-export const updateTask = (listId, taskId, updateObj) => (dispatch, getState) => {
+export const updateTask = (listId, taskId, updateObj) => async(dispatch, getState) => {
 
     // extract the target object from lists array & get all required parametrs
-    const targetList = getState().lists.find( (item) => item.id === listId )
+    const targetList = getState().app.lists.find( (item) => item.id === listId )
     const { page, filterValue } = targetList
     const tasksLength = targetList.tasks.length
     const targetTask = targetList.tasks.find( (item) => item.id === taskId )
@@ -650,32 +681,34 @@ export const updateTask = (listId, taskId, updateObj) => (dispatch, getState) =>
     
     dispatch( taskInProcessAC(listId,taskId, 'taskInProcess', true) )
   
-    api.updateTask(listId, taskId, updatedTask)
-        .then(Response => {
-            if (Response.data.resultCode === 0) {
-                if (filterValue === ALL_S) {
-                    dispatch(updateTaskAC(Response.data.data.item))
-                } else {
-                    api.getAllTasks(listId)
-                        .then((Response) => {
-                            if (!Response.data.error) {
-                                const tasks = Response.data.items;
-                                const status = filterValue === COMPLETED 
-                                    ? statusObj.completed 
-                                    : statusObj.active
-                                // set previous filtered page
-                                if (tasksLength === 1 && page !== 1 && updateObj.status !== undefined) {
-                                    dispatch(setFilteredPageAC(listId, page - 1, tasks, status))
-                                } else if (tasksLength === 1 && page === 1 && updateObj.status !== undefined) {
-                                        dispatch(setAllTasksPage(listId, 1))
-                                        dispatch(setFilterValueAC(listId, ALL_S))
-                                } else
-                                    dispatch(setFilteredPageAC(listId, page, tasks, status))
-                            }
-                        })
+    try {
+        const response_1 = await api.updateTask(listId, taskId, updatedTask)
+        if (response_1.data.resultCode === 0) {
+            if (filterValue === ALL_S) {
+                dispatch(updateTaskAC(response_1.data.data.item))
+            } else {
+                const response_2 = await api.getAllTasks(listId)
+                if (!response_2.data.error) {
+                    const tasks = response_2.data.items;
+                    const status = filterValue === COMPLETED
+                        ? statusObj.completed
+                        : statusObj.active
+                    // set previous filtered page
+                    if (tasksLength === 1 && page !== 1 && updateObj.status !== undefined) {
+                        dispatch(setFilteredPageAC(listId, page - 1, tasks, status))
+                    } else if (tasksLength === 1 && page === 1 && updateObj.status !== undefined) {
+                        await dispatch(setAllTasksPage(listId, 1))
+                        dispatch(setFilterValueAC(listId, ALL_S))
+                    } else
+                        dispatch(setFilteredPageAC(listId, page, tasks, status))
                 }
             }
-        }).then( () => dispatch( taskInProcessAC(listId,taskId, 'taskInProcess', false) ) )
+        }
+        dispatch(taskInProcessAC(listId, taskId, 'taskInProcess', false))
+    } catch (error) {
+        dispatch(setErrorAC(error))
+        dispatch(taskInProcessAC(listId, taskId, 'taskInProcess', false))
+    }
 }
 
 
@@ -683,10 +716,10 @@ const SET_TASKS_ORDER = 'SET_TASKS_ORDER'
 const setTasksOrder = (listId, tasksOrder) => ({ type: SET_TASKS_ORDER, listId, tasksOrder })
 
 
-export const reorderTask = (listId, taskId, currPos, nextRenderPos) => (dispatch, getState) => {
+export const reorderTask = (listId, taskId, currPos, nextRenderPos) => async(dispatch, getState) => {
 
     const nextPos = nextRenderPos !== (null || undefined) ? +nextRenderPos - 1 : null   //define next element position
-    const targerList = getState().lists.find((list) => list.id === listId)
+    const targerList = getState().app.lists.find((list) => list.id === listId)
 
     const getAfterId = () => {
         const { filterValue, prevActiveId } = targerList
@@ -736,24 +769,23 @@ export const reorderTask = (listId, taskId, currPos, nextRenderPos) => (dispatch
         // determine which page will appear on after the reorder
 
         dispatch(listInProcessAC(listId, 'taskIsAdding', true))
-        api.reorderTask(listId, taskId, putAfterItemId)
-            .then((response) => {
-                if (response.data.resultCode === 0) {
-                    if (filterValue === ALL_S) {
-                        dispatch(setAllTasksPage(listId, page))
-                            .then(() => {
-                                dispatch(setTasksOrder(listId, tasksOrder))
-                                dispatch(listInProcessAC(listId, 'taskIsAdding', false))
-                            })
-                    }
-                    if (filterValue === ACTIVE || filterValue === COMPLETED) {
-                        dispatch(setFilteredPage(listId, page, status))
-                        .then(() => {
-                            // dispatch(setTasksOrder(listId, tasksOrder))
-                            dispatch(listInProcessAC(listId, 'taskIsAdding', false))
-                        })
-                    }
+        try {
+            const response = await api.reorderTask(listId, taskId, putAfterItemId)
+            if (response.data.resultCode === 0) {
+                if (filterValue === ALL_S) {
+                    await dispatch(setAllTasksPage(listId, page))
+                    dispatch(setTasksOrder(listId, tasksOrder))
+                    dispatch(listInProcessAC(listId, 'taskIsAdding', false))
                 }
-            })
+                if (filterValue === ACTIVE || filterValue === COMPLETED) {
+                    await dispatch(setFilteredPage(listId, page, status))
+                    // dispatch(setTasksOrder(listId, tasksOrder))
+                    dispatch(listInProcessAC(listId, 'taskIsAdding', false))
+                }
+            }
+        } catch (error) {
+            dispatch(setErrorAC(error))
+            dispatch(listInProcessAC(listId, 'taskIsAdding', false))
+        }
     }
 }
