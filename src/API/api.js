@@ -1,11 +1,11 @@
 import Axios from 'axios';
 
 
-const instance = Axios.create({ 
+const instance = Axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/todo-lists',
     withCredentials: true,
-    headers: { 'API-KEY': '5deaa5a9-bfea-4e80-bac8-d313181506e0' }
- })
+    headers: { 'API-KEY': '077e296e-5c11-448c-9cff-a20ca6e66ed1' }
+})
 
 export const api = {
 
@@ -13,12 +13,12 @@ export const api = {
         return instance.get('')
     },
 
-    updateListTitle( listId, title ) {
-        return instance.put(`/${listId}`, {title} )
+    updateListTitle(listId, title) {
+        return instance.put(`/${listId}`, { title })
     },
 
     addList(title) {
-        return instance.post('', { title } )
+        return instance.post('', { title })
     },
 
     reorderList(listId, putAfterItemId) {
@@ -42,11 +42,11 @@ export const api = {
     },
 
     addTask(listId, title) {
-        return instance.post(`/${listId}/tasks`, {title} )
+        return instance.post(`/${listId}/tasks`, { title })
     },
 
     updateTask(listId, taskId, dataObj) {
-        return instance.put(`/${listId}/tasks/${taskId}`, { ...dataObj } )
+        return instance.put(`/${listId}/tasks/${taskId}`, { ...dataObj })
     },
 
     deleteTask(listId, taskId) {
@@ -54,6 +54,6 @@ export const api = {
     },
 
     reorderTask(listId, taskId, putAfterItemId) {
-        return instance.put(`/${listId}/tasks/${taskId}/reorder`, {putAfterItemId})
+        return instance.put(`/${listId}/tasks/${taskId}/reorder`, { putAfterItemId })
     }
 }
