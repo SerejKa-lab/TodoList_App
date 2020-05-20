@@ -73,13 +73,16 @@ class App extends React.Component {
         const preloaderStyles = {
             position: 'absolute', height: '12px', top: '1.75em', right: '34%', fill: 'white'
         }
-
+        
+        const errorMessage = this.props.error ? this.props.error.message : 'Error!!!'
+        
         const addListHint = 
             'Please, check the % sign is missing and enter a unique title between 1 and 100 chars long, or press "Esc" to reset'
 
         return (
             <div className={styles.app}>
                 <div className={styles.app_header}>
+                    {this.props.error && <span className={styles.error}>{errorMessage}</span>}
                     { this.props.listsLoading && <Preloader {...preloaderStyles}/>
                     }
                     <NavLink to='/' exact className={styles.app_title}>
@@ -111,11 +114,12 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        lists: state.lists,
-        listsCount: state.lists.length,
-        listsLoading: state.listsProgress.listsLoading,
-        maxListsCount: state.maxListsCount,
-        maxTasksCount: state.maxTasksCount
+        lists: state.app.lists,
+        listsCount: state.app.lists.length,
+        listsLoading: state.app.listsProgress.listsLoading,
+        maxListsCount: state.app.maxListsCount,
+        maxTasksCount: state.app.maxTasksCount,
+        error: state.errors.error
     }
 }
 
