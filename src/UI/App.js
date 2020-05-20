@@ -5,7 +5,7 @@ import { NavLink, Route, withRouter, Switch } from 'react-router-dom';
 import TodoList from './TodoList/TodoList';
 import AddItemForm from './AddItemForm/AddItemForm';
 import Preloader from './Preloader/Preloader';
-import {restoreLists, restoreTasks, addList} from '../Redux/reducer';
+import {restoreLists, restoreTasks, addList} from '../Redux/appReducer';
 import book from '../Assets/img/book.png';
 import { compose } from 'redux';
 import Error404 from './Error404/Error404';

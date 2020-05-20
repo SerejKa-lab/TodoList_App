@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import styles from './TaskOrder.module.css'
-import { reorderTask } from '../../../../../Redux/reducer'
+import { reorderTask } from '../../../../../Redux/appReducer'
 
 
 const TaskOrder = ({ listId, taskId, tasksCount, renderIndex, reorderTask }) => {

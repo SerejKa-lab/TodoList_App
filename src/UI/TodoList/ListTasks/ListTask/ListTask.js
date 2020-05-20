@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './ListTask.module.css'
 import { connect } from 'react-redux';
-import { delTaskFromPage, updateTask, statusObj } from '../../../../Redux/reducer'
+import { delTaskFromPage, updateTask, statusObj } from '../../../../Redux/appReducer'
 import Preloader from '../../../Preloader/Preloader'
 import TaskPriority from './TaskPriority/TaskPriority';
 import TaskTitle from './TaskTitle/TaskTitle';

@@ -1,12 +1,12 @@
 import { createStore, combineReducers ,applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import ThunkMiddleware from 'redux-thunk';
-import reducer from './reducer';
+import appReducer from './appReducer';
 import errorsReducer from './errorsReducer';
 
 
 const storeReducer = combineReducers({
-    app: reducer,
+    app: appReducer,
     errors: errorsReducer
 })
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import styles from './PagesLinks.module.css'
-import { setTasksPage } from '../../../../Redux/reducer'
+import { setTasksPage } from '../../../../Redux/appReducer'
 
 
 const PagesLinks = ({listId, filterValue, page, pagesCount, setTasksPage}) => {

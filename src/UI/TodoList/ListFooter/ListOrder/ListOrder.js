@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './ListOrder.module.css'
 import { connect } from 'react-redux'
-import { reorderList } from '../../../../Redux/reducer'
+import { reorderList } from '../../../../Redux/appReducer'
 import onClickOutside from 'react-onclickoutside'
 import { compose } from 'redux'
 

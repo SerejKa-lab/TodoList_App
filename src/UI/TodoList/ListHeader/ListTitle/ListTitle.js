@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './ListTitle.module.css'
 import { connect } from 'react-redux';
-import { updateListTitle } from '../../../../Redux/reducer';
+import { updateListTitle } from '../../../../Redux/appReducer';
 import Preloader from '../../../Preloader/Preloader';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';

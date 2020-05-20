@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import styles from './StatusFilter.module.css'
-import { setFilterValue, ALL_S, COMPLETED, ACTIVE } from '../../../../Redux/reducer'
+import { setFilterValue, ALL_S, COMPLETED, ACTIVE } from '../../../../Redux/appReducer'
 import onClickOutside from 'react-onclickoutside'
 import { compose } from 'redux'
 

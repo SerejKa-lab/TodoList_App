@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import AddItemForm from '../../AddItemForm/AddItemForm';
 import ListTitle from './ListTitle/ListTitle';
 import Preloader from '../../Preloader/Preloader';
-import { addTask, addTaskActive, deleteList, ALL_S, COMPLETED, ACTIVE } from '../../../Redux/reducer';
+import { addTask, addTaskActive, deleteList, ALL_S, COMPLETED, ACTIVE } from '../../../Redux/appReducer';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 
