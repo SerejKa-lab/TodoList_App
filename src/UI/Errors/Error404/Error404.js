@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import styles from './Error404.module.css'
+import styles from './Error404.module.css';
 
 
 const Error404 = (props) => {

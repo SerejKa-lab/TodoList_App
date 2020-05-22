@@ -1,22 +1,14 @@
-const initialState = {
-    error: null
-}
+const initialState = []
 
 const errorsReducer = (state = initialState, action) => {
 
     switch (action.type) {
-        
+
         case SET_ERROR:
-            return {
-                ...state,
-                error: action.error
-            }
+            return [...state, action.error]
 
         case RESET_ERROR:
-            return {
-                ...state,
-                error: null
-            }
+            return state.filter((el, index) => index !== 0)
 
         default:
             return state

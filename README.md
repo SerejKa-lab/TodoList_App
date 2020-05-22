@@ -56,3 +56,5 @@ Implemented functionality:
         - task status changing with dinamic updating of current content and total pages number
         - filtered task reordering with moving to a new task display page
 
+    -> Errors handling
+

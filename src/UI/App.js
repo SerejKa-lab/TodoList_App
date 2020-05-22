@@ -6,9 +6,11 @@ import TodoList from './TodoList/TodoList';
 import AddItemForm from './AddItemForm/AddItemForm';
 import Preloader from './Preloader/Preloader';
 import {restoreLists, restoreTasks, addList} from '../Redux/appReducer';
+import {resetErrorAC as resetError} from '../Redux/errorsReducer';
 import book from '../Assets/img/book.png';
 import { compose } from 'redux';
-import Error404 from './Error404/Error404';
+import Error404 from './Errors/Error404/Error404';
+import CommonError from './Errors/CommonError/CommonError';
 
 
 class App extends React.Component {
@@ -23,11 +25,13 @@ class App extends React.Component {
 
     render() {
 
-        const listTitles = this.props.lists.map((list) => ({title: list.title, id: list.id}) )
+        const {lists, listsCount, maxListsCount, maxTasksCount, listId, listsLoading, 
+            errors, resetError} = this.props;
+
+        const listTitles = lists.map((list) => ({title: list.title, id: list.id}) )
 
         // generate list Routes for single list display
-        const listsRoutes = this.props.lists.map((list) =>{
-            const { maxTasksCount } = this.props
+        const listsRoutes = lists.map((list) =>{
             const path = list.title.replace(/\s|\?|#/g, '-')
             return (
             <Route path={`/${path}`} exact key={list.id} render={() => 
@@ -37,15 +41,12 @@ class App extends React.Component {
         })
 
         // generate list Routes for lists general display
-        const allLists = this.props.lists.map((list) => {
-            const { listsCount, maxTasksCount } = this.props
-            return( 
-                <TodoList list={list} key={list.id} listTitles={listTitles} listsCount={listsCount}
-                    restoreTasks={this.restoreTasks} maxTasksCount={maxTasksCount}/>
-            )}
+        const allLists = lists.map((list) =>
+            <TodoList list={list} key={list.id} listTitles={listTitles} listsCount={listsCount}
+                restoreTasks={this.restoreTasks} maxTasksCount={maxTasksCount} />
         )
 
-        const allListsLinks = this.props.lists.map( ( list ) => {
+        const allListsLinks = lists.map( ( list ) => {
             const link = list.title.replace(/\s|\?|#/g, '-')
             return(
                 <li key={list.id}><NavLink to={`/${link}`}>{list.title}</NavLink></li>
@@ -53,9 +54,8 @@ class App extends React.Component {
         } )
 
         const listTitleValidation = (newTitle) => {
-
             const equalTitles = listTitles.find((el) => {
-                return (el.title.toLowerCase() === newTitle.toLowerCase() && el.id !== this.props.listId)
+                return (el.title.toLowerCase() === newTitle.toLowerCase() && el.id !== listId)
             })
 
             if (newTitle.trim() === '' || newTitle.length > 100 || newTitle.match(/%/) || equalTitles) {
@@ -74,24 +74,27 @@ class App extends React.Component {
             position: 'absolute', height: '12px', top: '1.75em', right: '34%', fill: 'white'
         }
         
-        const errorMessage = this.props.error ? this.props.error.message : 'Error!!!'
+        const errorsArr = errors.length
+            ? errors.map((error, index) =>
+                <CommonError message={error} resetError={resetError} key={index} />)
+            : null
         
         const addListHint = 
             'Please, check the % sign is missing and enter a unique title between 1 and 100 chars long, or press "Esc" to reset'
 
         return (
             <div className={styles.app}>
+                {(errors.length !== 0) && <div className={styles.errorsBlock}>{errorsArr}</div>}
+                
                 <div className={styles.app_header}>
-                    {this.props.error && <span className={styles.error}>{errorMessage}</span>}
-                    { this.props.listsLoading && <Preloader {...preloaderStyles}/>
-                    }
+                    { listsLoading && <Preloader {...preloaderStyles}/> }
                     <NavLink to='/' exact className={styles.app_title}>
                         <h2>
                             <img src={book} alt='book' className={styles.app_header_icon} />
                             Tasks Manager
                         </h2>
                     </NavLink>
-                    {this.props.lists.length < this.props.maxListsCount 
+                    {lists.length < maxListsCount 
                         && <div className={styles.app_addItemForm}>
                                 <AddItemForm addItem={addList} hint={addListHint}
                                     validationFunc={listTitleValidation} placeholder='Add list' />
@@ -119,13 +122,13 @@ const mapStateToProps = (state) => {
         listsLoading: state.app.listsProgress.listsLoading,
         maxListsCount: state.app.maxListsCount,
         maxTasksCount: state.app.maxTasksCount,
-        error: state.errors.error
+        errors: state.errors.length ? state.errors.map((el) => el.message) : state.errors
     }
 }
 
 
 
 export default compose(
-    connect(mapStateToProps, {restoreLists, restoreTasks ,addList}),
+    connect(mapStateToProps, {restoreLists, restoreTasks ,addList, resetError}),
     withRouter
 )(App);

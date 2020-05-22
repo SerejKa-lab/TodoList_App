@@ -1,17 +1,19 @@
-.error {
-  position: absolute;
-  right: 10%;
-  top: 40%;
-  font-size: 20px;
-  color: magenta;
-}
-
 .app {
   padding: 10px;
   min-height: 100vh;
   background-image: url('../Assets/img/navigation.jpg');
   background-size: cover;
   background-attachment: fixed;
+}
+
+.errorsBlock {
+  position: fixed;
+  z-index: 100;
+  right: 20px;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .app_title {
@@ -57,7 +59,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
 }
 
 .app_header_navigation {

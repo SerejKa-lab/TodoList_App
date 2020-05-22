@@ -1,0 +1,29 @@
+
+
+.error404 code {
+    color: mediumvioletred;
+}
+
+.error404 h3 {
+    position: relative;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgb(169, 169, 169, 0.7);
+    padding: 5px 10px;
+    padding-left: 40px;
+    border-radius: 2px;
+    color: white;
+}
+
+.error404 h3::before {
+    content: '';
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    color: magenta;
+    background-image: url(../../../Assets/img/error.png);
+    background-size: cover;
+    left: 5px;
+    bottom: 2px;
+}
