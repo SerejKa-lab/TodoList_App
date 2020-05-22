@@ -1,24 +1,25 @@
 {
   "files": {
-    "main.css": "/TasksManager/static/css/main.67ac2a90.chunk.css",
-    "main.js": "/TasksManager/static/js/main.fc856300.chunk.js",
-    "main.js.map": "/TasksManager/static/js/main.fc856300.chunk.js.map",
+    "main.css": "/TasksManager/static/css/main.3ae2f084.chunk.css",
+    "main.js": "/TasksManager/static/js/main.0171b72b.chunk.js",
+    "main.js.map": "/TasksManager/static/js/main.0171b72b.chunk.js.map",
     "runtime-main.js": "/TasksManager/static/js/runtime-main.09bd989b.js",
     "runtime-main.js.map": "/TasksManager/static/js/runtime-main.09bd989b.js.map",
-    "static/js/2.6970acc7.chunk.js": "/TasksManager/static/js/2.6970acc7.chunk.js",
-    "static/js/2.6970acc7.chunk.js.map": "/TasksManager/static/js/2.6970acc7.chunk.js.map",
+    "static/js/2.2f50b6e4.chunk.js": "/TasksManager/static/js/2.2f50b6e4.chunk.js",
+    "static/js/2.2f50b6e4.chunk.js.map": "/TasksManager/static/js/2.2f50b6e4.chunk.js.map",
     "index.html": "/TasksManager/index.html",
-    "precache-manifest.6bc1a6247a20887c8bd93f139eb81093.js": "/TasksManager/precache-manifest.6bc1a6247a20887c8bd93f139eb81093.js",
+    "precache-manifest.05d99a802d3787bd32334fe279a2e510.js": "/TasksManager/precache-manifest.05d99a802d3787bd32334fe279a2e510.js",
     "service-worker.js": "/TasksManager/service-worker.js",
-    "static/css/main.67ac2a90.chunk.css.map": "/TasksManager/static/css/main.67ac2a90.chunk.css.map",
-    "static/js/2.6970acc7.chunk.js.LICENSE.txt": "/TasksManager/static/js/2.6970acc7.chunk.js.LICENSE.txt",
-    "static/media/book.png": "/TasksManager/static/media/book.6d8795b6.png",
+    "static/css/main.3ae2f084.chunk.css.map": "/TasksManager/static/css/main.3ae2f084.chunk.css.map",
+    "static/js/2.2f50b6e4.chunk.js.LICENSE.txt": "/TasksManager/static/js/2.2f50b6e4.chunk.js.LICENSE.txt",
+    "static/media/book.png": "/TasksManager/static/media/book.4e282c1a.png",
+    "static/media/Error404.module.css": "/TasksManager/static/media/error.669ab4de.png",
     "static/media/App.module.css": "/TasksManager/static/media/navigation.fbcb2c9d.jpg"
   },
   "entrypoints": [
     "static/js/runtime-main.09bd989b.js",
-    "static/js/2.6970acc7.chunk.js",
-    "static/css/main.67ac2a90.chunk.css",
-    "static/js/main.fc856300.chunk.js"
+    "static/js/2.2f50b6e4.chunk.js",
+    "static/css/main.3ae2f084.chunk.css",
+    "static/js/main.0171b72b.chunk.js"
   ]
 }
