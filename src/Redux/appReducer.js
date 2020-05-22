@@ -11,7 +11,8 @@ const initialState =  {
     /* lists: [
         {
             id: 0, title: 'Спорт', nextTaskId: 2, totalCount: 1, countOnPage: 10, filterValue: ALL_S,
-            page: 1, titleUpdating: false, taskIsAdding: false, listDeliting: false, footerProcessing: false,
+            page: 1, listProcessing: false, taskIsAdding: false, listDeliting: false, 
+            footerProcessing: false,
             tasksOrder: [], prevActiveID: 'some_id'
             tasks: [{ id: 1, title: 'CSS', status: 0, priority: 'Middle', taskDeliting: false}]
         }
@@ -295,9 +296,9 @@ export const restoreLists = () => async(dispatch) => {
         dispatch(listIsLoadingAC(true))
         const response = await api.restoreLists()
         dispatch(restoreListsAC(response.data));
-        dispatch(listIsLoadingAC(false))
     } catch (error) {
         dispatch(setErrorAC(error))
+    } finally {
         dispatch(listIsLoadingAC(false))
     }
 }
@@ -311,9 +312,9 @@ export const addList = (title) => async(dispatch) => {
         dispatch(listIsLoadingAC(true))
         const response = await api.addList(title)
         dispatch(addListAC(response.data.data.item))
-        dispatch(listIsLoadingAC(false))
     } catch (error) {
         dispatch(setErrorAC(error))
+    } finally {
         dispatch(listIsLoadingAC(false))
     }
 }
@@ -323,15 +324,15 @@ const updateListTitleAC = (listId, title) => ({ type: UPDATE_LIST_TITLE, listId,
 
 export const updateListTitle = (listId, title) => async(dispatch) => {
     try {
-        dispatch(listInProcessAC(listId, 'titleUpdating', true))
+        dispatch(listInProcessAC(listId, 'listProcessing', true))
         const response = await api.updateListTitle(listId, title)
         if (response.data.resultCode === 0) {
             dispatch(updateListTitleAC(listId, title))
-            dispatch(listInProcessAC(listId, 'titleUpdating', false))
         }
     } catch (error) {
         dispatch(setErrorAC(error))
-        dispatch(listInProcessAC(listId, 'titleUpdating', false))
+    } finally {
+        dispatch(listInProcessAC(listId, 'listProcessing', false))
     }
 }
 
@@ -346,10 +347,9 @@ export const deleteList = (listId) => async(dispatch) => {
         if (response.data.resultCode === 0) {
             await dispatch(deleteListAC(listId))
         }
-        dispatch(listInProcessAC(listId, 'listDeliting', false))
-        
     } catch (error) {
         dispatch(setErrorAC(error))
+    } finally {
         dispatch(listInProcessAC(listId, 'listDeliting', false))
     }
 }
@@ -404,10 +404,10 @@ export const reorderList = (listId, currPos, nextRenderPos) => async(dispatch, g
             const response = await api.reorderList(listId, putAfterItemId)
             if (response.data.resultCode === 0) {
                 dispatch(reorderListAC(reorderedLists))
-                dispatch(listIsLoadingAC(false))
             }
         } catch (error) {
             dispatch(setErrorAC(error))
+        } finally {
             dispatch(listIsLoadingAC(false))
         }
     }
@@ -420,12 +420,15 @@ export const reorderList = (listId, currPos, nextRenderPos) => async(dispatch, g
 const RESTORE_TASKS = 'RESTORE_TASKS';
 const restoreTasksAC = (listId, tasks, totalCount) => ({ type: RESTORE_TASKS, listId, tasks, totalCount })
 
-export const restoreTasks = (listId) => async(dispatch) => {
+export const restoreTasks = (listId) => async (dispatch) => {
+    dispatch(listInProcessAC(listId, 'listProcessing', true))
     try {
         const response = await api.getAllTasks(listId)
         dispatch(restoreTasksAC(listId, response.data.items, response.data.totalCount))
     } catch (error) {
         dispatch(setErrorAC(error))
+    } finally {
+        dispatch(listInProcessAC(listId, 'listProcessing', false))
     }
 }
 
@@ -582,10 +585,10 @@ export const addTask = (listId, title) => async(dispatch, getState) => {
             dispatch(setTasksOrder(listId, newTasksOrder))
             await dispatch(setAllTasksPage(listId, 1))
             dispatch(setFilterValueAC(listId, ALL_S))
-            dispatch(listInProcessAC(listId, 'taskIsAdding', false))
         }
     } catch (error) {
         dispatch(setErrorAC(error))
+    } finally {
         dispatch(listInProcessAC(listId, 'taskIsAdding', false))
     }
 }
@@ -607,10 +610,10 @@ export const addTaskActive = (listId, title) => async(dispatch, getState) => {
             const status = statusObj.active
             const tasks = response_2.data.items;
             dispatch(setFilteredPageAC(listId, 1, tasks, status))
-            dispatch(listInProcessAC(listId, 'taskIsAdding', false))
         }
     } catch (error) {
         dispatch(setErrorAC(error))
+    } finally {
         dispatch(listInProcessAC(listId, 'taskIsAdding', false))
     }
 }
@@ -662,9 +665,9 @@ export const delTaskFromPage = (listId, taskId) => async(dispatch, getState) => 
                 await dispatch(deleteFltrTask(listId, taskId, page))
             }
         }
-            dispatch(taskInProcessAC(listId, taskId, 'taskInProcess', false))
     } catch(error) {
         dispatch(setErrorAC(error))
+    } finally {
         dispatch(taskInProcessAC(listId, taskId, 'taskInProcess', false))
     }
 }
@@ -704,9 +707,9 @@ export const updateTask = (listId, taskId, updateObj) => async(dispatch, getStat
                 }
             }
         }
-        dispatch(taskInProcessAC(listId, taskId, 'taskInProcess', false))
     } catch (error) {
         dispatch(setErrorAC(error))
+    } finally {
         dispatch(taskInProcessAC(listId, taskId, 'taskInProcess', false))
     }
 }
@@ -775,16 +778,15 @@ export const reorderTask = (listId, taskId, currPos, nextRenderPos) => async(dis
                 if (filterValue === ALL_S) {
                     await dispatch(setAllTasksPage(listId, page))
                     dispatch(setTasksOrder(listId, tasksOrder))
-                    dispatch(listInProcessAC(listId, 'taskIsAdding', false))
                 }
                 if (filterValue === ACTIVE || filterValue === COMPLETED) {
                     await dispatch(setFilteredPage(listId, page, status))
                     // dispatch(setTasksOrder(listId, tasksOrder))
-                    dispatch(listInProcessAC(listId, 'taskIsAdding', false))
                 }
             }
         } catch (error) {
             dispatch(setErrorAC(error))
+        } finally {
             dispatch(listInProcessAC(listId, 'taskIsAdding', false))
         }
     }

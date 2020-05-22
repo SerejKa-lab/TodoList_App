@@ -35,7 +35,7 @@ class ListHeader extends React.Component {
     render() {
 
         const {listId, title, page, totalCount, filterValue, listTitles, maxTasksCount,
-            generalCount, listDeliting, titleUpdating, taskIsAdding} = this.props
+            generalCount, listDeliting, listProcessing, taskIsAdding} = this.props
         
             const totalTasksCount = filterValue === ALL_S ? totalCount : generalCount
 
@@ -54,7 +54,7 @@ class ListHeader extends React.Component {
         return (
             <div className={styles.list_header}>
                 <ListTitle listId={listId} title={title} page={page} listTitles={listTitles}
-                    listDeliting={listDeliting} titleUpdating={titleUpdating} />
+                    listDeliting={listDeliting} listProcessing={listProcessing} />
                 {/* форма добавления задач */}
                 {totalTasksCount < maxTasksCount
                     && <div className={styles.list_header_add_form}>
@@ -68,10 +68,12 @@ class ListHeader extends React.Component {
                 
                 {/*delete icon display modes */}
                 { !listDeliting
-                    &&<i className={'fa fa-close ' + styles.delete_button} onClick={this.deleteList} />
+                    &&<i className={'fa fa-close ' + styles.delete_button} 
+                        onClick={this.deleteList} tabIndex='0' aria-label='delete list'/>
                 }
                 { listDeliting
-                    &&<i className={'fa fa-close ' + styles.delete_button}/>
+                    &&<i className={'fa fa-close ' + styles.delete_button} 
+                        tabIndex='0' aria-label='delete list'/>
                 }
             </div>
         )

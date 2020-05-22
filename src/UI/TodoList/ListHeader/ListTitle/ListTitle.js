@@ -83,7 +83,7 @@ class ListTitle extends React.Component {
         } else return (
             <div className={styles.list_title}>
                 <span onClick={this.setEditMode}>{this.props.title}</span>
-                {(this.props.listDeliting || this.props.titleUpdating)
+                {(this.props.listDeliting || this.props.listProcessing)
                     && <Preloader {...loaderStyle} />}
             </div>
         )
