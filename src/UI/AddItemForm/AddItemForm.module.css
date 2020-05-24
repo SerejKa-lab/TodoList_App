@@ -23,7 +23,3 @@
   color: mediumvioletred;
   cursor: pointer;
 }
-
-.delete_button:active {
-  outline: none;
-}

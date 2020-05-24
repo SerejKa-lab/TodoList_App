@@ -10,9 +10,13 @@ const TaskTitle = (props) => {
     const [inputError, setError] = useState(false)
 
 
-    const setTitleEditMode = () => {
+    const enableEditMode = () => {
         setEditMode(true)
         setTitle(props.title)
+    }
+
+    const enableEditModeKey = (e) => {
+        if (e.charCode === 13) enableEditMode()
     }
 
     const setDisplayMode = () => {
@@ -47,7 +51,10 @@ const TaskTitle = (props) => {
 
     if (!editMode) {
         return (
-            <span onClick={setTitleEditMode} className={styles.taskTitle}>{props.title}, </span>
+            <span tabIndex='0'
+                className={styles.taskTitle}
+                onClick={enableEditMode} 
+                onKeyPress={enableEditModeKey}>{props.title},&nbsp;</span>
         )
     } else {
         return (

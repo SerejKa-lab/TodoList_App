@@ -7,15 +7,42 @@ import { reorderTask } from '../../../../../Redux/appReducer'
 const TaskOrder = ({ listId, taskId, tasksCount, renderIndex, reorderTask }) => {
 
     const [selectMode, setMode] = useState(false)
-    const setOnMode = () => setMode(true)
-    const resetMode = () => setMode(false)
-    const resetOnKey = (e) => { if (e.keyCode === 27) resetMode() }
+    const [currentOrder, setCurrentOrder] = useState(null)
+    
+    const enableSelect = (e) => {
+        setMode(true)
+        const currOrd = e.currentTarget.textContent
+            .split('')
+            .filter((el) => el
+            .match('^[0-9]$')).join('')
+        
+        setCurrentOrder(currOrd)
+        
+    }
 
-    const reorderOnSelect = (e) => {
+    const enableSelectKey = (e) => {
+        if (e.charCode === 13) enableSelect(e)
+    }
+
+    const disableSelect = () => setMode(false)
+
+    const setTaskOrder = (e) => {
         const nextRenderPos = e.currentTarget.value
-        const currPos = renderIndex - 1
-        reorderTask(listId, taskId, currPos, nextRenderPos)
-        resetMode()
+            const currPos = renderIndex - 1
+            reorderTask(listId, taskId, currPos, nextRenderPos)
+            disableSelect()
+    }
+
+    const setOrderOnKey = (e) => {
+        if (e.keyCode === 27) disableSelect()
+        if (e.keyCode === 13) setTaskOrder(e)
+    }
+
+    const setOrderOnClick = (e) => {
+        if (e.currentTarget.value !== currentOrder) {
+            
+            setTaskOrder(e)
+        }
     }
 
     const getOptions = () => {
@@ -31,13 +58,18 @@ const TaskOrder = ({ listId, taskId, tasksCount, renderIndex, reorderTask }) => 
 
     if (selectMode) return (
         <select autoFocus
-            onBlur={resetMode}
-            onKeyDown={resetOnKey}
-            onChange={reorderOnSelect}
+            onBlur={disableSelect}
+            onKeyDown={setOrderOnKey}
+            onClick={setOrderOnClick}
             defaultValue={renderIndex}>{optionArr}</select>
     )
 
-    return <span className={styles.taskOrder} onClick={setOnMode}> {renderIndex} - </span>
+    else return (
+        <span tabIndex='0'
+            className={styles.taskOrder}
+            onClick={enableSelect}
+            onKeyPress={enableSelectKey}>&nbsp;{renderIndex}&nbsp;-&nbsp;</span>
+    )
 }
 
 export default connect(null, { reorderTask })(TaskOrder)

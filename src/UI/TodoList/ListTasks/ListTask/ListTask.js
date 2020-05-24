@@ -28,6 +28,8 @@ const ListTask = (props) => {
 
     const loaderStyle = { fill: 'rgb(85, 47, 11)', height: '8px' }
 
+    const delBtnOnClick = !taskInProcess ? deleteTask : null
+
     return (
         <div className={styles.todoList_task}>
             <div className={status ? styles.taskIsDone : ''}>
@@ -42,14 +44,9 @@ const ListTask = (props) => {
                     renderIndex={renderIndex} tasksCount={tasksCount}/>
                 <TaskTitle title={title} updateTask={updateTask} />
                 <TaskPriority priority={priority} updateTask={updateTask} />
+                <button className={'fa fa-close ' + styles.delete_button} onClick={delBtnOnClick} />
 
-                {/* кнопка delete */}
-                {!taskInProcess
-                    && < i className={'fa fa-close ' + styles.delete_button} onClick={deleteTask}/> }
-                {taskInProcess
-                    && < i className={'fa fa-close ' + styles.delete_button}/> 
-                    && <Preloader {...loaderStyle} /> }
-                 {/* {taskInProcess && <Preloader {...loaderStyle} />} */}
+                {taskInProcess && <Preloader {...loaderStyle} />}
             </div>
         </div>
     )

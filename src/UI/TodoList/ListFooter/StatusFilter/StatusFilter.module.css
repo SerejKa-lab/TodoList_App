@@ -14,10 +14,6 @@
     cursor: pointer;
 }
 
-.statusFilter button:focus {
-    outline: none;
-}
-
 .pressed {
     border-style: inset;
 }

@@ -5,7 +5,8 @@ import styles from './CommonError.module.css';
 const CommonError = ({message, resetError}) => {
 
     useEffect(() => {
-        setTimeout(resetError, 5000)
+        const timerId = setTimeout(resetError, 5000)
+        return () => clearTimeout(timerId)
     },[resetError])
 
     const keyReset = (e) => {

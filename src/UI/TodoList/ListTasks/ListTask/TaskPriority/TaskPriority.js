@@ -5,29 +5,51 @@ import styles from './TaskPriority.module.css'
 const TaskPriority = (props) => {
 
     const [editMode, setMode ] = useState(false)
+    const [currentValue, setCurrentValue ] = useState('')
+
+    const setEditMode = (e) => {
+        setMode(true)
+        setCurrentValue(e.currentTarget.textContent.trim())
+    }
+    const setEditModeKey = (e) => {
+        if (e.keyCode === 13) setEditMode(e)
+    }
+    const resetEditMode = () => setMode(false)
 
     const setTaskPriority = (e) => {
-        const priority = priorityArray.findIndex((prior) => prior === e.currentTarget.value);
-        props.updateTask({ priority });
+        if (e.currentTarget.value !== currentValue) {
+            const priority = priorityArray.findIndex((prior) => prior === e.currentTarget.value);
+            props.updateTask({ priority });
+        }
         resetEditMode()
     }
 
+    const setPriorityOnKey = (e) => {
+        if (e.keyCode === 27) resetEditMode() 
+        if (e.keyCode === 13) setTaskPriority(e)
+    }
+
+    const setPriorityClick = (e) => {
+        if (e.currentTarget.value !== currentValue) {
+            setTaskPriority(e)
+        }
+    }
+
+    
+    const getTaskPriority = () => priorityArray[props.priority]
+    const getTaskPriorityStyle = () => styles[ priorityArray[props.priority] ] + ' ' + styles.taskPriority
+    
     const priorityArray = ['Low', 'Middle', 'High', 'Urgent', 'Later']
 
     const priorityOptions = priorityArray.map(prior =>
-        <option className={styles[prior]} key={prior} >{prior}</option>)
-
-    const getTaskPriority = () => priorityArray[props.priority]
-    const getTaskPriorityStyle = () => styles[ priorityArray[props.priority] ] + ' ' + styles.taskPriority
-
-    const setEditMode = () => setMode(true)
-    const resetEditMode = () => setMode(false)
-
-    const priorityOnKey = (e) => { if (e.keyCode === 27) resetEditMode() }
+        <option key={prior} className={styles[prior]}>{prior}</option>)
 
     if (!editMode) {
         return (
-            <span onClick={setEditMode} className={getTaskPriorityStyle()}>
+            <span tabIndex='0'
+                className={getTaskPriorityStyle()}
+                onClick={setEditMode}
+                onKeyDown={setEditModeKey} >
                 {getTaskPriority()} &nbsp;
             </span>
         )
@@ -36,10 +58,10 @@ const TaskPriority = (props) => {
             <select
                 defaultValue={getTaskPriority()}
                 className={getTaskPriorityStyle()}
-                onChange={setTaskPriority}
                 onBlur={resetEditMode}
-                onKeyDown={priorityOnKey}
-                autoFocus={true} > {priorityOptions} </select>
+                onKeyDown={setPriorityOnKey}
+                onClick={setPriorityClick}
+                autoFocus={true} >{priorityOptions}</select>
         )
     }
 }

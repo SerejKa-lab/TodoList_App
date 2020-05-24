@@ -9,10 +9,6 @@
     cursor: pointer;
 }
 
-.listOrder button:focus{
-    outline: none;
-}
-
 .pressed {
     border-style: inset;
 }

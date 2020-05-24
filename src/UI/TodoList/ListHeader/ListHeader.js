@@ -22,7 +22,7 @@ class ListHeader extends React.Component {
     addTask = (title) => {
         const { listId, filterValue, taskIsAdding } = this.props;
 
-        if ( (filterValue === COMPLETED || filterValue === ALL_S) && !taskIsAdding )  {
+        if ((filterValue === COMPLETED || filterValue === ALL_S) && !taskIsAdding) {
             this.props.addTask(listId, title)
         }
 
@@ -34,10 +34,10 @@ class ListHeader extends React.Component {
 
     render() {
 
-        const {listId, title, page, totalCount, filterValue, listTitles, maxTasksCount,
-            generalCount, listDeliting, listProcessing, taskIsAdding} = this.props
-        
-            const totalTasksCount = filterValue === ALL_S ? totalCount : generalCount
+        const { listId, title, page, totalCount, filterValue, listTitles, maxTasksCount,
+            generalCount, listDeliting, listProcessing, taskIsAdding } = this.props
+
+        const totalTasksCount = filterValue === ALL_S ? totalCount : generalCount
 
         const taskTitleValidation = (newTitle) => {
             if (newTitle === '' || newTitle.length > 100 || newTitle.trim() === '') {
@@ -45,16 +45,28 @@ class ListHeader extends React.Component {
             }
         }
 
-        const loaderStyle ={
-            fill: 'rgb(85, 47, 11)', height: '8px', position: 'absolute', right: '50%', bottom: '-14px'}
+        const loaderStyle = {
+            fill: 'rgb(85, 47, 11)', height: '8px', position: 'absolute', right: '50%', bottom: '-14px'
+        }
 
-            const addTaskHint = 
+        const addTaskHint =
             'Please, enter a title with length between 1 to 100 chars or press "Esc" to reset'
 
         return (
             <div className={styles.list_header}>
+                {/*delete icon display modes */}
+                { !listDeliting
+                    &&<i className={'fa fa-close ' + styles.delete_button} 
+                        onClick={this.deleteList} tabIndex='0' aria-label='delete list'/>
+                }
+                { listDeliting
+                    &&<i className={'fa fa-close ' + styles.delete_button} 
+                        tabIndex='0' aria-label='delete list'/>
+                }
+
                 <ListTitle listId={listId} title={title} page={page} listTitles={listTitles}
                     listDeliting={listDeliting} listProcessing={listProcessing} />
+                
                 {/* форма добавления задач */}
                 {totalTasksCount < maxTasksCount
                     && <div className={styles.list_header_add_form}>
@@ -65,16 +77,6 @@ class ListHeader extends React.Component {
                             addItem={this.addTask} />
                         {taskIsAdding && <Preloader {...loaderStyle} />}
                     </div>}
-                
-                {/*delete icon display modes */}
-                { !listDeliting
-                    &&<i className={'fa fa-close ' + styles.delete_button} 
-                        onClick={this.deleteList} tabIndex='0' aria-label='delete list'/>
-                }
-                { listDeliting
-                    &&<i className={'fa fa-close ' + styles.delete_button} 
-                        tabIndex='0' aria-label='delete list'/>
-                }
             </div>
         )
     }
@@ -84,8 +86,8 @@ class ListHeader extends React.Component {
 
 const mdtp = { addTask, addTaskActive, deleteList }
 
-export default compose (
-    connect(null, mdtp ),
+export default compose(
+    connect(null, mdtp),
     withRouter
 )(ListHeader);
 

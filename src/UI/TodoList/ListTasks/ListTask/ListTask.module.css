@@ -7,7 +7,10 @@
 }
 
 .delete_button {
-  padding: 0 5px;
+  border: none;
+  margin: 0;
+  padding: 0;
+  background: inherit;
   color: rgb(85, 47, 11);
 }
 

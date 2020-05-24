@@ -26,6 +26,10 @@ class ListTitle extends React.Component {
     }
 
     setEditMode = () => this.setState({ editMode: true, title: this.props.title })
+    setEditModeKey = (e) => {
+        if (e.charCode === 13) this.setEditMode()
+    }
+
     setDisplayMode = () => {
         if (this.state.inputError) this.setState({ inputError: false })
         this.setState({ editMode: false })
@@ -36,9 +40,9 @@ class ListTitle extends React.Component {
         const equalTitles = this.props.listTitles.find((el) => {
             return (el.title.toLowerCase() === newTitle.toLowerCase() && el.id !== this.props.listId)
         })
-        
+
         if (this.state.inputError) this.setState({ inputError: false });
-        if (newTitle.trim() === '' || newTitle.length > 100 
+        if (newTitle.trim() === '' || newTitle.length > 100
             || newTitle.match(/%/) || equalTitles) {
             this.setState({ title: newTitle, inputError: true })
         } else this.setState({ title: newTitle })
@@ -63,7 +67,7 @@ class ListTitle extends React.Component {
             fill: 'rgb(85, 47, 11)', height: '10px', position: 'absolute', bottom: '-12px', right: '43%'
         }
 
-        const listTitleHint = 
+        const listTitleHint =
             'Please, check the % sign is missing and enter a unique title between 1 and 100 chars long, or press "Esc" to exit'
 
         if (this.state.editMode) {
@@ -76,13 +80,15 @@ class ListTitle extends React.Component {
                         autoFocus={true}
                         onBlur={this.setDisplayMode}
                         onKeyDown={this.setTitleOnKey} />
-                    
-                    { this.state.inputError && <Tooltip hint={listTitleHint} /> }
+
+                    {this.state.inputError && <Tooltip hint={listTitleHint} />}
                 </div>
             )
         } else return (
             <div className={styles.list_title}>
-                <span onClick={this.setEditMode}>{this.props.title}</span>
+                <span onClick={this.setEditMode} onKeyPress={this.setEditModeKey} tabIndex='0'>
+                    {this.props.title}
+                </span>
                 {(this.props.listDeliting || this.props.listProcessing)
                     && <Preloader {...loaderStyle} />}
             </div>
