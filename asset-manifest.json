@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/TasksManager/static/css/main.19669e06.chunk.css",
-    "main.js": "/TasksManager/static/js/main.f9b95a22.chunk.js",
-    "main.js.map": "/TasksManager/static/js/main.f9b95a22.chunk.js.map",
-    "runtime-main.js": "/TasksManager/static/js/runtime-main.09bd989b.js",
-    "runtime-main.js.map": "/TasksManager/static/js/runtime-main.09bd989b.js.map",
-    "static/js/2.14867413.chunk.js": "/TasksManager/static/js/2.14867413.chunk.js",
-    "static/js/2.14867413.chunk.js.map": "/TasksManager/static/js/2.14867413.chunk.js.map",
-    "index.html": "/TasksManager/index.html",
-    "precache-manifest.2307a981fac727624f15c7592e6c94d6.js": "/TasksManager/precache-manifest.2307a981fac727624f15c7592e6c94d6.js",
-    "service-worker.js": "/TasksManager/service-worker.js",
-    "static/css/main.19669e06.chunk.css.map": "/TasksManager/static/css/main.19669e06.chunk.css.map",
-    "static/js/2.14867413.chunk.js.LICENSE.txt": "/TasksManager/static/js/2.14867413.chunk.js.LICENSE.txt",
-    "static/media/book.png": "/TasksManager/static/media/book.4e282c1a.png",
-    "static/media/Error404.module.css": "/TasksManager/static/media/error.669ab4de.png",
-    "static/media/App.module.css": "/TasksManager/static/media/navigation.fbcb2c9d.jpg"
+    "main.css": "/tasks_manager/static/css/main.21881fc0.chunk.css",
+    "main.js": "/tasks_manager/static/js/main.f9b95a22.chunk.js",
+    "main.js.map": "/tasks_manager/static/js/main.f9b95a22.chunk.js.map",
+    "runtime-main.js": "/tasks_manager/static/js/runtime-main.d16ae611.js",
+    "runtime-main.js.map": "/tasks_manager/static/js/runtime-main.d16ae611.js.map",
+    "static/js/2.14867413.chunk.js": "/tasks_manager/static/js/2.14867413.chunk.js",
+    "static/js/2.14867413.chunk.js.map": "/tasks_manager/static/js/2.14867413.chunk.js.map",
+    "index.html": "/tasks_manager/index.html",
+    "precache-manifest.868bc7a0f64423cd9f8999df054aace4.js": "/tasks_manager/precache-manifest.868bc7a0f64423cd9f8999df054aace4.js",
+    "service-worker.js": "/tasks_manager/service-worker.js",
+    "static/css/main.21881fc0.chunk.css.map": "/tasks_manager/static/css/main.21881fc0.chunk.css.map",
+    "static/js/2.14867413.chunk.js.LICENSE.txt": "/tasks_manager/static/js/2.14867413.chunk.js.LICENSE.txt",
+    "static/media/book.png": "/tasks_manager/static/media/book.4e282c1a.png",
+    "static/media/Error404.module.css": "/tasks_manager/static/media/error.669ab4de.png",
+    "static/media/App.module.css": "/tasks_manager/static/media/navigation.fbcb2c9d.jpg"
   },
   "entrypoints": [
-    "static/js/runtime-main.09bd989b.js",
+    "static/js/runtime-main.d16ae611.js",
     "static/js/2.14867413.chunk.js",
-    "static/css/main.19669e06.chunk.css",
+    "static/css/main.21881fc0.chunk.css",
     "static/js/main.f9b95a22.chunk.js"
   ]
 }
